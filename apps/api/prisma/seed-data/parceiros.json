@@ -1,0 +1,92 @@
+[
+  {
+    "id": "partner-1",
+    "nome": "Canva Pro",
+    "segmento": "Design & Criação",
+    "cnpj": "12.345.678/0001-01",
+    "email": "partners@canva.com",
+    "qtdBeneficios": 2,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-2",
+    "nome": "CapCut Pro",
+    "segmento": "Edição de Vídeo",
+    "cnpj": "23.456.789/0001-02",
+    "email": "business@capcut.com",
+    "qtdBeneficios": 2,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-3",
+    "nome": "mLabs",
+    "segmento": "Agendamento & Analytics",
+    "cnpj": "34.567.890/0001-03",
+    "email": "comercial@mlabs.com.br",
+    "qtdBeneficios": 2,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-4",
+    "nome": "Advocacia Campos & Lima",
+    "segmento": "Jurídico",
+    "cnpj": "45.678.901/0001-04",
+    "email": "atendimento@camposlima.adv.br",
+    "qtdBeneficios": 2,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-5",
+    "nome": "Contábil Creator",
+    "segmento": "Contabilidade",
+    "cnpj": "56.789.012/0001-05",
+    "email": "contato@contabilcreator.com.br",
+    "qtdBeneficios": 2,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-6",
+    "nome": "Ring Light & Cia",
+    "segmento": "Equipamentos",
+    "cnpj": "67.890.123/0001-06",
+    "email": "vendas@ringlightcia.com.br",
+    "qtdBeneficios": 2,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-7",
+    "nome": "Hotmart",
+    "segmento": "Monetização",
+    "cnpj": "78.901.234/0001-07",
+    "email": "parcerias@hotmart.com",
+    "qtdBeneficios": 3,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-8",
+    "nome": "Adobe Creative Cloud",
+    "segmento": "Design & Criação",
+    "cnpj": "89.012.345/0001-08",
+    "email": "partners@adobe.com",
+    "qtdBeneficios": 2,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-9",
+    "nome": "Epidemic Sound",
+    "segmento": "Áudio & Música",
+    "cnpj": "90.123.456/0001-09",
+    "email": "creators@epidemicsound.com",
+    "qtdBeneficios": 1,
+    "status": "Ativo"
+  },
+  {
+    "id": "partner-10",
+    "nome": "Squid by Wake",
+    "segmento": "Campanhas & Collabs",
+    "cnpj": "01.234.567/0001-10",
+    "email": "contato@squidit.com.br",
+    "qtdBeneficios": 1,
+    "status": "Ativo"
+  }
+]

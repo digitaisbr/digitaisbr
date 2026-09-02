@@ -1,0 +1,19 @@
+# Caddy do contêiner do front.
+# O TLS é terminado pelo proxy de borda (ver Caddyfile na raiz); aqui só
+# servimos os arquivos e devolvemos o index nas rotas do SPA.
+:80 {
+	root * /srv
+	encode gzip zstd
+
+	# rotas do React Router não existem em disco — devolver o index
+	try_files {path} /index.html
+	file_server
+
+	# o bundle tem hash no nome: pode ser cacheado agressivamente
+	@imutavel path /assets/*
+	header @imutavel Cache-Control "public, max-age=31536000, immutable"
+
+	# o index nunca: é ele que aponta para o bundle novo a cada deploy
+	@index path /
+	header @index Cache-Control "no-cache"
+}

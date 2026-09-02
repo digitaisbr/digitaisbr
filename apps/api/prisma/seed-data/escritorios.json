@@ -1,0 +1,78 @@
+[
+  {
+    "nome": "Almeida & Vieira Advogados",
+    "tipo": "Jurídico",
+    "especialidades": [
+      "Contratos",
+      "LGPD",
+      "Marcas"
+    ],
+    "responsavel": "Dr. Marcos Almeida",
+    "email": "contato@almeidavieira.adv.br",
+    "telefone": "(11) 3456-7890",
+    "localizacao": "São Paulo, SP",
+    "atendimentos": 42,
+    "ativo": true
+  },
+  {
+    "nome": "Lopes Contabilidade Digital",
+    "tipo": "Contábil",
+    "especialidades": [
+      "MEI",
+      "CNPJ",
+      "IR",
+      "Tributário"
+    ],
+    "responsavel": "Contador Ricardo Lopes",
+    "email": "ricardo@lopescontabil.com.br",
+    "telefone": "(11) 2345-6789",
+    "localizacao": "São Paulo, SP",
+    "atendimentos": 38,
+    "ativo": true
+  },
+  {
+    "nome": "Beatriz Contadores Associados",
+    "tipo": "Contábil",
+    "especialidades": [
+      "Balanço",
+      "Fiscal",
+      "Folha"
+    ],
+    "responsavel": "Contadora Ana Beatriz",
+    "email": "ana@beatrizcontadores.com.br",
+    "telefone": "(21) 3456-1234",
+    "localizacao": "Rio de Janeiro, RJ",
+    "atendimentos": 25,
+    "ativo": true
+  },
+  {
+    "nome": "Vieira & Santos Advocacia",
+    "tipo": "Jurídico",
+    "especialidades": [
+      "Direito Digital",
+      "Contratos",
+      "Trabalhista"
+    ],
+    "responsavel": "Dra. Carla Vieira",
+    "email": "carla@vieirasantos.adv.br",
+    "telefone": "(31) 4567-8901",
+    "localizacao": "Belo Horizonte, MG",
+    "atendimentos": 31,
+    "ativo": true
+  },
+  {
+    "nome": "Nexo Assessoria Integrada",
+    "tipo": "Jurídico + Contábil",
+    "especialidades": [
+      "Abertura CNPJ",
+      "Contratos",
+      "Planejamento Tributário"
+    ],
+    "responsavel": "Dr. Felipe Nexo",
+    "email": "contato@nexoassessoria.com.br",
+    "telefone": "(41) 5678-9012",
+    "localizacao": "Curitiba, PR",
+    "atendimentos": 15,
+    "ativo": false
+  }
+]

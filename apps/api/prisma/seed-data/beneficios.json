@@ -1,0 +1,173 @@
+[
+  {
+    "nome": "50% off Canva Pro Anual",
+    "valor": "50%",
+    "descricao": "Assinatura anual do Canva Pro com desconto exclusivo para criadores DigitaisBR.",
+    "parceiro": "Canva Pro",
+    "tipo": "DESCONTO",
+    "planoMinimo": "Básico",
+    "utilizacoes": 312
+  },
+  {
+    "nome": "25% off Equipamentos de Estúdio",
+    "valor": "25%",
+    "descricao": "Desconto em ring lights, tripés, microfones e iluminação profissional.",
+    "parceiro": "Ring Light & Cia",
+    "tipo": "DESCONTO",
+    "planoMinimo": "Básico",
+    "utilizacoes": 234
+  },
+  {
+    "nome": "35% off Adobe Creative Cloud",
+    "valor": "35%",
+    "descricao": "Desconto na suite completa: Photoshop, Premiere Pro, Lightroom e After Effects.",
+    "parceiro": "Adobe Creative Cloud",
+    "tipo": "DESCONTO",
+    "planoMinimo": "Básico",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Epidemic Sound - 30 dias grátis",
+    "valor": "30 dias grátis",
+    "descricao": "Acesso gratuito à biblioteca de músicas sem copyright por 30 dias.",
+    "parceiro": "Epidemic Sound",
+    "tipo": "ACESSO",
+    "planoMinimo": "Básico",
+    "utilizacoes": 256
+  },
+  {
+    "nome": "5% Cashback em Vendas",
+    "valor": "5%",
+    "descricao": "Receba 5% de volta em créditos na plataforma sobre todas as suas vendas.",
+    "parceiro": "Hotmart",
+    "tipo": "CASHBACK",
+    "planoMinimo": "Básico",
+    "utilizacoes": null
+  },
+  {
+    "nome": "40% off CapCut Pro",
+    "valor": "40%",
+    "descricao": "Desconto na assinatura do CapCut Pro com efeitos premium e legendas automáticas.",
+    "parceiro": "CapCut Pro",
+    "tipo": "DESCONTO",
+    "planoMinimo": "Básico",
+    "utilizacoes": 278
+  },
+  {
+    "nome": "30% off mLabs Profissional",
+    "valor": "30%",
+    "descricao": "Desconto no plano profissional de agendamento e analytics de redes sociais.",
+    "parceiro": "mLabs",
+    "tipo": "DESCONTO",
+    "planoMinimo": "Básico",
+    "utilizacoes": 201
+  },
+  {
+    "nome": "Modelo de Contrato de Publi",
+    "valor": "Gratuito",
+    "descricao": "Templates de contrato de publicidade prontos para uso, revisados por advogados.",
+    "parceiro": "Advocacia Campos & Lima",
+    "tipo": "ACESSO",
+    "planoMinimo": "Básico",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Contabilidade MEI Creator",
+    "valor": "R$ 49,90/mês",
+    "descricao": "Serviço contábil completo para influencers MEI por preço diferenciado.",
+    "parceiro": "Contábil Creator",
+    "tipo": "SERVICO",
+    "planoMinimo": "Básico",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Declaração IR para Influencer",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Intermediário",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Kit Starter Creator Grátis",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Avançado",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Taxa Zero Hotmart 1º Produto",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Intermediário",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Mentoria Infoprodutos Hotmart",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Avançado",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Adobe Lightroom Mobile Gratuito",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Intermediário",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Acesso Antecipado a Campanhas",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Avançado",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Canva Teams Gratuito 3 meses",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Avançado",
+    "utilizacoes": null
+  },
+  {
+    "nome": "CapCut Business Gratuito",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Intermediário",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Relatório de Performance Mensal",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Intermediário",
+    "utilizacoes": null
+  },
+  {
+    "nome": "Consultoria Jurídica para Creators",
+    "valor": null,
+    "descricao": null,
+    "parceiro": null,
+    "tipo": null,
+    "planoMinimo": "Intermediário",
+    "utilizacoes": null
+  }
+]

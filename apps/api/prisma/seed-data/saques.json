@@ -1,0 +1,66 @@
+[
+  {
+    "data": "2026-06-18",
+    "valor": 500.0,
+    "metodo": "TED",
+    "destino": "Banco do Brasil · Ag 1234 · CC 56789-0",
+    "status": "Concluído",
+    "concluidoEm": "2026-06-21"
+  },
+  {
+    "data": "2026-06-25",
+    "valor": 247.0,
+    "metodo": "PIX",
+    "destino": "maria@email.com",
+    "status": "Concluído",
+    "concluidoEm": "2026-06-28"
+  },
+  {
+    "data": "2026-07-02",
+    "valor": 1135.0,
+    "metodo": "PIX",
+    "destino": "maria@email.com",
+    "status": "Concluído",
+    "concluidoEm": "2026-07-05"
+  },
+  {
+    "data": "2026-07-09",
+    "valor": 1677.0,
+    "metodo": "TED",
+    "destino": "Banco do Brasil · Ag 1234 · CC 56789-0",
+    "status": "Processando",
+    "concluidoEm": null
+  },
+  {
+    "data": "2026-07-16",
+    "valor": 1562.0,
+    "metodo": "PIX",
+    "destino": "maria@email.com",
+    "status": "Pendente",
+    "concluidoEm": null
+  },
+  {
+    "data": "2026-07-23",
+    "valor": 1552.0,
+    "metodo": "PIX",
+    "destino": "maria@email.com",
+    "status": "Concluído",
+    "concluidoEm": "2026-07-26"
+  },
+  {
+    "data": "2026-07-30",
+    "valor": 1796.0,
+    "metodo": "TED",
+    "destino": "Banco do Brasil · Ag 1234 · CC 56789-0",
+    "status": "Concluído",
+    "concluidoEm": "2026-08-02"
+  },
+  {
+    "data": "2026-08-06",
+    "valor": 1873.0,
+    "metodo": "PIX",
+    "destino": "maria@email.com",
+    "status": "Rejeitado",
+    "concluidoEm": null
+  }
+]

@@ -1,0 +1,207 @@
+<!-- ============================================================ 15 — DEPLOY -->
+<h1><span class="cap">Capítulo 15</span>Publicar na internet</h1>
+
+<p class="intro">
+  O que existe hoje roda em <code>localhost</code>, com dados de demonstração e segredos de
+  exemplo. Este capítulo lista o que falta para colocar o sistema no ar de forma segura, em
+  ordem de dependência.
+</p>
+
+<h2>15.1 Arquitetura de produção</h2>
+
+<figure>
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="p1" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+  <style>
+    .cx { fill:#f6f8fb; stroke:#c8d1e0; stroke-width:1.2; }
+    .cd { fill:#e6f4ff; stroke:#1677ff; stroke-width:1.4; }
+    .cg { fill:#e8f8ef; stroke:#12a150; stroke-width:1.4; }
+    .cw { fill:#fffbf0; stroke:#d48806; stroke-width:1.3; }
+    .t1 { font-size:10.5px; font-weight:700; fill:#1f2430; }
+    .t2 { font-size:8.4px; fill:#5b6472; }
+  </style>
+
+  <rect class="cx" x="270" y="6" width="220" height="40" rx="7"/>
+  <text class="t1" x="380" y="24" text-anchor="middle">Usuários · navegador</text>
+  <text class="t2" x="380" y="38" text-anchor="middle">https://digitaisbr.com</text>
+
+  <line x1="380" y1="46" x2="380" y2="62" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+
+  <rect class="cw" x="230" y="66" width="300" height="46" rx="7"/>
+  <text class="t1" x="380" y="85" text-anchor="middle" fill="#8c5800">Nginx / Caddy — proxy reverso</text>
+  <text class="t2" x="380" y="100" text-anchor="middle">TLS (Let's Encrypt) · compressão · cabeçalhos de segurança</text>
+
+  <line x1="300" y1="112" x2="230" y2="140" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+  <line x1="460" y1="112" x2="530" y2="140" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+
+  <rect class="cx" x="60" y="144" width="240" height="52" rx="7"/>
+  <text class="t1" x="180" y="164" text-anchor="middle">Front — arquivos estáticos</text>
+  <text class="t2" x="180" y="178" text-anchor="middle">build do Vite (dist/)</text>
+  <text class="t2" x="180" y="190" text-anchor="middle">servido pelo proxy ou por CDN</text>
+
+  <rect class="cd" x="460" y="144" width="240" height="52" rx="7"/>
+  <text class="t1" x="580" y="164" text-anchor="middle" fill="#002c8c">API — Node em cluster</text>
+  <text class="t2" x="580" y="178" text-anchor="middle">4 a 8 workers (PM2 ou Docker)</text>
+  <text class="t2" x="580" y="190" text-anchor="middle">sem estado — escala horizontal</text>
+
+  <line x1="580" y1="196" x2="580" y2="216" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+
+  <rect class="cg" x="460" y="220" width="240" height="46" rx="7"/>
+  <text class="t1" x="580" y="239" text-anchor="middle" fill="#0b6b36">PostgreSQL 16</text>
+  <text class="t2" x="580" y="254" text-anchor="middle">gerenciado, com backup automático</text>
+
+  <rect class="cx" x="60" y="220" width="240" height="46" rx="7"/>
+  <text class="t1" x="180" y="239" text-anchor="middle">Armazenamento de arquivos</text>
+  <text class="t2" x="180" y="254" text-anchor="middle">S3 / R2 — imagens e materiais</text>
+
+  <line x1="460" y1="243" x2="306" y2="243" stroke="#c8d1e0" stroke-width="1.2" stroke-dasharray="3,3"/>
+  <text class="t2" x="380" y="238" text-anchor="middle" fill="#8c94a3">pendente</text>
+
+  <rect class="cx" x="60" y="278" width="640" height="18" rx="4"/>
+  <text class="t2" x="380" y="291" text-anchor="middle">Observabilidade: logs centralizados · métricas · alerta de erro 5xx</text>
+</svg>
+<figcaption>Topologia mínima recomendada. Nada aqui exige mudança no código da aplicação.</figcaption>
+</figure>
+
+<h2>15.2 Checklist obrigatório — sem isto, não publique</h2>
+
+<table>
+  <thead><tr><th style="width:6%"></th><th style="width:32%">Item</th><th>Como fazer</th></tr></thead>
+  <tbody>
+    <tr><td>☐</td><td><strong>Gerar segredos novos</strong></td>
+        <td>O <code>.env.example</code> está no repositório e seus valores são públicos.<br>
+            <code>openssl rand -base64 48</code> para cada um de <code>JWT_SECRET</code> e
+            <code>JWT_REFRESH_SECRET</code>.</td></tr>
+    <tr><td>☐</td><td><strong>Trocar as senhas do seed</strong></td>
+        <td><code>Admin@2026</code> e <code>Assoc@2026</code> estão publicadas nesta documentação.
+            Crie o administrador real e remova as contas de demonstração.</td></tr>
+    <tr><td>☐</td><td><strong>TLS em tudo</strong></td>
+        <td>Let's Encrypt via Caddy (automático) ou Certbot com Nginx. Redirecionar 80 → 443.</td></tr>
+    <tr><td>☐</td><td><strong>Restringir CORS</strong></td>
+        <td><code>CORS_ORIGINS=https://digitaisbr.com</code>. O padrão atual é <code>*</code>.</td></tr>
+    <tr><td>☐</td><td><strong>Não rodar o seed</strong></td>
+        <td>Ele executa <code>TRUNCATE</code> em todas as tabelas antes de carregar.</td></tr>
+    <tr><td>☐</td><td><strong>Usar <code>migrate deploy</code></strong></td>
+        <td>Nunca <code>migrate dev</code> em produção — ele pode propor reset destrutivo.</td></tr>
+    <tr><td>☐</td><td><strong>Backup do banco</strong></td>
+        <td>Volume Docker não é backup. Use um Postgres gerenciado com snapshot diário, ou
+            <code>pg_dump</code> agendado para armazenamento externo.</td></tr>
+    <tr><td>☐</td><td><strong>Senha forte no Postgres</strong></td>
+        <td>Hoje é <code>digitaisbr/digitaisbr</code>. O banco não deve aceitar conexão externa.</td></tr>
+  </tbody>
+</table>
+
+<h2>15.3 Checklist recomendado</h2>
+
+<table>
+  <thead><tr><th style="width:6%"></th><th style="width:32%">Item</th><th>Motivo</th></tr></thead>
+  <tbody>
+    <tr><td>☐</td><td>Cluster de 4 a 8 workers</td>
+        <td>Multiplica o throughput e, principalmente, a capacidade de login (seção 10.5).</td></tr>
+    <tr><td>☐</td><td>Rate limit específico no login</td>
+        <td>Algo como 10 tentativas por minuto por IP, contra força bruta.</td></tr>
+    <tr><td>☐</td><td>Logs centralizados e alerta de 5xx</td>
+        <td>Os filtros já registram stack trace; falta para onde enviar.</td></tr>
+    <tr><td>☐</td><td>Ativar CSP no Helmet</td>
+        <td>Está desligada por causa do Swagger — publique a documentação em rota separada
+            ou restrita.</td></tr>
+    <tr><td>☐</td><td>Swagger fechado em produção</td>
+        <td>Expor o mapa completo da API facilita reconhecimento. Restrinja por IP ou desative.</td></tr>
+    <tr><td>☐</td><td>Cache nos analíticos</td>
+        <td>Dashboard e relatórios são as consultas mais caras.</td></tr>
+    <tr><td>☐</td><td>Expurgo de notificações e auditoria</td>
+        <td>São as tabelas que crescem sem teto.</td></tr>
+    <tr><td>☐</td><td>Healthcheck e reinício automático</td>
+        <td><code>GET /api/planos</code> serve como sonda; PM2 ou Docker reiniciam em falha.</td></tr>
+  </tbody>
+</table>
+
+<h2>15.4 Funcionalidades ainda não implementadas</h2>
+
+<p>
+  Dois recursos são recebidos e armazenados pelo sistema, mas não têm integração externa:
+</p>
+
+<table>
+  <thead><tr><th style="width:28%">Recurso</th><th style="width:30%">Situação</th><th>O que falta</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Email e push</strong></td>
+        <td>Notificações e campanhas são gravadas no banco e servidas pela API; nada sai para
+            fora.</td>
+        <td>Integrar um provedor de envio (Resend, SendGrid, SES) e um serviço de push.
+            O modelo de dados já prevê o canal.</td></tr>
+    <tr><td><strong>Upload de arquivos</strong></td>
+        <td>Imagens de produto, banner e logo são recebidas como URL.</td>
+        <td>Conectar um bucket S3 ou R2 e trocar os campos de URL por upload com validação de
+            tipo e tamanho.</td></tr>
+  </tbody>
+</table>
+
+<h2>15.5 Passo a passo do deploy</h2>
+
+<pre><code><span class="cmt"># 1. servidor: Docker + proxy reverso</span>
+apt update &amp;&amp; apt install -y docker.io docker-compose-plugin caddy
+
+<span class="cmt"># 2. variáveis de produção (fora do repositório)</span>
+JWT_SECRET=$(openssl rand -base64 48)
+JWT_REFRESH_SECRET=$(openssl rand -base64 48)
+DATABASE_URL="postgresql://usuario:SENHA_FORTE@db:5432/digitaisbr?connection_limit=20"
+CORS_ORIGINS="https://digitaisbr.com"
+NODE_ENV=production
+
+<span class="cmt"># 3. banco: aplicar migrations (nunca o seed)</span>
+npx prisma migrate deploy
+
+<span class="cmt"># 4. API em cluster</span>
+npm run build
+pm2 start dist/main.js -i 4 --name digitaisbr-api
+
+<span class="cmt"># 5. front: build estático</span>
+cd apps/web &amp;&amp; npm run build     <span class="cmt"># gera dist/</span></code></pre>
+
+<p>Configuração mínima do Caddy — TLS é automático:</p>
+
+<pre><code>digitaisbr.com {
+    <span class="cmt"># a API responde sob /api</span>
+    handle /api/* {
+        reverse_proxy localhost:3000
+    }
+    <span class="cmt"># todo o resto é o front; fallback para o index (rotas do SPA)</span>
+    handle {
+        root * /var/www/digitaisbr/dist
+        try_files {path} /index.html
+        file_server
+    }
+}</code></pre>
+
+<h2>15.6 Estimativa de infraestrutura</h2>
+
+<table>
+  <thead><tr>
+    <th style="width:22%">Porte</th><th style="width:20%">Usuários ativos</th>
+    <th style="width:28%">Servidor</th><th>Banco</th>
+  </tr></thead>
+  <tbody>
+    <tr><td><strong>Piloto</strong></td><td>até 500</td>
+        <td>2 vCPU · 4 GB — API e banco juntos</td>
+        <td>Postgres no mesmo host</td></tr>
+    <tr><td><strong>Produção inicial</strong></td><td>2.000 – 5.000</td>
+        <td>4 vCPU · 8 GB — 4 workers</td>
+        <td>Gerenciado, 2 vCPU · 4 GB, com backup</td></tr>
+    <tr><td><strong>Crescimento</strong></td><td>15.000 – 20.000</td>
+        <td>8 vCPU · 16 GB — 8 workers, ou 2 instâncias</td>
+        <td>Gerenciado, 4 vCPU · 8 GB + réplica de leitura</td></tr>
+  </tbody>
+</table>
+
+<p style="font-size:9pt;color:#5b6472">
+  Projeção derivada das medições do capítulo 10, assumindo navegação típica (uma ação a cada
+  8–12 segundos). Vale como ponto de partida para dimensionar, não como garantia — confirme com
+  um teste de carga no ambiente real antes de abrir ao público.
+</p>
+
+<div class="rodape-doc">
+  DigitaisBR · Documentação da Plataforma · Versão 1.1 · Agosto de 2026<br>
+  Referência navegável e testável da API: <code>/api/docs</code>
+</div>

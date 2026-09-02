@@ -1,0 +1,67 @@
+[
+  {
+    "id": "cup-1",
+    "codigo": "MARIA10",
+    "tipoDesconto": "PERCENTUAL",
+    "desconto": 10.0,
+    "compraMinima": 50.0,
+    "usos": 47,
+    "limiteUsos": 100,
+    "validade": "2026-08-31",
+    "semLimiteValidade": false,
+    "expirado": false,
+    "status": "Ativo"
+  },
+  {
+    "id": "cup-2",
+    "codigo": "PROMO20",
+    "tipoDesconto": "PERCENTUAL",
+    "desconto": 20.0,
+    "compraMinima": 100.0,
+    "usos": 50,
+    "limiteUsos": 50,
+    "validade": null,
+    "semLimiteValidade": false,
+    "expirado": true,
+    "status": "Inativo"
+  },
+  {
+    "id": "cup-3",
+    "codigo": "FRETE0",
+    "tipoDesconto": "VALOR",
+    "desconto": 25.0,
+    "compraMinima": 80.0,
+    "usos": 89,
+    "limiteUsos": 200,
+    "validade": null,
+    "semLimiteValidade": true,
+    "expirado": false,
+    "status": "Ativo"
+  },
+  {
+    "id": "cup-4",
+    "codigo": "BEMVINDO",
+    "tipoDesconto": "PERCENTUAL",
+    "desconto": 15.0,
+    "compraMinima": null,
+    "usos": 213,
+    "limiteUsos": 500,
+    "validade": null,
+    "semLimiteValidade": true,
+    "expirado": false,
+    "status": "Ativo"
+  },
+  {
+    "id": "cup-5",
+    "codigo": "VIP30",
+    "tipoDesconto": "PERCENTUAL",
+    "desconto": 30.0,
+    "compraMinima": 200.0,
+    "usos": 8,
+    "limiteUsos": 20,
+    "validade": "2026-09-30",
+    "semLimiteValidade": false,
+    "expirado": false,
+    "status": "Ativo"
+  }
+]

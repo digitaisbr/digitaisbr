@@ -1,0 +1,202 @@
+[
+  {
+    "titulo": "Venda cancelada",
+    "tipo": "Venda",
+    "canal": "Push",
+    "mensagem": "A venda #VND-045 foi cancelada pelo cliente.",
+    "data": "2025-06-29",
+    "enviadaEm": "29/06/2025 04:00"
+  },
+  {
+    "titulo": "Novo conteúdo publicado",
+    "tipo": "Conteúdo",
+    "canal": "Push",
+    "mensagem": "Artigo: Como aumentar suas vendas online em 2025.",
+    "data": "2025-06-27",
+    "enviadaEm": "27/06/2025 04:00"
+  },
+  {
+    "titulo": "Ticket respondido",
+    "tipo": "Suporte",
+    "canal": "In-App",
+    "mensagem": "Sua solicitação #SUP-042 foi respondida pela equipe.",
+    "data": "2025-06-27",
+    "enviadaEm": "27/06/2025 04:00"
+  },
+  {
+    "titulo": "Produto em destaque vendeu!",
+    "tipo": "Venda",
+    "canal": "Push",
+    "mensagem": "O Kit Premium Saúde vendeu 3 unidades hoje.",
+    "data": "2025-06-27",
+    "enviadaEm": "27/06/2025 04:00"
+  },
+  {
+    "titulo": "Comissão pendente",
+    "tipo": "Comissão",
+    "canal": "In-App",
+    "mensagem": "Você tem R$ 89,50 em comissões pendentes de aprovação.",
+    "data": "2025-06-26",
+    "enviadaEm": "26/06/2025 04:00"
+  },
+  {
+    "titulo": "FAQ atualizado",
+    "tipo": "Suporte",
+    "canal": "Email",
+    "mensagem": "Novas perguntas frequentes sobre comissões e saques.",
+    "data": "2025-06-25",
+    "enviadaEm": "25/06/2025 04:00"
+  },
+  {
+    "titulo": "Manutenção programada",
+    "tipo": "Sistema",
+    "canal": "Email",
+    "mensagem": "Manutenção dia 28/06 das 02h às 04h. Sem impacto.",
+    "data": "2025-06-24",
+    "enviadaEm": "24/06/2025 04:00"
+  },
+  {
+    "titulo": "Ticket resolvido",
+    "tipo": "Suporte",
+    "canal": "Push",
+    "mensagem": "Seu ticket #SUP-035 foi marcado como resolvido.",
+    "data": "2025-06-24",
+    "enviadaEm": "24/06/2025 04:00"
+  },
+  {
+    "titulo": "Pagamento processado",
+    "tipo": "Comissão",
+    "canal": "Email",
+    "mensagem": "Saque de R$ 350,00 processado. Previsão: 2 dias úteis.",
+    "data": "2025-06-23",
+    "enviadaEm": "23/06/2025 04:00"
+  },
+  {
+    "titulo": "Novo benefício disponível",
+    "tipo": "Benefício",
+    "canal": "In-App",
+    "mensagem": "Desconto de 20% em cursos de marketing digital.",
+    "data": "2025-06-22",
+    "enviadaEm": "22/06/2025 04:00"
+  },
+  {
+    "titulo": "Avalie o atendimento",
+    "tipo": "Suporte",
+    "canal": "Email",
+    "mensagem": "Como foi a resolução do ticket #SUP-028? Avalie!",
+    "data": "2025-06-20",
+    "enviadaEm": "20/06/2025 04:00"
+  },
+  {
+    "titulo": "Venda aprovada",
+    "tipo": "Venda",
+    "canal": "Email",
+    "mensagem": "A venda #VND-018 foi aprovada e a comissão será gerada.",
+    "data": "2025-06-17",
+    "enviadaEm": "17/06/2025 04:00"
+  },
+  {
+    "titulo": "Cashback disponível",
+    "tipo": "Benefício",
+    "canal": "Push",
+    "mensagem": "Você tem R$ 45,00 em cashback para utilizar.",
+    "data": "2025-06-17",
+    "enviadaEm": "17/06/2025 04:00"
+  },
+  {
+    "titulo": "Promoção de upgrade",
+    "tipo": "Sistema",
+    "canal": "Email",
+    "mensagem": "Upgrade para Avançado com 20% off até sexta!",
+    "data": "2025-06-17",
+    "enviadaEm": "17/06/2025 04:00"
+  },
+  {
+    "titulo": "Recorde de vendas!",
+    "tipo": "Venda",
+    "canal": "In-App",
+    "mensagem": "Sua loja bateu recorde: 12 vendas esta semana!",
+    "data": "2025-06-16",
+    "enviadaEm": "16/06/2025 04:00"
+  },
+  {
+    "titulo": "Benefício expirando",
+    "tipo": "Benefício",
+    "canal": "Push",
+    "mensagem": "Seu desconto de 15% na TechShop expira em 5 dias.",
+    "data": "2025-06-10",
+    "enviadaEm": "10/06/2025 04:00"
+  },
+  {
+    "titulo": "Bem-vindo à DigitaisBR!",
+    "tipo": "Sistema",
+    "canal": "In-App",
+    "mensagem": "Sua conta foi criada. Explore os benefícios do seu plano.",
+    "data": "2025-06-09",
+    "enviadaEm": "09/06/2025 04:00"
+  },
+  {
+    "titulo": "Parceiro em destaque",
+    "tipo": "Benefício",
+    "canal": "Push",
+    "mensagem": "Clínica Sorriso: consulta gratuita para plano Avançado.",
+    "data": "2025-06-08",
+    "enviadaEm": "08/06/2025 04:00"
+  },
+  {
+    "titulo": "Nova venda realizada!",
+    "tipo": "Venda",
+    "canal": "Push",
+    "mensagem": "Você realizou uma venda de R$ 149,90 na sua loja.",
+    "data": "2025-06-07",
+    "enviadaEm": "07/06/2025 04:00"
+  },
+  {
+    "titulo": "Novo parceiro na plataforma",
+    "tipo": "Sistema",
+    "canal": "Push",
+    "mensagem": "EduTech Brasil agora oferece cursos com 30% off.",
+    "data": "2025-06-07",
+    "enviadaEm": "07/06/2025 04:00"
+  },
+  {
+    "titulo": "Atualização da plataforma",
+    "tipo": "Sistema",
+    "canal": "Email",
+    "mensagem": "Novos recursos disponíveis! Confira as novidades.",
+    "data": "2025-06-06",
+    "enviadaEm": "06/06/2025 04:00"
+  },
+  {
+    "titulo": "Comissão creditada",
+    "tipo": "Comissão",
+    "canal": "In-App",
+    "mensagem": "Comissão de R$ 22,49 foi creditada na sua conta.",
+    "data": "2025-06-05",
+    "enviadaEm": "05/06/2025 04:00"
+  },
+  {
+    "titulo": "Curso disponível",
+    "tipo": "Conteúdo",
+    "canal": "In-App",
+    "mensagem": "Masterclass de fotografia de produtos já está no ar!",
+    "data": "2025-06-04",
+    "enviadaEm": "04/06/2025 04:00"
+  },
+  {
+    "titulo": "E-book gratuito",
+    "tipo": "Conteúdo",
+    "canal": "Email",
+    "mensagem": "Baixe o Guia Completo de SEO para Lojas Virtuais.",
+    "data": "2025-06-04",
+    "enviadaEm": "04/06/2025 04:00"
+  },
+  {
+    "titulo": "Meta de comissão atingida!",
+    "tipo": "Comissão",
+    "canal": "Email",
+    "mensagem": "Parabéns! Você atingiu R$ 1.000 em comissões este mês.",
+    "data": "2025-06-02",
+    "enviadaEm": "02/06/2025 04:00"
+  }
+]

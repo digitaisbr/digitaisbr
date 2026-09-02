@@ -1,0 +1,381 @@
+/* ============================================================
+   DigitaisBR — folha de estilo da documentação (impressão A4)
+   ============================================================ */
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 16mm 16mm;
+}
+@page :first {
+  margin: 0;
+}
+
+:root {
+  --azul: #1677ff;
+  --azul-escuro: #0958d9;
+  --azul-tinta: #002c8c;
+  --grafite: #1f2430;
+  --texto: #2b3038;
+  --suave: #5b6472;
+  --tenue: #8c94a3;
+  --linha: #e3e7ee;
+  --fundo-suave: #f6f8fb;
+  --verde: #12a150;
+  --ambar: #d48806;
+  --vermelho: #d4380d;
+  --roxo: #722ed1;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 10.2pt;
+  line-height: 1.62;
+  color: var(--texto);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------- capa */
+
+.capa {
+  height: 297mm;
+  padding: 34mm 24mm 20mm;
+  background: linear-gradient(158deg, #062a63 0%, #0d47a1 46%, #1677ff 100%);
+  color: #fff;
+  page-break-after: always;
+  position: relative;
+  /* clipa o círculo decorativo: sem isto ele transborda e o Chromium
+     reduz a escala da página inteira para caber */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.capa::after {
+  content: "";
+  position: absolute;
+  right: -60mm; top: 96mm;
+  width: 170mm; height: 170mm;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.055);
+}
+.capa-marca {
+  font-size: 12pt;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  opacity: 0.82;
+  font-weight: 600;
+}
+.capa-titulo {
+  font-size: 40pt;
+  line-height: 1.06;
+  font-weight: 700;
+  margin: 14mm 0 0;
+  letter-spacing: -1.2px;
+}
+.capa-sub {
+  font-size: 14.5pt;
+  font-weight: 300;
+  opacity: 0.93;
+  margin-top: 7mm;
+  max-width: 128mm;
+  line-height: 1.5;
+}
+.capa-regua {
+  width: 34mm; height: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  margin: 12mm 0;
+  border-radius: 2px;
+}
+.capa-nums {
+  display: flex;
+  gap: 14mm;
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+}
+.capa-num b {
+  display: block;
+  font-size: 25pt;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.capa-num span {
+  font-size: 8.6pt;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  opacity: 0.78;
+}
+.capa-rodape {
+  margin-top: 12mm;
+  padding-top: 6mm;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  font-size: 9.2pt;
+  opacity: 0.85;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------- sumário */
+
+.sumario { page-break-after: always; }
+.sumario ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: cap;
+}
+.sumario > ol > li {
+  counter-increment: cap;
+  border-bottom: 1px solid var(--linha);
+  padding: 5.5px 0;
+  font-size: 11pt;
+  font-weight: 600;
+  color: var(--grafite);
+}
+.sumario > ol > li::before {
+  content: counter(cap) ".";
+  color: var(--azul);
+  font-weight: 700;
+  display: inline-block;
+  width: 9mm;
+}
+/* subitens em linha, separados por ponto médio — cabe tudo numa página */
+.sumario ul {
+  list-style: none;
+  padding: 1.5px 0 0 9mm;
+  margin: 0;
+  font-weight: 400;
+  font-size: 9.2pt;
+  color: var(--suave);
+  line-height: 1.45;
+}
+.sumario ul li { display: inline; }
+.sumario ul li + li::before { content: " · "; color: var(--tenue); }
+
+/* ---------------------------------------------------------- títulos */
+
+h1 {
+  font-size: 21pt;
+  color: var(--azul-tinta);
+  margin: 0 0 2mm;
+  padding-bottom: 3mm;
+  border-bottom: 2.5px solid var(--azul);
+  page-break-before: always;
+  page-break-after: avoid;
+  letter-spacing: -0.4px;
+}
+h1 .cap {
+  display: block;
+  font-size: 8.6pt;
+  letter-spacing: 2.6px;
+  color: var(--tenue);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 2mm;
+  letter-spacing: 2.6px;
+}
+h1.sem-quebra { page-break-before: auto; }
+
+h2 {
+  font-size: 13.6pt;
+  color: var(--grafite);
+  margin: 9mm 0 3mm;
+  page-break-after: avoid;
+  letter-spacing: -0.2px;
+}
+h3 {
+  font-size: 11.2pt;
+  color: var(--azul-escuro);
+  margin: 6mm 0 2mm;
+  page-break-after: avoid;
+}
+h4 {
+  font-size: 10pt;
+  color: var(--grafite);
+  margin: 4mm 0 1.5mm;
+  page-break-after: avoid;
+}
+
+p { margin: 0 0 3mm; }
+p.intro {
+  font-size: 11.4pt;
+  color: var(--suave);
+  line-height: 1.62;
+  margin-bottom: 6mm;
+}
+
+a { color: var(--azul-escuro); text-decoration: none; }
+
+/* ---------------------------------------------------------- tabelas */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9.1pt;
+  page-break-inside: auto;
+}
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; }
+th {
+  background: var(--fundo-suave);
+  color: var(--grafite);
+  text-align: left;
+  font-weight: 600;
+  padding: 5.5px 8px;
+  border-bottom: 1.5px solid var(--linha);
+  font-size: 8.6pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+td {
+  padding: 5.5px 8px;
+  border-bottom: 1px solid var(--linha);
+  vertical-align: top;
+}
+td code, th code { font-size: 8.4pt; }
+tbody tr:nth-child(even) td { background: #fbfcfe; }
+table.compacta { font-size: 8.5pt; }
+table.compacta td, table.compacta th { padding: 4px 7px; }
+
+/* ---------------------------------------------------------- código */
+
+code {
+  font-family: "Cascadia Mono", "SF Mono", Consolas, "Liberation Mono", monospace;
+  font-size: 8.8pt;
+  background: #eef2f8;
+  color: var(--azul-tinta);
+  padding: 1px 4.5px;
+  border-radius: 3px;
+}
+pre {
+  background: #10151f;
+  color: #dfe6f0;
+  padding: 4mm 5mm;
+  border-radius: 5px;
+  font-size: 8.5pt;
+  line-height: 1.55;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  page-break-inside: avoid;
+  margin: 3mm 0 5mm;
+}
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+pre .cmt { color: #7d8da5; }
+pre .kw  { color: #79b8ff; }
+pre .str { color: #9ae6a0; }
+
+/* ---------------------------------------------------------- blocos */
+
+.destaque {
+  background: var(--fundo-suave);
+  border-left: 3.5px solid var(--azul);
+  padding: 4mm 5mm;
+  margin: 4mm 0 5mm;
+  border-radius: 0 5px 5px 0;
+  page-break-inside: avoid;
+}
+.destaque.atencao { border-left-color: var(--ambar); background: #fffbf0; }
+.destaque.nota    { border-left-color: var(--roxo);  background: #f9f6ff; }
+.destaque p:last-child { margin-bottom: 0; }
+.destaque .rotulo {
+  display: block;
+  font-size: 8.2pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--azul);
+  margin-bottom: 1.5mm;
+}
+.destaque.atencao .rotulo { color: var(--ambar); }
+.destaque.nota .rotulo    { color: var(--roxo); }
+
+/* cartões de métrica */
+.cartoes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3mm;
+  margin: 4mm 0 6mm;
+  page-break-inside: avoid;
+}
+.cartoes.tres { grid-template-columns: repeat(3, 1fr); }
+.cartao {
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  padding: 3.5mm 4mm;
+  background: #fff;
+  border-top: 3px solid var(--azul);
+}
+.cartao b {
+  display: block;
+  font-size: 16pt;
+  color: var(--azul-tinta);
+  line-height: 1.15;
+  font-weight: 700;
+}
+.cartao span {
+  display: block;
+  font-size: 8.2pt;
+  color: var(--suave);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 1mm;
+}
+.cartao small {
+  display: block;
+  font-size: 8.4pt;
+  color: var(--tenue);
+  margin-top: 1.5mm;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* selos */
+.selo {
+  display: inline-block;
+  font-size: 7.6pt;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.6px;
+  vertical-align: 1px;
+}
+.selo.get    { background: #e6f4ff; color: #0958d9; }
+.selo.post   { background: #e8f8ef; color: #12a150; }
+.selo.patch  { background: #fff4e0; color: #ad6800; }
+.selo.delete { background: #ffefe8; color: #cf1322; }
+.selo.admin  { background: #f4edff; color: #531dab; }
+.selo.pub    { background: #e8f8ef; color: #12a150; }
+.selo.assoc  { background: #eaf1ff; color: #0958d9; }
+
+ul.lista, ol.lista { margin: 0 0 4mm; padding-left: 5mm; }
+ul.lista li, ol.lista li { margin-bottom: 1.6mm; }
+
+.duas-colunas { column-count: 2; column-gap: 8mm; }
+
+figure { margin: 4mm 0 6mm; page-break-inside: avoid; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption {
+  font-size: 8.4pt;
+  color: var(--tenue);
+  margin-top: 2mm;
+  text-align: center;
+  font-style: italic;
+}
+
+hr.fina { border: none; border-top: 1px solid var(--linha); margin: 6mm 0; }
+
+.rodape-doc {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--linha);
+  font-size: 8.4pt;
+  color: var(--tenue);
+  text-align: center;
+}

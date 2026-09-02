@@ -1,0 +1,2824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>DigitaisBR — Documentação da Plataforma</title>
+<style>
+/* ============================================================
+   DigitaisBR — folha de estilo da documentação (impressão A4)
+   ============================================================ */
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 16mm 16mm;
+}
+@page :first {
+  margin: 0;
+}
+
+:root {
+  --azul: #1677ff;
+  --azul-escuro: #0958d9;
+  --azul-tinta: #002c8c;
+  --grafite: #1f2430;
+  --texto: #2b3038;
+  --suave: #5b6472;
+  --tenue: #8c94a3;
+  --linha: #e3e7ee;
+  --fundo-suave: #f6f8fb;
+  --verde: #12a150;
+  --ambar: #d48806;
+  --vermelho: #d4380d;
+  --roxo: #722ed1;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 10.2pt;
+  line-height: 1.62;
+  color: var(--texto);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------- capa */
+
+.capa {
+  height: 297mm;
+  padding: 34mm 24mm 20mm;
+  background: linear-gradient(158deg, #062a63 0%, #0d47a1 46%, #1677ff 100%);
+  color: #fff;
+  page-break-after: always;
+  position: relative;
+  /* clipa o círculo decorativo: sem isto ele transborda e o Chromium
+     reduz a escala da página inteira para caber */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.capa::after {
+  content: "";
+  position: absolute;
+  right: -60mm; top: 96mm;
+  width: 170mm; height: 170mm;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.055);
+}
+.capa-marca {
+  font-size: 12pt;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  opacity: 0.82;
+  font-weight: 600;
+}
+.capa-titulo {
+  font-size: 40pt;
+  line-height: 1.06;
+  font-weight: 700;
+  margin: 14mm 0 0;
+  letter-spacing: -1.2px;
+}
+.capa-sub {
+  font-size: 14.5pt;
+  font-weight: 300;
+  opacity: 0.93;
+  margin-top: 7mm;
+  max-width: 128mm;
+  line-height: 1.5;
+}
+.capa-regua {
+  width: 34mm; height: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  margin: 12mm 0;
+  border-radius: 2px;
+}
+.capa-nums {
+  display: flex;
+  gap: 14mm;
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+}
+.capa-num b {
+  display: block;
+  font-size: 25pt;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.capa-num span {
+  font-size: 8.6pt;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  opacity: 0.78;
+}
+.capa-rodape {
+  margin-top: 12mm;
+  padding-top: 6mm;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  font-size: 9.2pt;
+  opacity: 0.85;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------- sumário */
+
+.sumario { page-break-after: always; }
+.sumario ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: cap;
+}
+.sumario > ol > li {
+  counter-increment: cap;
+  border-bottom: 1px solid var(--linha);
+  padding: 5.5px 0;
+  font-size: 11pt;
+  font-weight: 600;
+  color: var(--grafite);
+}
+.sumario > ol > li::before {
+  content: counter(cap) ".";
+  color: var(--azul);
+  font-weight: 700;
+  display: inline-block;
+  width: 9mm;
+}
+/* subitens em linha, separados por ponto médio — cabe tudo numa página */
+.sumario ul {
+  list-style: none;
+  padding: 1.5px 0 0 9mm;
+  margin: 0;
+  font-weight: 400;
+  font-size: 9.2pt;
+  color: var(--suave);
+  line-height: 1.45;
+}
+.sumario ul li { display: inline; }
+.sumario ul li + li::before { content: " · "; color: var(--tenue); }
+
+/* ---------------------------------------------------------- títulos */
+
+h1 {
+  font-size: 21pt;
+  color: var(--azul-tinta);
+  margin: 0 0 2mm;
+  padding-bottom: 3mm;
+  border-bottom: 2.5px solid var(--azul);
+  page-break-before: always;
+  page-break-after: avoid;
+  letter-spacing: -0.4px;
+}
+h1 .cap {
+  display: block;
+  font-size: 8.6pt;
+  letter-spacing: 2.6px;
+  color: var(--tenue);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 2mm;
+  letter-spacing: 2.6px;
+}
+h1.sem-quebra { page-break-before: auto; }
+
+h2 {
+  font-size: 13.6pt;
+  color: var(--grafite);
+  margin: 9mm 0 3mm;
+  page-break-after: avoid;
+  letter-spacing: -0.2px;
+}
+h3 {
+  font-size: 11.2pt;
+  color: var(--azul-escuro);
+  margin: 6mm 0 2mm;
+  page-break-after: avoid;
+}
+h4 {
+  font-size: 10pt;
+  color: var(--grafite);
+  margin: 4mm 0 1.5mm;
+  page-break-after: avoid;
+}
+
+p { margin: 0 0 3mm; }
+p.intro {
+  font-size: 11.4pt;
+  color: var(--suave);
+  line-height: 1.62;
+  margin-bottom: 6mm;
+}
+
+a { color: var(--azul-escuro); text-decoration: none; }
+
+/* ---------------------------------------------------------- tabelas */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9.1pt;
+  page-break-inside: auto;
+}
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; }
+th {
+  background: var(--fundo-suave);
+  color: var(--grafite);
+  text-align: left;
+  font-weight: 600;
+  padding: 5.5px 8px;
+  border-bottom: 1.5px solid var(--linha);
+  font-size: 8.6pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+td {
+  padding: 5.5px 8px;
+  border-bottom: 1px solid var(--linha);
+  vertical-align: top;
+}
+td code, th code { font-size: 8.4pt; }
+tbody tr:nth-child(even) td { background: #fbfcfe; }
+table.compacta { font-size: 8.5pt; }
+table.compacta td, table.compacta th { padding: 4px 7px; }
+
+/* ---------------------------------------------------------- código */
+
+code {
+  font-family: "Cascadia Mono", "SF Mono", Consolas, "Liberation Mono", monospace;
+  font-size: 8.8pt;
+  background: #eef2f8;
+  color: var(--azul-tinta);
+  padding: 1px 4.5px;
+  border-radius: 3px;
+}
+pre {
+  background: #10151f;
+  color: #dfe6f0;
+  padding: 4mm 5mm;
+  border-radius: 5px;
+  font-size: 8.5pt;
+  line-height: 1.55;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  page-break-inside: avoid;
+  margin: 3mm 0 5mm;
+}
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+pre .cmt { color: #7d8da5; }
+pre .kw  { color: #79b8ff; }
+pre .str { color: #9ae6a0; }
+
+/* ---------------------------------------------------------- blocos */
+
+.destaque {
+  background: var(--fundo-suave);
+  border-left: 3.5px solid var(--azul);
+  padding: 4mm 5mm;
+  margin: 4mm 0 5mm;
+  border-radius: 0 5px 5px 0;
+  page-break-inside: avoid;
+}
+.destaque.atencao { border-left-color: var(--ambar); background: #fffbf0; }
+.destaque.nota    { border-left-color: var(--roxo);  background: #f9f6ff; }
+.destaque p:last-child { margin-bottom: 0; }
+.destaque .rotulo {
+  display: block;
+  font-size: 8.2pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--azul);
+  margin-bottom: 1.5mm;
+}
+.destaque.atencao .rotulo { color: var(--ambar); }
+.destaque.nota .rotulo    { color: var(--roxo); }
+
+/* cartões de métrica */
+.cartoes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3mm;
+  margin: 4mm 0 6mm;
+  page-break-inside: avoid;
+}
+.cartoes.tres { grid-template-columns: repeat(3, 1fr); }
+.cartao {
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  padding: 3.5mm 4mm;
+  background: #fff;
+  border-top: 3px solid var(--azul);
+}
+.cartao b {
+  display: block;
+  font-size: 16pt;
+  color: var(--azul-tinta);
+  line-height: 1.15;
+  font-weight: 700;
+}
+.cartao span {
+  display: block;
+  font-size: 8.2pt;
+  color: var(--suave);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 1mm;
+}
+.cartao small {
+  display: block;
+  font-size: 8.4pt;
+  color: var(--tenue);
+  margin-top: 1.5mm;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* selos */
+.selo {
+  display: inline-block;
+  font-size: 7.6pt;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.6px;
+  vertical-align: 1px;
+}
+.selo.get    { background: #e6f4ff; color: #0958d9; }
+.selo.post   { background: #e8f8ef; color: #12a150; }
+.selo.patch  { background: #fff4e0; color: #ad6800; }
+.selo.delete { background: #ffefe8; color: #cf1322; }
+.selo.admin  { background: #f4edff; color: #531dab; }
+.selo.pub    { background: #e8f8ef; color: #12a150; }
+.selo.assoc  { background: #eaf1ff; color: #0958d9; }
+
+ul.lista, ol.lista { margin: 0 0 4mm; padding-left: 5mm; }
+ul.lista li, ol.lista li { margin-bottom: 1.6mm; }
+
+.duas-colunas { column-count: 2; column-gap: 8mm; }
+
+figure { margin: 4mm 0 6mm; page-break-inside: avoid; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption {
+  font-size: 8.4pt;
+  color: var(--tenue);
+  margin-top: 2mm;
+  text-align: center;
+  font-style: italic;
+}
+
+hr.fina { border: none; border-top: 1px solid var(--linha); margin: 6mm 0; }
+
+.rodape-doc {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--linha);
+  font-size: 8.4pt;
+  color: var(--tenue);
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<!-- ============================================================ CAPA -->
+<div class="capa">
+  <div class="capa-marca">DigitaisBR</div>
+  <h1 class="capa-titulo" style="page-break-before:auto;border:none;color:#fff">Documentação<br>da Plataforma</h1>
+  <div class="capa-regua"></div>
+  <div class="capa-sub">
+    Associação de criadores digitais — arquitetura, modelo de dados, regras de negócio,
+    interface, capacidade medida, análise de segurança e guia de publicação.
+  </div>
+
+  <div class="capa-nums">
+    <div class="capa-num"><b>37</b><span>tabelas</span></div>
+    <div class="capa-num"><b>170</b><span>rotas</span></div>
+    <div class="capa-num"><b>40</b><span>telas</span></div>
+    <div class="capa-num"><b>77</b><span>testes e2e</span></div>
+  </div>
+
+  <div class="capa-rodape">
+    <span>Versão 1.1 · Agosto de 2026</span>
+    <span>NestJS · Prisma · PostgreSQL · React</span>
+  </div>
+</div>
+
+<!-- ============================================================ SUMÁRIO -->
+<div class="sumario">
+  <h1 class="sem-quebra"><span class="cap">Índice</span>Sumário</h1>
+  <ol>
+    <li>Visão geral do produto
+      <ul><li>O que é a DigitaisBR</li><li>As duas áreas</li><li>Os três planos</li><li>Como o dinheiro circula</li></ul></li>
+    <li>Arquitetura
+      <ul><li>Visão em camadas</li><li>Stack e escolhas</li><li>Estrutura do código</li><li>Origem do domínio</li></ul></li>
+    <li>Autenticação e autorização
+      <ul><li>Fluxo de login</li><li>Tokens e rotação</li><li>Os quatro guards</li><li>Matriz de permissões</li></ul></li>
+    <li>Modelo de dados
+      <ul><li>Mapa das 37 tabelas</li><li>Diagrama de relacionamentos</li><li>Decisões de modelagem</li><li>Enums</li></ul></li>
+    <li>Regras de negócio
+      <ul><li>Ciclo de vida da venda</li><li>Cálculo da comissão</li><li>Cupons</li><li>Saques e saldo</li><li>Limites por plano</li></ul></li>
+    <li>Módulos funcionais
+      <ul><li>Área administrativa</li><li>Portal do associado</li><li>Área pública</li></ul></li>
+    <li>Referência da API
+      <ul><li>Convenções</li><li>Paginação, busca e filtros</li><li>Erros</li><li>As 170 rotas</li></ul></li>
+    <li>A interface
+      <ul><li>Tecnologias</li><li>As três áreas · 40 telas</li><li>Decisões estruturais</li><li>Identidade visual</li></ul></li>
+    <li>Como foi desenvolvido
+      <ul><li>As cinco etapas</li><li>Pipeline reexecutável</li><li>O que a conferência revelou</li></ul></li>
+    <li>Escalabilidade e capacidade
+      <ul><li>Capacidade medida por endpoint</li><li>Comportamento sob concorrência</li><li>Quantos usuários simultâneos</li><li>Gargalo corrigido</li><li>Caminhos de crescimento</li></ul></li>
+    <li>Análise de segurança
+      <ul><li>Testes ofensivos executados</li><li>Controles implementados</li><li>Vulnerabilidade corrigida</li><li>Pendências</li></ul></li>
+    <li>Dados e fidelidade
+      <ul><li>Pipeline de extração</li><li>Conteúdo do seed</li><li>Conferência com as telas originais</li></ul></li>
+    <li>Qualidade e testes
+      <ul><li>Cobertura da suíte</li><li>Como executar</li></ul></li>
+    <li>Operação
+      <ul><li>Subir o ambiente</li><li>Variáveis</li><li>Migrations</li><li>Checklist</li></ul></li>
+    <li>Publicar na internet
+      <ul><li>Arquitetura de produção</li><li>Checklist obrigatório</li><li>Passo a passo</li><li>Estimativa de infraestrutura</li></ul></li>
+  </ol>
+</div>
+
+<!-- ============================================================ 1 -->
+<h1><span class="cap">Capítulo 1</span>Visão geral do produto</h1>
+
+<p class="intro">
+  A DigitaisBR é uma plataforma de <strong>associação de criadores digitais</strong>. Ela conecta
+  três partes: os <em>associados</em> (influenciadores que recomendam e vendem produtos), os
+  <em>parceiros</em> (empresas que oferecem produtos e benefícios) e a <em>administração</em>,
+  que cura o catálogo, liquida comissões e sustenta a operação.
+</p>
+
+<p>
+  O modelo de receita tem duas pernas. A primeira é a <strong>assinatura mensal</strong>: cada
+  associado paga por um plano (Básico, Intermediário ou Avançado), o que gera receita recorrente
+  previsível. A segunda é a <strong>venda por indicação</strong>: cada associado monta uma loja
+  virtual com produtos do catálogo, divulga links rastreáveis, e recebe uma comissão percentual
+  sobre o que vende.
+</p>
+
+<h2>1.1 As duas áreas</h2>
+
+<p>
+  O sistema se divide em duas experiências distintas, com autorizações separadas.
+</p>
+
+<table>
+  <thead>
+    <tr><th style="width:22%">Área</th><th style="width:16%">Quem acessa</th><th>O que faz</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Administrativa</strong></td>
+      <td><span class="selo admin">ADMIN</span></td>
+      <td>Cadastra associados e produtos, cura o catálogo, acompanha vendas, aprova e liquida
+          comissões, gerencia parceiros e benefícios, publica conteúdo, modera a comunidade,
+          atende o suporte, dispara campanhas e acompanha o financeiro (DRE, fluxo de caixa, MRR).</td>
+    </tr>
+    <tr>
+      <td><strong>Portal do associado</strong></td>
+      <td><span class="selo assoc">ASSOCIADO</span></td>
+      <td>Monta e personaliza a própria loja, escolhe produtos do marketplace, cria cupons,
+          gera links de afiliado, acompanha vendas e comissões, solicita saques, resgata
+          benefícios, consome conteúdo, participa da comunidade, abre chamados e pede
+          assessoria jurídica ou contábil.</td>
+    </tr>
+    <tr>
+      <td><strong>Pública</strong></td>
+      <td><span class="selo pub">SEM LOGIN</span></td>
+      <td>Vitrine da loja de cada associado, perfil público do criador e o redirecionador
+          dos links de afiliado.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>1.2 Os três planos</h2>
+
+<p>
+  O plano é o eixo de monetização e, ao mesmo tempo, o mecanismo de controle de acesso: ele
+  define quantos produtos cabem na loja, quais benefícios e conteúdos ficam liberados, quanto
+  de comissão extra o associado ganha e que nível de suporte recebe.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:20%">Plano</th><th style="width:14%">Mensalidade</th>
+      <th style="width:14%">Produtos</th><th style="width:14%">Comissão extra</th>
+      <th style="width:16%">Suporte</th><th>Destaques</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Básico</strong></td><td>R$ 49,90</td><td>até 20</td><td>—</td><td>Email</td>
+      <td>Benefícios essenciais, conteúdos educacionais, comunidade, loja padrão</td>
+    </tr>
+    <tr>
+      <td><strong>Intermediário</strong></td><td>R$ 99,90</td><td>até 100</td><td>+2%</td><td>Chat</td>
+      <td>Tudo do Básico, mais suporte jurídico e contábil, personalização visual da loja e
+          relatórios avançados</td>
+    </tr>
+    <tr>
+      <td><strong>Avançado</strong></td><td>R$ 199,90</td><td>ilimitado</td><td>+5%</td><td>Prioritário</td>
+      <td>Tudo do Intermediário, mais produtos exclusivos, assessoria completa e consultoria mensal</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="destaque nota">
+  <span class="rotulo">Como o plano gateia o acesso</span>
+  <p>
+    Produtos, benefícios e conteúdos carregam um campo <code>planoMinimo</code>. Quando um
+    associado do Básico lista o catálogo, os itens acima do plano dele não somem — voltam
+    marcados com <code>bloqueado: true</code>, junto com o plano exigido. Isso reproduz as
+    seções “Disponíveis” e “Bloqueados” das telas e cria o gancho natural de upgrade.
+  </p>
+</div>
+
+<h2>1.3 Como o dinheiro circula</h2>
+
+<p>
+  O fluxo abaixo é o coração do negócio, e cada seta corresponde a uma operação real da API.
+</p>
+
+<figure>
+<svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="seta" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/>
+    </marker>
+  </defs>
+
+  <rect x="8"   y="28" width="128" height="54" rx="7" fill="#e6f4ff" stroke="#1677ff" stroke-width="1.4"/>
+  <text x="72"  y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#002c8c">Cliente final</text>
+  <text x="72"  y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">compra pelo link</text>
+
+  <rect x="180" y="28" width="128" height="54" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.2"/>
+  <text x="244" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2430">Loja do associado</text>
+  <text x="244" y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">vitrine + cupom</text>
+
+  <rect x="352" y="28" width="128" height="54" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.2"/>
+  <text x="416" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2430">Venda</text>
+  <text x="416" y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">POST /vendas</text>
+
+  <rect x="524" y="28" width="128" height="54" rx="7" fill="#e8f8ef" stroke="#12a150" stroke-width="1.4"/>
+  <text x="588" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#0b6b36">Comissão</text>
+  <text x="588" y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">gerada na hora</text>
+
+  <line x1="138" y1="55" x2="176" y2="55" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <line x1="310" y1="55" x2="348" y2="55" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <line x1="482" y1="55" x2="520" y2="55" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+
+  <line x1="588" y1="86" x2="588" y2="120" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <rect x="524" y="126" width="128" height="50" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.2"/>
+  <text x="588" y="146" text-anchor="middle" font-size="11" font-weight="600" fill="#1f2430">Liquidação</text>
+  <text x="588" y="162" text-anchor="middle" font-size="9" fill="#5b6472">admin paga em lote</text>
+
+  <line x1="588" y1="180" x2="588" y2="200" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <rect x="524" y="206" width="128" height="38" rx="7" fill="#e6f4ff" stroke="#1677ff" stroke-width="1.4"/>
+  <text x="588" y="230" text-anchor="middle" font-size="11" font-weight="600" fill="#002c8c">Saque (PIX / TED)</text>
+
+  <rect x="8"   y="126" width="300" height="50" rx="7" fill="#f4edff" stroke="#722ed1" stroke-width="1.3"/>
+  <text x="158" y="146" text-anchor="middle" font-size="11" font-weight="600" fill="#3b0e8f">Assinatura mensal do plano</text>
+  <text x="158" y="162" text-anchor="middle" font-size="9" fill="#5b6472">receita recorrente — compõe o MRR</text>
+
+  <rect x="8"   y="196" width="472" height="48" rx="7" fill="#fffbf0" stroke="#d48806" stroke-width="1.3"/>
+  <text x="244" y="216" text-anchor="middle" font-size="11" font-weight="600" fill="#8c5800">Lançamentos financeiros</text>
+  <text x="244" y="232" text-anchor="middle" font-size="9" fill="#5b6472">entradas e saídas alimentam o DRE, o fluxo de caixa e o saldo</text>
+
+  <line x1="352" y1="150" x2="352" y2="150" stroke="none"/>
+  <line x1="416" y1="86" x2="416" y2="192" stroke="#c8d1e0" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#seta)"/>
+  <line x1="158" y1="180" x2="158" y2="192" stroke="#c8d1e0" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#seta)"/>
+</svg>
+<figcaption>Do clique do cliente ao saque do associado — e o que cada etapa registra no financeiro.</figcaption>
+</figure>
+
+<!-- ============================================================ 2 -->
+<h1><span class="cap">Capítulo 2</span>Arquitetura</h1>
+
+<p class="intro">
+  O backend é uma API REST em NestJS, organizada por domínio de negócio, com PostgreSQL
+  acessado via Prisma. Não há estado em memória: toda a verdade vive no banco, o que permite
+  rodar várias instâncias atrás de um balanceador sem sessão pegajosa.
+</p>
+
+<h2>2.1 Visão em camadas</h2>
+
+<figure>
+<svg viewBox="0 0 760 322" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="8" y="8" width="744" height="52" rx="7" fill="#e6f4ff" stroke="#1677ff" stroke-width="1.4"/>
+  <text x="24" y="30" font-size="11.5" font-weight="700" fill="#002c8c">Clientes</text>
+  <text x="24" y="47" font-size="9.5" fill="#5b6472">Painel administrativo · Portal do associado · Vitrines públicas · Swagger UI</text>
+
+  <line x1="380" y1="60" x2="380" y2="76" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta2)"/>
+  <defs>
+    <marker id="seta2" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/>
+    </marker>
+  </defs>
+
+  <rect x="8" y="80" width="744" height="60" rx="7" fill="#fffbf0" stroke="#d48806" stroke-width="1.4"/>
+  <text x="24" y="102" font-size="11.5" font-weight="700" fill="#8c5800">Camada transversal</text>
+  <text x="24" y="119" font-size="9.5" fill="#5b6472">Throttler (300 req/min) → JwtAuthGuard → RolesGuard → PlanoGuard</text>
+  <text x="24" y="133" font-size="9.5" fill="#5b6472">ValidationPipe (whitelist + rejeição de campos desconhecidos) · Helmet · CORS · filtros de exceção</text>
+
+  <line x1="380" y1="140" x2="380" y2="156" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta2)"/>
+
+  <rect x="8" y="160" width="744" height="84" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.3"/>
+  <text x="24" y="182" font-size="11.5" font-weight="700" fill="#1f2430">17 módulos de domínio</text>
+  <text x="24" y="200" font-size="9.3" fill="#5b6472">auth · planos · associados · catalogo · lojas · vendas · comissoes · financeiro · parceiros</text>
+  <text x="24" y="215" font-size="9.3" fill="#5b6472">conteudos · comunidade · suporte · servicos · notificacoes · gamificacao · dashboard · portal</text>
+  <text x="24" y="234" font-size="9" fill="#8c94a3" font-style="italic">cada módulo = controller (HTTP) + service (regra de negócio) + DTOs (contrato validado)</text>
+
+  <line x1="380" y1="244" x2="380" y2="260" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta2)"/>
+
+  <rect x="8" y="264" width="366" height="50" rx="7" fill="#f4edff" stroke="#722ed1" stroke-width="1.3"/>
+  <text x="24" y="286" font-size="11.5" font-weight="700" fill="#3b0e8f">PrismaService</text>
+  <text x="24" y="303" font-size="9.3" fill="#5b6472">cliente tipado, transações, agregações</text>
+
+  <rect x="386" y="264" width="366" height="50" rx="7" fill="#e8f8ef" stroke="#12a150" stroke-width="1.3"/>
+  <text x="402" y="286" font-size="11.5" font-weight="700" fill="#0b6b36">PostgreSQL 16</text>
+  <text x="402" y="303" font-size="9.3" fill="#5b6472">37 tabelas · 23 enums · constraints e índices</text>
+</svg>
+<figcaption>Toda requisição atravessa a mesma cadeia antes de tocar a regra de negócio.</figcaption>
+</figure>
+
+<h2>2.2 Stack e por que cada peça</h2>
+
+<table>
+  <thead><tr><th style="width:24%">Peça</th><th style="width:14%">Versão</th><th>Motivo da escolha</th></tr></thead>
+  <tbody>
+    <tr><td><strong>NestJS</strong></td><td>11</td>
+        <td>Modularidade explícita e injeção de dependências. Com 17 domínios, a estrutura
+            imposta pelo framework evita que o projeto vire um punhado de controllers soltos.</td></tr>
+    <tr><td><strong>Prisma</strong></td><td>6</td>
+        <td>Schema declarativo como fonte única da verdade, tipos gerados a partir dele e
+            migrations versionadas. O <code>groupBy</code> e o <code>aggregate</code> tipados
+            resolvem quase toda a camada de dashboards sem SQL manual.</td></tr>
+    <tr><td><strong>PostgreSQL</strong></td><td>16</td>
+        <td>Necessário por três recursos usados de fato: <code>Decimal</code> exato para dinheiro,
+            arrays nativos (recursos do plano, especialidades, público-alvo) e enums no banco.</td></tr>
+    <tr><td><strong>JWT + Passport</strong></td><td>—</td>
+        <td>Autenticação sem estado, com refresh token rotativo guardado hasheado no banco.</td></tr>
+    <tr><td><strong>class-validator</strong></td><td>0.14</td>
+        <td>Validação declarativa nos DTOs, que o Swagger reaproveita para documentar o contrato.</td></tr>
+    <tr><td><strong>Swagger</strong></td><td>11</td>
+        <td>Documentação viva gerada dos próprios decoradores — nunca desatualiza em relação ao código.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.3 Estrutura do código</h2>
+
+<pre><code>apps/api/
+├── prisma/
+│   ├── schema.prisma          <span class="cmt">37 modelos, 23 enums — a fonte da verdade</span>
+│   ├── migrations/            <span class="cmt">histórico versionado do banco</span>
+│   ├── seed.ts                <span class="cmt">carrega o dataset real nas tabelas</span>
+│   └── seed-data/*.json       <span class="cmt">24 arquivos, 374 registros extraídos</span>
+├── src/
+│   ├── main.ts                <span class="cmt">bootstrap, Swagger, CORS, Helmet, filtros globais</span>
+│   ├── app.module.ts          <span class="cmt">composição dos módulos e cadeia de guards</span>
+│   ├── common/
+│   │   ├── prisma/            <span class="cmt">PrismaService (módulo global)</span>
+│   │   ├── decorators/        <span class="cmt">@Public @Roles @PlanoMinimo @CurrentUser</span>
+│   │   ├── guards/            <span class="cmt">JwtAuthGuard RolesGuard PlanoGuard</span>
+│   │   ├── filters/           <span class="cmt">tradução de erros do Prisma para HTTP</span>
+│   │   ├── dto/               <span class="cmt">PaginationDto e PaginatedResult</span>
+│   │   └── utils/             <span class="cmt">busca textual, ordenação segura, intervalo de datas</span>
+│   └── modules/&lt;dominio&gt;/
+│       ├── *.controller.ts    <span class="cmt">rotas, autorização, documentação</span>
+│       ├── *.service.ts       <span class="cmt">regra de negócio e acesso a dados</span>
+│       ├── *.module.ts        <span class="cmt">montagem e exportação</span>
+│       └── dto/               <span class="cmt">contratos de entrada validados</span>
+└── test/                      <span class="cmt">suíte end-to-end (77 asserções)</span></code></pre>
+
+<div class="destaque">
+  <span class="rotulo">Uma regra de organização</span>
+  <p>
+    Controllers não contêm regra de negócio — apenas roteiam, autorizam e documentam. Toda
+    decisão de domínio vive no service, onde há acesso ao estado real do banco. É por isso que
+    validações como “este produto é exclusivo do plano Avançado” ficam no service e não num
+    guard: o guard não sabe qual produto está sendo pedido.
+  </p>
+</div>
+
+<h2>2.4 De onde veio o domínio</h2>
+
+<p>
+  Este backend não foi desenhado a partir de uma especificação escrita. Ele foi
+  <strong>reconstruído por engenharia reversa</strong> de 113 telas capturadas da plataforma
+  original — uma SPA React com Firebase, cujo bundle minificado não permitia recuperar o
+  código-fonte.
+</p>
+
+<p>
+  O caminho foi: capturar o HTML renderizado de cada rota → extrair as tabelas, os cards e as
+  páginas de detalhe → inferir as entidades, os campos e os relacionamentos → modelar o schema →
+  reimplementar as regras que os dados denunciavam. O script <code>tools/extract.py</code>
+  materializa esse elo e continua reexecutável.
+</p>
+
+<figure>
+<svg viewBox="0 0 760 92" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="4"   y="20" width="132" height="52" rx="6" fill="#f6f8fb" stroke="#c8d1e0"/>
+  <text x="70"  y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#1f2430">113 telas</text>
+  <text x="70"  y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">HTML capturado</text>
+
+  <rect x="160" y="20" width="132" height="52" rx="6" fill="#f6f8fb" stroke="#c8d1e0"/>
+  <text x="226" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#1f2430">extract.py</text>
+  <text x="226" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">parsing estrutural</text>
+
+  <rect x="316" y="20" width="132" height="52" rx="6" fill="#f4edff" stroke="#722ed1"/>
+  <text x="382" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#3b0e8f">24 JSONs</text>
+  <text x="382" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">374 registros</text>
+
+  <rect x="472" y="20" width="132" height="52" rx="6" fill="#e6f4ff" stroke="#1677ff"/>
+  <text x="538" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#002c8c">seed.ts</text>
+  <text x="538" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">mapeia p/ o schema</text>
+
+  <rect x="628" y="20" width="128" height="52" rx="6" fill="#e8f8ef" stroke="#12a150"/>
+  <text x="692" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#0b6b36">PostgreSQL</text>
+  <text x="692" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">37 tabelas</text>
+
+  <line x1="138" y1="46" x2="156" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <line x1="294" y1="46" x2="312" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <line x1="450" y1="46" x2="468" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <line x1="606" y1="46" x2="624" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <defs><marker id="seta3" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+</svg>
+<figcaption>O pipeline que transformou telas capturadas em um banco de dados relacional.</figcaption>
+</figure>
+
+<!-- ============================================================ 3 -->
+<h1><span class="cap">Capítulo 3</span>Autenticação e autorização</h1>
+
+<p class="intro">
+  A segurança se apoia em quatro camadas independentes, aplicadas em cadeia a toda requisição.
+  Cada uma responde a uma pergunta diferente: quantas requisições, quem é, que papel tem, e
+  qual plano assina.
+</p>
+
+<h2>3.1 Fluxo de autenticação</h2>
+
+<p>
+  A plataforma original protegia o acesso com um código antes mesmo do login. Esse gate foi
+  preservado como <code>POST /auth/codigo-acesso</code>, e o fluxo completo é:
+</p>
+
+<figure>
+<svg viewBox="0 0 760 208" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="s4" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+
+  <rect x="6"   y="16" width="136" height="46" rx="6" fill="#f6f8fb" stroke="#c8d1e0"/>
+  <text x="74"  y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#1f2430">Código de acesso</text>
+  <text x="74"  y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">POST /auth/codigo-acesso</text>
+
+  <rect x="166" y="16" width="136" height="46" rx="6" fill="#e6f4ff" stroke="#1677ff"/>
+  <text x="234" y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#002c8c">Login</text>
+  <text x="234" y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">email + senha (bcrypt)</text>
+
+  <rect x="326" y="16" width="180" height="46" rx="6" fill="#e8f8ef" stroke="#12a150"/>
+  <text x="416" y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#0b6b36">access token · 15 min</text>
+  <text x="416" y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">JWT assinado, enviado no Bearer</text>
+
+  <rect x="530" y="16" width="224" height="46" rx="6" fill="#f4edff" stroke="#722ed1"/>
+  <text x="642" y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#3b0e8f">refresh token · 7 dias</text>
+  <text x="642" y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">aleatório, guardado como SHA-256</text>
+
+  <line x1="144" y1="39" x2="162" y2="39" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <line x1="304" y1="39" x2="322" y2="39" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <line x1="508" y1="39" x2="526" y2="39" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+
+  <line x1="416" y1="66" x2="416" y2="86" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <rect x="230" y="90" width="372" height="42" rx="6" fill="#fffbf0" stroke="#d48806"/>
+  <text x="416" y="108" text-anchor="middle" font-size="9.6" font-weight="600" fill="#8c5800">Access expirou → POST /auth/refresh</text>
+  <text x="416" y="123" text-anchor="middle" font-size="8.3" fill="#5b6472">o refresh usado é revogado e um novo par é emitido (rotação)</text>
+
+  <line x1="416" y1="136" x2="416" y2="156" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <rect x="150" y="160" width="532" height="42" rx="6" fill="#ffefe8" stroke="#d4380d"/>
+  <text x="416" y="178" text-anchor="middle" font-size="9.6" font-weight="600" fill="#a8280b">Logout ou troca de senha</text>
+  <text x="416" y="193" text-anchor="middle" font-size="8.3" fill="#5b6472">revoga todos os refresh tokens do usuário — derruba todas as sessões abertas</text>
+</svg>
+<figcaption>Ciclo de vida das credenciais, do gate de acesso à revogação.</figcaption>
+</figure>
+
+<h3>Decisões de segurança tomadas</h3>
+
+<table>
+  <thead><tr><th style="width:34%">Decisão</th><th>Consequência prática</th></tr></thead>
+  <tbody>
+    <tr><td>Senha com <strong>bcrypt</strong> (10 rounds)</td>
+        <td>Vazamento do banco não expõe senhas em texto claro.</td></tr>
+    <tr><td>Refresh token guardado <strong>hasheado</strong></td>
+        <td>Quem lê a tabela <code>refresh_tokens</code> não consegue se passar por um usuário.</td></tr>
+    <tr><td><strong>Rotação</strong> a cada renovação</td>
+        <td>Um refresh token roubado só serve uma vez; o uso legítimo seguinte falha e denuncia o roubo.</td></tr>
+    <tr><td>Access token curto (15 min)</td>
+        <td>Reduz a janela de exploração de um token interceptado.</td></tr>
+    <tr><td>Validação do usuário <strong>a cada requisição</strong></td>
+        <td>Desativar uma conta tem efeito imediato, sem esperar o token expirar.</td></tr>
+    <tr><td>Troca de senha <strong>revoga sessões</strong></td>
+        <td>Recuperar a conta após um comprometimento realmente expulsa o invasor.</td></tr>
+    <tr><td><code>forbidNonWhitelisted</code> no ValidationPipe</td>
+        <td>Campo não declarado no DTO gera <code>400</code> — bloqueia <em>mass assignment</em>.</td></tr>
+  </tbody>
+</table>
+
+<h2>3.2 Os quatro guards</h2>
+
+<p>Registrados globalmente, executam nesta ordem para toda requisição:</p>
+
+<table>
+  <thead><tr><th style="width:22%">Guard</th><th style="width:26%">Pergunta que responde</th><th>Como se configura</th></tr></thead>
+  <tbody>
+    <tr><td><strong>ThrottlerGuard</strong></td><td>Excedeu o limite?</td>
+        <td>300 requisições por minuto, por IP. Devolve <code>429</code>.</td></tr>
+    <tr><td><strong>JwtAuthGuard</strong></td><td>Quem é você?</td>
+        <td>Exige <code>Authorization: Bearer</code>. Rotas com <code>@Public()</code> passam direto.</td></tr>
+    <tr><td><strong>RolesGuard</strong></td><td>Tem o papel certo?</td>
+        <td><code>@Roles(Role.ADMIN)</code> no controller ou no método.</td></tr>
+    <tr><td><strong>PlanoGuard</strong></td><td>O plano cobre isso?</td>
+        <td><code>@PlanoMinimo(NivelPlano.INTERMEDIARIO)</code>. Admin sempre passa.</td></tr>
+  </tbody>
+</table>
+
+<div class="destaque atencao">
+  <span class="rotulo">Onde os guards não bastam</span>
+  <p>
+    Guards decidem por metadados estáticos da rota. Regras que dependem do <em>dado sendo
+    manipulado</em> — “este produto específico é exclusivo do Avançado”, “esta loja já atingiu o
+    limite de 20 produtos do Básico”, “este chamado pertence a outro associado” — são validadas
+    no service, que tem acesso ao estado. Ignorar essa distinção é como se abrem brechas de
+    autorização horizontal.
+  </p>
+</div>
+
+<h2>3.3 Matriz de permissões</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:34%">Recurso</th><th style="width:14%">Público</th><th style="width:22%">Associado</th><th>Administrador</th></tr></thead>
+  <tbody>
+    <tr><td>Vitrine da loja · perfil público · redirecionador de link</td><td>✅ leitura</td><td>✅</td><td>✅</td></tr>
+    <tr><td>Catálogo de produtos</td><td>—</td><td>✅ com bloqueio por plano</td><td>✅ total + escrita</td></tr>
+    <tr><td>Benefícios e conteúdos</td><td>—</td><td>✅ com bloqueio por plano</td><td>✅ total + escrita</td></tr>
+    <tr><td>Própria loja, cupons, links, métricas</td><td>—</td><td>✅ escrita</td><td>✅</td></tr>
+    <tr><td>Comunidade</td><td>—</td><td>✅ publicar, curtir, comentar</td><td>✅ + fixar e moderar</td></tr>
+    <tr><td>Chamados de suporte</td><td>—</td><td>✅ só os próprios, sem notas internas</td><td>✅ todos + notas internas</td></tr>
+    <tr><td>Saques</td><td>—</td><td>✅ solicitar do próprio saldo</td><td>✅ aprovar, processar, rejeitar</td></tr>
+    <tr><td>Cadastro de associados e produtos</td><td>—</td><td>—</td><td>✅</td></tr>
+    <tr><td>Vendas, comissões, financeiro</td><td>—</td><td>— (vê os próprios via portal)</td><td>✅</td></tr>
+    <tr><td>Campanhas, parceiros, relatórios</td><td>—</td><td>—</td><td>✅</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 4 -->
+<h1><span class="cap">Capítulo 4</span>Modelo de dados</h1>
+
+<p class="intro">
+  São 37 tabelas e 23 enums, agrupadas em oito domínios. A maior parte das regras de
+  consistência foi empurrada para o banco — chaves estrangeiras, índices únicos e enums — de
+  modo que um bug na aplicação não consiga produzir um estado impossível.
+</p>
+
+<h2>4.1 Mapa das tabelas</h2>
+
+<h3>Autenticação e auditoria</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>usuarios</code></td><td>email ⟨único⟩, senhaHash, role, ativo, ultimoLogin</td>
+        <td>Credencial de acesso. Um usuário é ADMIN ou ASSOCIADO.</td></tr>
+    <tr><td><code>refresh_tokens</code></td><td>tokenHash ⟨único⟩, expiraEm, revogado</td>
+        <td>Sessões abertas. Permite revogação seletiva ou em massa.</td></tr>
+    <tr><td><code>logs_auditoria</code></td><td>acao, entidade, entidadeId, dados ⟨JSON⟩, ip</td>
+        <td>Rastro de operações sensíveis. Sobrevive à exclusão do usuário.</td></tr>
+  </tbody>
+</table>
+
+<h3>Associados e planos</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>planos</code></td><td>nivel ⟨único⟩, preco, recursos ⟨array⟩, limiteProdutos, comissaoExtraPct</td>
+        <td>Define preço e o que cada nível libera. É referenciado como plano mínimo em outras tabelas.</td></tr>
+    <tr><td><code>associados</code></td><td>handle ⟨único⟩, cpfCnpj ⟨único⟩, nicho, seguidores, engajamento, status, pontuacao</td>
+        <td>O criador de conteúdo. Relaciona-se 1:1 com usuário e 1:1 com loja.</td></tr>
+    <tr><td><code>assinaturas</code></td><td>valor, inicioEm, fimEm, ativa</td>
+        <td>Histórico de planos. Só as ativas compõem o MRR.</td></tr>
+    <tr><td><code>redes_sociais_contas</code></td><td>(associado, rede) ⟨único⟩, handle, seguidores, engajamento</td>
+        <td>Perfis conectados e suas métricas.</td></tr>
+  </tbody>
+</table>
+
+<h3>Catálogo e lojas</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>categorias_produto</code></td><td>nome ⟨único⟩, slug ⟨único⟩, cor</td><td>Taxonomia do catálogo.</td></tr>
+    <tr><td><code>produtos</code></td><td>sku ⟨único⟩, preco, comissaoPct, estoque, planoMinimoId, status</td>
+        <td>Item vendável. <code>estoque = -1</code> significa ilimitado.</td></tr>
+    <tr><td><code>lojas</code></td><td>associadoId ⟨único⟩, slug ⟨único⟩, corPrimaria, ativa, visualizacoes</td>
+        <td>Vitrine pública do associado.</td></tr>
+    <tr><td><code>loja_produtos</code></td><td>(loja, produto) ⟨único⟩, destaque, ordem</td>
+        <td>Curadoria: quais produtos o associado escolheu exibir e em que ordem.</td></tr>
+  </tbody>
+</table>
+
+<h3>Vendas e comissões</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>vendas</code></td><td>ref ⟨único⟩, quantidade, precoUnitario, desconto, total, status, dataVenda</td>
+        <td>Transação. Guarda o preço praticado no momento — mudar o produto depois não reescreve a história.</td></tr>
+    <tr><td><code>comissoes</code></td><td>vendaId ⟨único⟩, percentual, valor, status, pagoEm, saqueId</td>
+        <td>Direito do associado sobre a venda. Relação 1:1 com a venda.</td></tr>
+    <tr><td><code>cupons</code></td><td>(associado, codigo) ⟨único⟩, tipoDesconto, desconto, compraMinima, usos, limiteUsos</td>
+        <td>Desconto criado pelo associado. O contador de usos é incrementado na venda.</td></tr>
+    <tr><td><code>links_afiliado</code></td><td>codigo ⟨único⟩, cliques, conversoes, receita, comissao</td>
+        <td>Link rastreável por produto, com métricas acumuladas.</td></tr>
+    <tr><td><code>metricas_diarias</code></td><td>(associado, data) ⟨único⟩, cliques, conversoes, receita, comissao</td>
+        <td>Série pré-agregada. Evita varrer eventos brutos para montar gráficos.</td></tr>
+  </tbody>
+</table>
+
+<h3>Parceiros e benefícios</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>parceiros</code></td><td>nome ⟨único⟩, cnpj ⟨único⟩, segmento, ativo</td><td>Empresa conveniada.</td></tr>
+    <tr><td><code>beneficios</code></td><td>nome ⟨único⟩, tipo, valorLabel, planoMinimoId, utilizacoes</td>
+        <td>Vantagem oferecida: desconto, acesso, cashback ou serviço.</td></tr>
+    <tr><td><code>beneficios_usos</code></td><td>beneficioId, associadoId, usadoEm</td><td>Resgates, para medir adesão.</td></tr>
+  </tbody>
+</table>
+
+<h3>Conteúdo e comunidade</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>conteudos</code></td><td>slug ⟨único⟩, tipo, status, planoMinimoId, visualizacoes, curtidas</td>
+        <td>Material educativo: artigo, vídeo, podcast, curso ou e-book.</td></tr>
+    <tr><td><code>conteudos_interacoes</code></td><td>(conteudo, associado) ⟨único⟩, visualizado, curtido</td>
+        <td>Garante que a visualização conte uma vez por pessoa.</td></tr>
+    <tr><td><code>materiais_divulgacao</code></td><td>tipo, dimensao, arquivoUrl, textoCopy, downloads</td>
+        <td>Banners, stories, posts, vídeos e textos prontos para o associado divulgar.</td></tr>
+    <tr><td><code>categorias_comunidade</code></td><td>nome ⟨único⟩, slug ⟨único⟩, icone</td><td>Seções do fórum.</td></tr>
+    <tr><td><code>posts_comunidade</code></td><td>autorId, categoriaId, conteudo, fixado, visualizacoes</td><td>Publicação no feed.</td></tr>
+    <tr><td><code>comentarios_post</code></td><td>postId, autorId, conteudo</td><td>Respostas.</td></tr>
+    <tr><td><code>curtidas_post</code></td><td>(post, associado) ⟨único⟩</td>
+        <td>O índice único torna impossível curtir duas vezes — regra no banco, não no código.</td></tr>
+  </tbody>
+</table>
+
+<h3>Suporte e serviços</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>tickets</code></td><td>numero ⟨único⟩, categoria, prioridade, status, atribuidoAId, resolvidoEm</td><td>Chamado de atendimento.</td></tr>
+    <tr><td><code>tickets_mensagens</code></td><td>ticketId, autorId, conteudo, <strong>interna</strong></td>
+        <td>Thread da conversa. <code>interna = true</code> nunca chega ao associado.</td></tr>
+    <tr><td><code>escritorios_parceiros</code></td><td>nome ⟨único⟩, tipo, especialidades ⟨array⟩, atendimentos</td><td>Banca jurídica ou contábil conveniada.</td></tr>
+    <tr><td><code>profissionais</code></td><td>nome, especialidade, nota, avaliacoes, valorHora, disponivel</td><td>Advogado ou contador atendendo.</td></tr>
+    <tr><td><code>solicitacoes_servico</code></td><td>assunto, status, profissionalId, concluidaEm</td><td>Pedido de assessoria feito pelo associado.</td></tr>
+  </tbody>
+</table>
+
+<h3>Comunicação, financeiro e gamificação</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>notificacoes</code></td><td>associadoId ⟨anulável⟩, tipo, canal, lida, lidaEm</td>
+        <td><code>associadoId = null</code> representa um comunicado para todos.</td></tr>
+    <tr><td><code>campanhas</code></td><td>codigo ⟨único⟩, publicoAlvo ⟨array de planos⟩, enviados, aberturas, status</td>
+        <td>Disparo em massa segmentado por plano.</td></tr>
+    <tr><td><code>saques</code></td><td>valor, metodo, destino, status, concluidoEm, motivoRejeicao</td><td>Retirada de comissões.</td></tr>
+    <tr><td><code>lancamentos_financeiros</code></td><td>tipo, categoria, valor, competencia</td>
+        <td>Livro-caixa. Sustenta DRE, fluxo de caixa e saldo sem recalcular vendas.</td></tr>
+    <tr><td><code>conquistas</code></td><td>nome ⟨único⟩, meta, pontos, ordem</td><td>Catálogo de metas gamificadas.</td></tr>
+    <tr><td><code>conquistas_associados</code></td><td>(conquista, associado) ⟨único⟩, progresso, desbloqueada</td><td>Progresso individual.</td></tr>
+  </tbody>
+</table>
+
+<h2>4.2 Relacionamentos centrais</h2>
+
+<figure>
+<svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="rel" markerWidth="8" markerHeight="6" refX="7.5" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#8c94a3"/>
+    </marker>
+  </defs>
+  <style>
+    .ent  { fill:#fff; stroke:#1677ff; stroke-width:1.4; }
+    .ent2 { fill:#f6f8fb; stroke:#c8d1e0; stroke-width:1.2; }
+    .tit  { font-size:10px; font-weight:700; fill:#002c8c; }
+    .tit2 { font-size:10px; font-weight:700; fill:#1f2430; }
+    .cmp  { font-size:8px; fill:#5b6472; }
+    .lbl  { font-size:7.6px; fill:#8c94a3; font-style:italic; }
+    .ln   { stroke:#8c94a3; stroke-width:1.2; fill:none; }
+  </style>
+
+  <rect class="ent"  x="300" y="8"   width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="26"  text-anchor="middle">Usuario</text>
+  <text class="cmp"  x="375" y="40"  text-anchor="middle">email · senhaHash · role</text>
+  <text class="cmp"  x="375" y="52"  text-anchor="middle">ADMIN | ASSOCIADO</text>
+
+  <rect class="ent"  x="300" y="96"  width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="114" text-anchor="middle">Associado</text>
+  <text class="cmp"  x="375" y="128" text-anchor="middle">handle · nicho · status</text>
+  <text class="cmp"  x="375" y="140" text-anchor="middle">seguidores · pontuacao</text>
+
+  <rect class="ent2" x="112" y="96"  width="140" height="52" rx="6"/>
+  <text class="tit2" x="182" y="114" text-anchor="middle">Plano</text>
+  <text class="cmp"  x="182" y="128" text-anchor="middle">nivel · preco</text>
+  <text class="cmp"  x="182" y="140" text-anchor="middle">limiteProdutos</text>
+
+  <rect class="ent2" x="500" y="96"  width="150" height="52" rx="6"/>
+  <text class="tit2" x="575" y="114" text-anchor="middle">Loja</text>
+  <text class="cmp"  x="575" y="128" text-anchor="middle">slug · ativa</text>
+  <text class="cmp"  x="575" y="140" text-anchor="middle">visualizacoes</text>
+
+  <rect class="ent2" x="500" y="188" width="150" height="46" rx="6"/>
+  <text class="tit2" x="575" y="206" text-anchor="middle">LojaProduto</text>
+  <text class="cmp"  x="575" y="222" text-anchor="middle">destaque · ordem</text>
+
+  <rect class="ent2" x="500" y="272" width="150" height="52" rx="6"/>
+  <text class="tit2" x="575" y="290" text-anchor="middle">Produto</text>
+  <text class="cmp"  x="575" y="304" text-anchor="middle">sku · preco · comissaoPct</text>
+  <text class="cmp"  x="575" y="316" text-anchor="middle">estoque · planoMinimo</text>
+
+  <rect class="ent"  x="300" y="188" width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="206" text-anchor="middle">Venda</text>
+  <text class="cmp"  x="375" y="220" text-anchor="middle">ref · total · status</text>
+  <text class="cmp"  x="375" y="232" text-anchor="middle">dataVenda</text>
+
+  <rect class="ent"  x="300" y="272" width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="290" text-anchor="middle">Comissao</text>
+  <text class="cmp"  x="375" y="304" text-anchor="middle">percentual · valor</text>
+  <text class="cmp"  x="375" y="316" text-anchor="middle">status · pagoEm</text>
+
+  <rect class="ent2" x="112" y="272" width="140" height="52" rx="6"/>
+  <text class="tit2" x="182" y="290" text-anchor="middle">Cupom</text>
+  <text class="cmp"  x="182" y="304" text-anchor="middle">codigo · desconto</text>
+  <text class="cmp"  x="182" y="316" text-anchor="middle">usos / limiteUsos</text>
+
+  <rect class="ent2" x="112" y="188" width="140" height="46" rx="6"/>
+  <text class="tit2" x="182" y="206" text-anchor="middle">Assinatura</text>
+  <text class="cmp"  x="182" y="222" text-anchor="middle">valor · ativa</text>
+
+  <rect class="ent2" x="300" y="352" width="150" height="40" rx="6"/>
+  <text class="tit2" x="375" y="370" text-anchor="middle">Saque</text>
+  <text class="cmp"  x="375" y="384" text-anchor="middle">valor · metodo · status</text>
+
+  <line class="ln" x1="375" y1="60"  x2="375" y2="92"  marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="80">1:1</text>
+
+  <line class="ln" x1="256" y1="122" x2="296" y2="122" marker-end="url(#rel)"/>
+  <text class="lbl" x="260" y="116">N:1</text>
+
+  <line class="ln" x1="454" y1="122" x2="496" y2="122" marker-end="url(#rel)"/>
+  <text class="lbl" x="458" y="116">1:1</text>
+
+  <line class="ln" x1="575" y1="148" x2="575" y2="184" marker-end="url(#rel)"/>
+  <line class="ln" x1="575" y1="234" x2="575" y2="268" marker-end="url(#rel)"/>
+  <text class="lbl" x="582" y="256">N:1</text>
+
+  <line class="ln" x1="375" y1="148" x2="375" y2="184" marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="168">1:N</text>
+
+  <line class="ln" x1="375" y1="240" x2="375" y2="268" marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="258">1:1</text>
+
+  <line class="ln" x1="496" y1="298" x2="454" y2="298" marker-end="url(#rel)"/>
+
+  <line class="ln" x1="256" y1="298" x2="296" y2="212" marker-end="url(#rel)"/>
+  <text class="lbl" x="252" y="262">opcional</text>
+
+  <line class="ln" x1="182" y1="148" x2="182" y2="184" marker-end="url(#rel)"/>
+
+  <line class="ln" x1="375" y1="324" x2="375" y2="348" marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="342">N:1</text>
+</svg>
+<figcaption>Núcleo transacional. A comissão é 1:1 com a venda e agrupa-se num saque quando liquidada.</figcaption>
+</figure>
+
+<h2>4.3 Decisões de modelagem</h2>
+
+<table>
+  <thead><tr><th style="width:34%">Decisão</th><th>Justificativa</th></tr></thead>
+  <tbody>
+    <tr><td><code>Decimal(10,2)</code> e <code>Decimal(12,2)</code> para dinheiro</td>
+        <td>Ponto flutuante acumula erro em soma de moeda. Numa base com milhares de comissões,
+            o desvio aparece no fechamento. O tipo decimal do Postgres é exato.</td></tr>
+    <tr><td><code>estoque = -1</code> significa ilimitado</td>
+        <td>Preserva a semântica da plataforma original e evita uma coluna booleana extra que
+            poderia divergir do valor numérico.</td></tr>
+    <tr><td><code>Comissao</code> em 1:1 com <code>Venda</code></td>
+        <td>A comissão nasce com a venda e acompanha o destino dela. Manter tabela separada
+            permite ter status e data de pagamento próprios, sem inchar a venda.</td></tr>
+    <tr><td><code>precoUnitario</code> gravado na venda</td>
+        <td>O preço do produto muda com o tempo. Congelar o valor praticado mantém o histórico
+            financeiro correto para sempre.</td></tr>
+    <tr><td><code>Notificacao.associadoId</code> anulável</td>
+        <td><code>null</code> é broadcast. Evita criar 40 mil linhas para um comunicado geral.</td></tr>
+    <tr><td><code>LancamentoFinanceiro</code> como livro-caixa separado</td>
+        <td>DRE e fluxo de caixa consultam uma tabela pequena e indexada por competência, em vez
+            de reagregar todas as vendas e comissões a cada carregamento de tela.</td></tr>
+    <tr><td><code>MetricaDiaria</code> única por (associado, dia)</td>
+        <td>Gráficos de performance leem uma linha por dia. A alternativa — varrer cliques
+            brutos — degradaria à medida que o tráfego crescesse.</td></tr>
+    <tr><td><code>planoMinimoId</code> em produto, benefício e conteúdo</td>
+        <td>A regra de acesso vive no dado. Criar um produto exclusivo é preencher um campo,
+            não alterar código.</td></tr>
+    <tr><td>Índices únicos compostos em curtidas, interações e cupons</td>
+        <td>Transferem a regra de unicidade para o banco. Nem uma condição de corrida consegue
+            gerar duas curtidas da mesma pessoa no mesmo post.</td></tr>
+    <tr><td><code>onDelete</code> explícito em cada relação</td>
+        <td><code>Cascade</code> onde o filho não faz sentido sozinho (loja de um associado);
+            <code>SetNull</code> onde o registro deve sobreviver (autor de um log, atendente de
+            um ticket encerrado).</td></tr>
+  </tbody>
+</table>
+
+<h2>4.4 Enums do domínio</h2>
+
+<p>
+  Vinte e três enums transferem para o banco a consistência de status e tipos. Os principais:
+</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:26%">Enum</th><th>Valores</th></tr></thead>
+  <tbody>
+    <tr><td><code>Role</code></td><td>ADMIN · ASSOCIADO</td></tr>
+    <tr><td><code>NivelPlano</code></td><td>BASICO · INTERMEDIARIO · AVANCADO</td></tr>
+    <tr><td><code>StatusAssociado</code></td><td>ATIVO · INATIVO · SUSPENSO</td></tr>
+    <tr><td><code>StatusProduto</code></td><td>ATIVO · INATIVO · ESGOTADO</td></tr>
+    <tr><td><code>StatusVenda</code></td><td>AGUARDANDO_PGTO · PAGA · CANCELADA · REEMBOLSADA</td></tr>
+    <tr><td><code>StatusComissao</code></td><td>AGUARDANDO_PGTO · PROCESSANDO · PAGA · CANCELADA</td></tr>
+    <tr><td><code>TipoBeneficio</code></td><td>DESCONTO · ACESSO · CASHBACK · SERVICO</td></tr>
+    <tr><td><code>TipoConteudo</code></td><td>ARTIGO · VIDEO · PODCAST · CURSO · EBOOK</td></tr>
+    <tr><td><code>StatusTicket</code></td><td>ABERTO · EM_ANDAMENTO · RESOLVIDO · FECHADO</td></tr>
+    <tr><td><code>PrioridadeTicket</code></td><td>BAIXA · MEDIA · ALTA · URGENTE</td></tr>
+    <tr><td><code>TipoNotificacao</code></td><td>SISTEMA · VENDA · COMISSAO · BENEFICIO · SUPORTE · CONTEUDO</td></tr>
+    <tr><td><code>CanalNotificacao</code></td><td>IN_APP · EMAIL · PUSH</td></tr>
+    <tr><td><code>MetodoSaque</code> · <code>StatusSaque</code></td><td>PIX · TED ⟋ PENDENTE · PROCESSANDO · CONCLUIDO · REJEITADO</td></tr>
+    <tr><td><code>TipoLancamento</code> · <code>CategoriaLancamento</code></td>
+        <td>ENTRADA · SAIDA ⟋ ASSINATURA · VENDA · COMISSAO · INFRAESTRUTURA · MARKETING · SUPORTE · JURIDICO · OUTROS</td></tr>
+    <tr><td><code>RedeSocial</code></td><td>INSTAGRAM · YOUTUBE · TIKTOK · TWITTER · FACEBOOK · LINKEDIN</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 5 -->
+<h1><span class="cap">Capítulo 5</span>Regras de negócio</h1>
+
+<p class="intro">
+  Este capítulo descreve o que a API faz além de guardar e devolver registros. São as regras
+  que, se implementadas errado, produzem prejuízo financeiro ou inconsistência contábil.
+</p>
+
+<h2>5.1 Registro de uma venda</h2>
+
+<p>
+  <code>POST /vendas</code> executa oito passos dentro de <strong>uma única transação</strong>.
+  Se qualquer um falhar, nada é gravado — não existe estado meio-feito em que o estoque baixou
+  mas a comissão não foi criada.
+</p>
+
+<ol class="lista">
+  <li><strong>Valida o produto</strong> — precisa existir e estar <code>ATIVO</code>; senão, <code>409</code>.</li>
+  <li><strong>Calcula o bruto</strong> — <code>preço × quantidade</code>.</li>
+  <li><strong>Aplica o cupom</strong>, se houver. Confere quatro condições: pertence ao associado,
+      está ativo, não expirou, não estourou o limite de usos, e a compra atinge o mínimo exigido.
+      Incrementa o contador de usos.</li>
+  <li><strong>Fecha o total</strong> — <code>bruto − desconto</code>, arredondado a dois decimais.</li>
+  <li><strong>Calcula a comissão</strong> — percentual do produto <em>somado</em> ao bônus do plano.</li>
+  <li><strong>Baixa o estoque</strong> — se finito; se zerar, o produto vira <code>ESGOTADO</code>.</li>
+  <li><strong>Gera a referência</strong> — <code>CHK-NNNNN</code>, sequencial e contínuo com o histórico.</li>
+  <li><strong>Cria venda + comissão e notifica</strong> o associado.</li>
+</ol>
+
+<h3>A fórmula da comissão</h3>
+
+<pre><code><span class="cmt">// percentual efetivo = o do produto + o bônus do plano do associado</span>
+percentual = produto.comissaoPct + associado.plano.comissaoExtraPct
+valor      = total × percentual / 100</code></pre>
+
+<p>
+  Um exemplo concreto: um produto de R$ 149,90 com 18% de comissão, vendido em duas unidades
+  por um associado do plano Básico (bônus 0%), gera <code>299,80 × 18% = R$ 53,96</code>.
+  O mesmo produto vendido por um associado Avançado (bônus +5%) renderia
+  <code>299,80 × 23% = R$ 68,95</code>. O plano se paga pelo próprio volume.
+</p>
+
+<h2>5.2 Ciclo de vida da venda</h2>
+
+<p>
+  O status da venda é uma máquina de estados fechada. Transições fora do diagrama devolvem
+  <code>409 Conflict</code> com a lista do que seria permitido — o que impede, por exemplo,
+  reembolsar uma venda que nunca foi paga.
+</p>
+
+<figure>
+<svg viewBox="0 0 760 176" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="s5" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+
+  <rect x="24"  y="60" width="150" height="50" rx="8" fill="#fffbf0" stroke="#d48806" stroke-width="1.5"/>
+  <text x="99"  y="82" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8c5800">AGUARDANDO_PGTO</text>
+  <text x="99"  y="98" text-anchor="middle" font-size="8.4" fill="#5b6472">estado inicial</text>
+
+  <rect x="292" y="18" width="150" height="50" rx="8" fill="#e8f8ef" stroke="#12a150" stroke-width="1.5"/>
+  <text x="367" y="40" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0b6b36">PAGA</text>
+  <text x="367" y="56" text-anchor="middle" font-size="8.4" fill="#5b6472">comissão → PROCESSANDO</text>
+
+  <rect x="292" y="104" width="150" height="50" rx="8" fill="#ffefe8" stroke="#d4380d" stroke-width="1.5"/>
+  <text x="367" y="126" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a8280b">CANCELADA</text>
+  <text x="367" y="142" text-anchor="middle" font-size="8.4" fill="#5b6472">estoque devolvido</text>
+
+  <rect x="560" y="18" width="176" height="50" rx="8" fill="#ffefe8" stroke="#d4380d" stroke-width="1.5"/>
+  <text x="648" y="40" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a8280b">REEMBOLSADA</text>
+  <text x="648" y="56" text-anchor="middle" font-size="8.4" fill="#5b6472">comissão → CANCELADA</text>
+
+  <path d="M176 76 L288 46" class="ln" stroke="#12a150" stroke-width="1.6" fill="none" marker-end="url(#s5)"/>
+  <path d="M176 96 L288 124" stroke="#d4380d" stroke-width="1.6" fill="none" marker-end="url(#s5)"/>
+  <path d="M444 43 L556 43" stroke="#d4380d" stroke-width="1.6" fill="none" marker-end="url(#s5)"/>
+
+  <text x="214" y="50"  font-size="8.4" fill="#0b6b36" font-weight="600">pagamento confirmado</text>
+  <text x="206" y="122" font-size="8.4" fill="#a8280b" font-weight="600">cancelamento</text>
+  <text x="470" y="34"  font-size="8.4" fill="#a8280b" font-weight="600">reembolso</text>
+
+  <text x="367" y="172" text-anchor="middle" font-size="8.4" fill="#8c94a3" font-style="italic">
+    CANCELADA e REEMBOLSADA são estados finais — nenhuma transição sai deles</text>
+</svg>
+<figcaption>Máquina de estados da venda e os efeitos colaterais de cada transição.</figcaption>
+</figure>
+
+<p>Cada transição propaga consequências, que também correm em transação:</p>
+
+<table>
+  <thead><tr><th style="width:26%">Transição</th><th style="width:26%">Comissão</th><th style="width:24%">Estoque</th><th>Contador do produto</th></tr></thead>
+  <tbody>
+    <tr><td>→ <strong>PAGA</strong></td><td>vai a PROCESSANDO</td><td>permanece baixado</td><td>incrementa</td></tr>
+    <tr><td>→ <strong>CANCELADA</strong></td><td>vai a CANCELADA</td><td>devolvido; se estava esgotado, reativa</td><td>—</td></tr>
+    <tr><td>→ <strong>REEMBOLSADA</strong></td><td>vai a CANCELADA</td><td>devolvido; se estava esgotado, reativa</td><td>decrementa</td></tr>
+  </tbody>
+</table>
+
+<h2>5.3 Comissões e liquidação</h2>
+
+<p>
+  A comissão percorre quatro estados. Ela nasce <code>AGUARDANDO_PGTO</code> junto com a venda,
+  vai a <code>PROCESSANDO</code> quando a venda é paga, e só chega a <code>PAGA</code> quando o
+  administrador a liquida — individualmente ou em lote.
+</p>
+
+<p>
+  O pagamento em lote (<code>POST /comissoes/pagar</code>) recebe uma lista de identificadores e,
+  antes de qualquer escrita, verifica que todas existem e todas estão em estado liquidável.
+  Se uma única já estiver paga, o lote inteiro é recusado com <code>409</code> — evitando
+  pagamento duplicado por clique repetido. Ao final, consolida os valores por associado e
+  envia <strong>uma</strong> notificação por pessoa, com o total, em vez de uma por comissão.
+</p>
+
+<h2>5.4 Saldo e saques</h2>
+
+<p>
+  O saldo disponível não é um campo guardado — seria uma fonte constante de divergência. Ele é
+  calculado no momento da consulta:
+</p>
+
+<pre><code>disponivel = comissoes(PAGA)
+           − saques(CONCLUIDO)
+           − saques(PENDENTE + PROCESSANDO)   <span class="cmt">← reserva o que já foi pedido</span></code></pre>
+
+<p>
+  Subtrair os saques em andamento é o que impede o saque duplo: pedir R$ 500 duas vezes seguidas
+  falha na segunda tentativa, porque o primeiro pedido já reservou o valor.
+</p>
+
+<table>
+  <thead><tr><th style="width:26%">Estado do saque</th><th>Transições possíveis</th></tr></thead>
+  <tbody>
+    <tr><td><strong>PENDENTE</strong></td><td>→ PROCESSANDO · → REJEITADO <em>(exige motivo)</em></td></tr>
+    <tr><td><strong>PROCESSANDO</strong></td><td>→ CONCLUIDO · → REJEITADO <em>(exige motivo)</em></td></tr>
+    <tr><td><strong>CONCLUIDO</strong></td><td>estado final — gera lançamento de saída no caixa</td></tr>
+    <tr><td><strong>REJEITADO</strong></td><td>estado final</td></tr>
+  </tbody>
+</table>
+
+<h2>5.5 Limites e exclusividades por plano</h2>
+
+<table>
+  <thead><tr><th style="width:30%">Regra</th><th style="width:24%">Onde é checada</th><th>Comportamento</th></tr></thead>
+  <tbody>
+    <tr><td>Limite de produtos na loja</td><td><code>LojasService</code></td>
+        <td>Básico até 20, Intermediário até 100, Avançado ilimitado. Estourar devolve
+            <code>409</code> sugerindo upgrade.</td></tr>
+    <tr><td>Produto exclusivo de plano</td><td><code>LojasService</code></td>
+        <td>Adicionar produto acima do plano devolve <code>403</code> nomeando o plano exigido.</td></tr>
+    <tr><td>Personalização visual da loja</td><td><code>PortalService</code></td>
+        <td>Cor, banner e logo exigem Intermediário. Renomear e descrever é livre.</td></tr>
+    <tr><td>Benefício acima do plano</td><td><code>ParceirosService</code></td>
+        <td>Resgatar devolve <code>403</code>; listar devolve com <code>bloqueado: true</code>.</td></tr>
+    <tr><td>Conteúdo acima do plano</td><td><code>ConteudosService</code></td>
+        <td>Abrir devolve <code>403</code>; listar marca como bloqueado.</td></tr>
+    <tr><td>Rotas com <code>@PlanoMinimo</code></td><td><code>PlanoGuard</code></td>
+        <td>Bloqueio no nível da rota, antes de tocar o service.</td></tr>
+  </tbody>
+</table>
+
+<h2>5.6 Suporte: isolamento e notas internas</h2>
+
+<p>
+  Duas regras de confidencialidade governam o módulo de atendimento, e ambas são testadas na
+  suíte end-to-end:
+</p>
+
+<ul class="lista">
+  <li><strong>Isolamento horizontal</strong> — um associado que tente abrir o chamado de outro
+      recebe <code>403</code>, mesmo conhecendo o identificador. A checagem compara o dono do
+      ticket com o associado autenticado.</li>
+  <li><strong>Notas internas</strong> — mensagens com <code>interna: true</code> são filtradas
+      da resposta quando quem consulta não é administrador. Um associado tentando criar uma
+      recebe <code>403</code>.</li>
+</ul>
+
+<p>
+  Além disso, a primeira resposta do atendimento move o ticket de <code>ABERTO</code> para
+  <code>EM_ANDAMENTO</code> automaticamente, e apenas mensagens públicas geram notificação
+  para o associado — uma nota interna não avisa ninguém de fora.
+</p>
+
+<h2>5.7 Gamificação</h2>
+
+<p>
+  A pontuação do ranking é derivada dos dados reais, não digitada:
+  <code>vendas × 100 + comissões pagas acumuladas</code>. O endpoint de recálculo reprocessa
+  também o progresso das conquistas, medindo cada uma contra a métrica que lhe corresponde —
+  volume de vendas, comissão acumulada, produtos na loja, cupons criados ou posts publicados.
+</p>
+
+<!-- ============================================================ 6 -->
+<h1><span class="cap">Capítulo 6</span>Módulos funcionais</h1>
+
+<p class="intro">
+  Dezessete módulos, cada um responsável por um domínio. Abaixo, o que cada um entrega e as
+  operações que vão além do CRUD.
+</p>
+
+<h2>6.1 Área administrativa</h2>
+
+<h3>Dashboard e relatórios</h3>
+<p>
+  Consolida em uma chamada os cartões da home: associados ativos, vendas aprovadas, receita,
+  lojas ativas, comissões pagas e pendentes, saldo financeiro e produtos ativos. Fornece ainda a
+  série mensal de receita × comissões (SQL agregado direto, não N+1) e o relatório analítico com
+  vendas por status, associados por plano, e os cinco produtos e associados de maior receita —
+  tudo filtrável por período.
+</p>
+
+<h3>Associados</h3>
+<p>
+  Cadastro completo com busca textual, filtros por status, plano, nicho e faixa de seguidores,
+  e ordenação por qualquer campo permitido. Criar um associado é uma operação composta: gera o
+  usuário com senha (retornada uma única vez se não informada), a assinatura do plano e a loja
+  virtual — tudo de uma vez.
+</p>
+<p>
+  Duas operações merecem nota. <strong>Trocar de plano</strong> encerra a assinatura vigente,
+  abre uma nova e notifica o associado, em transação. <strong>Alterar status</strong> propaga:
+  inativar um associado também desativa o acesso dele e tira a loja do ar. E a
+  <strong>exclusão</strong> é recusada com <code>409</code> se houver vendas registradas —
+  histórico financeiro não se apaga; inativa-se.
+</p>
+
+<h3>Catálogo</h3>
+<p>
+  Produtos e categorias. Cada produto responde com <code>ganhoEstimado</code> já calculado e,
+  para associados, o campo <code>bloqueado</code>. Os filtros cobrem faixa de preço, comissão
+  mínima, categoria, status e exclusividade. Remover um produto com vendas é recusado — a
+  orientação é inativá-lo, preservando o histórico.
+</p>
+
+<h3>Lojas</h3>
+<p>
+  Gestão das vitrines: curadoria de produtos com destaque e ordenação, personalização visual e
+  ativação. O endpoint de detalhe traz desempenho calculado — vendas aprovadas, receita,
+  visualizações e taxa de conversão.
+</p>
+
+<h3>Vendas</h3>
+<p>
+  Registro transacional (seção 5.1), máquina de estados (5.2), indicadores do topo da tela e
+  <strong>exportação CSV</strong> da listagem filtrada, com escape correto de aspas — o
+  equivalente ao botão “Exportar CSV” da tela original, agora funcional.
+</p>
+
+<h3>Comissões</h3>
+<p>
+  Listagem com filtros por status, associado e período; liquidação em lote com validação prévia;
+  consulta de saldo por associado; e ranking dos que mais receberam.
+</p>
+
+<h3>Financeiro</h3>
+<p>
+  A área mais analítica. Entrega visão geral (saldo, MRR, ARR, margem líquida, comissões a pagar),
+  fluxo de caixa mensal, DRE com composição percentual por categoria, projeção de MRR baseada no
+  crescimento observado nos últimos 30 dias (limitada a 20% ao mês para não extrapolar), gestão
+  de saques e extrato consolidado por associado.
+</p>
+
+<h3>Parceiros, benefícios e conteúdos</h3>
+<p>
+  Cadastro de parceiros com CNPJ validado por formato, benefícios tipados (desconto, acesso,
+  cashback, serviço) com plano mínimo e contador de utilizações, e uma biblioteca de conteúdos
+  com controle de publicação. Materiais de divulgação — banners, stories, posts, vídeos e copies
+  — com contagem de downloads.
+</p>
+
+<h3>Comunidade, suporte e serviços</h3>
+<p>
+  Feed com categorias, fixação de posts, curtidas, comentários e moderação. Central de
+  atendimento com thread, prioridade, atribuição e notas internas. Rede de escritórios jurídicos
+  e contábeis com profissionais, avaliações e solicitações de atendimento.
+</p>
+
+<h3>Notificações e campanhas</h3>
+<p>
+  Notificações individuais ou em broadcast, com tipo e canal. Campanhas segmentadas por plano,
+  com estados de rascunho, agendada, enviada e cancelada; o disparo cria uma notificação por
+  destinatário e registra a contagem de envios.
+</p>
+
+<h2>6.2 Portal do associado</h2>
+
+<table>
+  <thead><tr><th style="width:26%">Área</th><th>O que o associado faz</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Painel</strong></td>
+        <td>Vê vendas, receita, comissões recebidas e pendentes, uso do plano e as vendas recentes.</td></tr>
+    <tr><td><strong>Perfil</strong></td>
+        <td>Edita bio, nicho e contato; controla se email e telefone aparecem no perfil público.</td></tr>
+    <tr><td><strong>Meu plano</strong></td>
+        <td>Vê o consumo (produtos, benefícios, conteúdos), o ROI da mensalidade e exatamente o
+            que o próximo plano desbloquearia — número de benefícios, conteúdos e comissão extra.</td></tr>
+    <tr><td><strong>Minha loja</strong></td>
+        <td>Escolhe produtos do marketplace, ordena, destaca e personaliza a vitrine.</td></tr>
+    <tr><td><strong>Cupons</strong></td>
+        <td>Cria códigos de desconto com validade, limite de usos e compra mínima. Cupom já
+            utilizado não pode ser excluído — apenas desativado.</td></tr>
+    <tr><td><strong>Links de afiliado</strong></td>
+        <td>Gera links rastreáveis por produto e acompanha cliques, conversões, taxa e receita.</td></tr>
+    <tr><td><strong>Performance</strong></td>
+        <td>Série diária de cliques e conversões, com os produtos de maior receita.</td></tr>
+    <tr><td><strong>Financeiro</strong></td>
+        <td>Consulta saldo e solicita saque por PIX ou TED.</td></tr>
+    <tr><td><strong>Benefícios e conteúdos</strong></td>
+        <td>Resgata benefícios e consome material educativo, dentro do que o plano libera.</td></tr>
+    <tr><td><strong>Comunidade e suporte</strong></td>
+        <td>Publica, comenta, curte; abre e acompanha os próprios chamados.</td></tr>
+    <tr><td><strong>Ranking</strong></td>
+        <td>Vê a própria posição, o percentil e o progresso das conquistas.</td></tr>
+    <tr><td><strong>Redes sociais</strong></td>
+        <td>Conecta perfis e acompanha seguidores, engajamento e volume de posts.</td></tr>
+  </tbody>
+</table>
+
+<h2>6.3 Área pública</h2>
+
+<table>
+  <thead><tr><th style="width:34%">Rota</th><th>Comportamento</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /lojas/publica/:slug</code></td>
+        <td>Vitrine da loja. Devolve apenas produtos ativos, contabiliza uma visualização por
+            acesso e recusa lojas desativadas com <code>403</code>.</td></tr>
+    <tr><td><code>GET /associados/perfil/:handle</code></td>
+        <td>Perfil público do criador, respeitando as preferências de privacidade: email e
+            telefone só aparecem se o associado permitiu.</td></tr>
+    <tr><td><code>GET /portal/r/:codigo</code></td>
+        <td>Redirecionador do link de afiliado. Registra o clique, soma na métrica diária e
+            devolve o destino.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 7 -->
+<h1><span class="cap">Capítulo 7</span>Referência da API</h1>
+
+<p class="intro">
+  170 rotas em 17 módulos. Esta referência lista todas, agrupadas por área. A versão navegável,
+  com schemas de entrada e saída e formulário de teste, está no Swagger em <code>/api/docs</code>.
+</p>
+
+<h2>7.1 Convenções</h2>
+
+<table>
+  <thead><tr><th style="width:26%">Item</th><th>Convenção</th></tr></thead>
+  <tbody>
+    <tr><td>URL base</td><td><code>http://localhost:3000/api</code></td></tr>
+    <tr><td>Autenticação</td><td><code>Authorization: Bearer &lt;access token&gt;</code></td></tr>
+    <tr><td>Formato</td><td>JSON em requisição e resposta; UTF-8</td></tr>
+    <tr><td>Valores monetários</td><td>número com dois decimais (ex.: <code>149.9</code>), nunca string</td></tr>
+    <tr><td>Datas</td><td>ISO 8601 na resposta; <code>YYYY-MM-DD</code> aceito em filtros</td></tr>
+    <tr><td>Identificadores</td><td>UUID v4; algumas rotas aceitam também o código natural
+        (<code>CHK-10056</code>, <code>SUP-001</code>, SKU, slug)</td></tr>
+  </tbody>
+</table>
+
+<h2>7.2 Paginação, busca, filtro e ordenação</h2>
+
+<p>Toda listagem aceita os mesmos parâmetros e devolve a mesma envelopagem:</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:16%">Parâmetro</th><th style="width:14%">Padrão</th><th>Efeito</th></tr></thead>
+  <tbody>
+    <tr><td><code>page</code></td><td>1</td><td>Página, começando em 1</td></tr>
+    <tr><td><code>limit</code></td><td>10</td><td>Itens por página; máximo 100 — acima disso, <code>400</code></td></tr>
+    <tr><td><code>search</code></td><td>—</td><td>Busca textual, sem distinção de maiúsculas, nos campos relevantes do recurso</td></tr>
+    <tr><td><code>sort</code></td><td>—</td><td>Campo de ordenação; só nomes de uma lista permitida por recurso</td></tr>
+    <tr><td><code>order</code></td><td>desc</td><td><code>asc</code> ou <code>desc</code></td></tr>
+    <tr><td><code>de</code> / <code>ate</code></td><td>—</td><td>Recorte de período nos recursos com data</td></tr>
+  </tbody>
+</table>
+
+<pre><code>GET /api/associados?search=ana&amp;status=ATIVO&amp;plano=AVANCADO&amp;sort=seguidores&amp;order=desc&amp;limit=20
+
+{
+  <span class="str">"data"</span>: [ … ],
+  <span class="str">"meta"</span>: {
+    <span class="str">"total"</span>: 40,  <span class="str">"page"</span>: 1,     <span class="str">"limit"</span>: 20,
+    <span class="str">"totalPages"</span>: 2, <span class="str">"hasNext"</span>: true, <span class="str">"hasPrev"</span>: false
+  }
+}</code></pre>
+
+<div class="destaque">
+  <span class="rotulo">Ordenação segura</span>
+  <p>
+    O parâmetro <code>sort</code> é confrontado com uma lista branca por recurso antes de virar
+    cláusula <code>ORDER BY</code>. Um nome fora da lista cai silenciosamente no padrão, em vez
+    de vazar estrutura interna ou permitir injeção.
+  </p>
+</div>
+
+<h2>7.3 Erros</h2>
+
+<p>
+  Toda resposta de erro segue o mesmo formato, e os erros do Prisma são traduzidos para
+  mensagens em português antes de chegar ao cliente.
+</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:12%">Código</th><th style="width:28%">Quando ocorre</th><th>Exemplo de mensagem</th></tr></thead>
+  <tbody>
+    <tr><td><code>400</code></td><td>Entrada inválida</td><td>“A senha deve ter ao menos 8 caracteres.”</td></tr>
+    <tr><td><code>401</code></td><td>Sem token, token expirado ou credenciais erradas</td><td>“Email ou senha inválidos.”</td></tr>
+    <tr><td><code>403</code></td><td>Papel ou plano insuficiente, ou recurso de outro associado</td>
+        <td>“Recurso disponível a partir do plano AVANCADO.”</td></tr>
+    <tr><td><code>404</code></td><td>Registro inexistente <em>(P2025)</em></td><td>“Registro não encontrado.”</td></tr>
+    <tr><td><code>409</code></td><td>Conflito de estado ou violação de unicidade <em>(P2002)</em></td>
+        <td>“Transição inválida: PAGA → AGUARDANDO_PGTO.”</td></tr>
+    <tr><td><code>429</code></td><td>Acima de 300 requisições por minuto</td><td>“ThrottlerException: Too Many Requests”</td></tr>
+  </tbody>
+</table>
+
+<pre><code>{
+  <span class="str">"statusCode"</span>: 409,
+  <span class="str">"path"</span>: <span class="str">"/api/vendas/…/status"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-08-27T21:14:02.881Z"</span>,
+  <span class="str">"message"</span>: <span class="str">"Transição inválida: AGUARDANDO_PGTO → REEMBOLSADA. Permitidas: PAGA, CANCELADA."</span>
+}</code></pre>
+
+<h2>7.4 As rotas</h2>
+
+<p>
+  Legenda: <span class="selo admin">ADMIN</span> exige papel de administrador ·
+  <span class="selo pub">PÚBLICO</span> dispensa autenticação ·
+  as demais exigem apenas estar autenticado.
+</p>
+
+<h3>Autenticação <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 7 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/auth/alterar-senha</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Altera a senha e encerra as sessões abertas</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/auth/codigo-acesso</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Valida o código de acesso da plataforma (gate anterior ao login)</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/auth/login</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Autentica e devolve access + refresh token</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/auth/logout</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Revoga todos os refresh tokens do usuário</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/auth/perfil</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Dados do usuário autenticado</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/auth/refresh</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Renova o access token (com rotação do refresh)</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/auth/registrar</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Cria uma conta de associado (com loja e assinatura)</td></tr>
+</tbody></table>
+<h3>Dashboard e Relatórios <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 5 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/dashboard/admin</code></td><td><span class="selo admin">ADMIN</span></td><td>Cards e totais da home administrativa</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/dashboard/portal</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Painel inicial do portal do associado logado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/dashboard/receita-comissoes</code></td><td><span class="selo admin">ADMIN</span></td><td>Série mensal de receita e comissões</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/dashboard/suporte</code></td><td><span class="selo admin">ADMIN</span></td><td>Resumo de tickets por status e prioridade</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/relatorios</code></td><td><span class="selo admin">ADMIN</span></td><td>Relatório analítico consolidado</td></tr>
+</tbody></table>
+<h3>Planos <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 5 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/planos</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista os planos com contagem de associados ativos</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/planos</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria um plano</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/planos/metricas</code></td><td><span class="selo admin">ADMIN</span></td><td>MRR, ARR e distribuição de associados por plano</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/planos/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Detalha um plano</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/planos/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um plano</td></tr>
+</tbody></table>
+<h3>Associados <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 12 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/associados</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista associados com busca, filtros e paginação</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/associados</code></td><td><span class="selo admin">ADMIN</span></td><td>Cadastra um associado (cria usuário, assinatura e loja)</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/associados/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Totais por status, plano e nicho</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/associados/perfil/{handle}</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Perfil público do associado (respeita as preferências de privacidade)</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/associados/ranking</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Ranking de associados por pontuação</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/associados/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um associado sem vendas registradas</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/associados/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Ficha completa do associado</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/associados/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza os dados cadastrais</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/associados/{id}/plano</code></td><td><span class="selo admin">ADMIN</span></td><td>Troca o plano e reabre a assinatura</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/associados/{id}/redes-sociais</code></td><td><span class="selo admin">ADMIN</span></td><td>Vincula ou atualiza uma rede social</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/associados/{id}/redes-sociais/{rede}</code></td><td><span class="selo admin">ADMIN</span></td><td>Desvincula uma rede social</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/associados/{id}/status/{status}</code></td><td><span class="selo admin">ADMIN</span></td><td>Ativa, inativa ou suspende (reflete no acesso e na loja)</td></tr>
+</tbody></table>
+<h3>Catálogo <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 11 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/catalogo/categorias</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista as categorias com contagem de produtos</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/catalogo/categorias</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria uma categoria</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/catalogo/categorias/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove uma categoria sem produtos</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/catalogo/categorias/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza uma categoria</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/catalogo/produtos</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista o catálogo</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/catalogo/produtos</code></td><td><span class="selo admin">ADMIN</span></td><td>Cadastra um produto</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/catalogo/produtos/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Totais por status e categoria, preço e comissão médios</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/catalogo/produtos/mais-vendidos</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Top produtos por receita</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/catalogo/produtos/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um produto sem vendas</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/catalogo/produtos/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Detalha um produto por ID ou SKU</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/catalogo/produtos/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um produto</td></tr>
+</tbody></table>
+<h3>Lojas <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 9 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/lojas</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista as lojas com filtros e paginação</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/lojas</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria uma loja</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/lojas/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Totais, visualizações e média de produtos por loja</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/lojas/publica/{slug}</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Vitrine pública da loja</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/lojas/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Detalha uma loja com vitrine e desempenho</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/lojas/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza dados e personalização da loja</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/lojas/{id}/ativa/{valor}</code></td><td><span class="selo admin">ADMIN</span></td><td>Ativa ou desativa a loja</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/lojas/{id}/produtos</code></td><td><span class="selo admin">ADMIN</span></td><td>Adiciona um produto à vitrine</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/lojas/{id}/produtos/{produtoId}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um produto da vitrine</td></tr>
+</tbody></table>
+<h3>Vendas <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 7 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/vendas</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista vendas com busca, filtros, período e paginação</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/vendas</code></td><td><span class="selo admin">ADMIN</span></td><td>Registra uma venda</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/vendas/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Receita, ticket médio, conversão e cancelamento</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/vendas/exportar</code></td><td><span class="selo admin">ADMIN</span></td><td>Exporta a listagem filtrada em CSV</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/vendas/serie-mensal</code></td><td><span class="selo admin">ADMIN</span></td><td>Série mensal de receita e comissões</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/vendas/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Detalha uma venda por ID ou referência (CHK-…)</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/vendas/{id}/status</code></td><td><span class="selo admin">ADMIN</span></td><td>Altera o status da venda</td></tr>
+</tbody></table>
+<h3>Comissões <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 7 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comissoes</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista comissões com filtros de status, associado e período</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comissoes/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Totais por status, pagas, pendentes e percentual médio</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/comissoes/pagar</code></td><td><span class="selo admin">ADMIN</span></td><td>Liquida um lote de comissões</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comissoes/saldo/{associadoId}</code></td><td><span class="selo admin">ADMIN</span></td><td>Saldo disponível para saque de um associado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comissoes/top-associados</code></td><td><span class="selo admin">ADMIN</span></td><td>Associados que mais receberam comissão</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comissoes/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Detalha uma comissão</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/comissoes/{id}/status</code></td><td><span class="selo admin">ADMIN</span></td><td>Altera o status de uma comissão</td></tr>
+</tbody></table>
+<h3>Financeiro <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 11 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/financeiro/dre</code></td><td><span class="selo admin">ADMIN</span></td><td>Demonstrativo de resultado com composição por categoria</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/financeiro/extrato/{associadoId}</code></td><td><span class="selo admin">ADMIN</span></td><td>Extrato de comissões e saques de um associado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/financeiro/fluxo-caixa</code></td><td><span class="selo admin">ADMIN</span></td><td>Entradas e saídas mês a mês</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/financeiro/lancamentos</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista os lançamentos do período</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/financeiro/lancamentos</code></td><td><span class="selo admin">ADMIN</span></td><td>Registra um lançamento manual</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/financeiro/lancamentos/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um lançamento</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/financeiro/projecao-mrr</code></td><td><span class="selo admin">ADMIN</span></td><td>Projeção de MRR com base no crescimento recente</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/financeiro/saques</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista solicitações de saque</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/financeiro/saques</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Solicita um saque das comissões disponíveis</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/financeiro/saques/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Aprova, processa, conclui ou rejeita um saque</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/financeiro/visao-geral</code></td><td><span class="selo admin">ADMIN</span></td><td>Saldo, MRR, margem líquida e comissões a pagar</td></tr>
+</tbody></table>
+<h3>Parceiros e Benefícios <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 13 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/beneficios</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista os benefícios</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/beneficios</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria um benefício</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/beneficios/meus-usos</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Histórico de benefícios resgatados pelo associado logado</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/beneficios/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um benefício</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/beneficios/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Detalha um benefício</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/beneficios/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um benefício</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/beneficios/{id}/resgatar</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Resgata um benefício</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/parceiros</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista parceiros com contagem de benefícios</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/parceiros</code></td><td><span class="selo admin">ADMIN</span></td><td>Cadastra um parceiro</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/parceiros/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Totais de parceiros, benefícios e mais utilizados</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/parceiros/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um parceiro sem benefícios vinculados</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/parceiros/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Detalha um parceiro com seus benefícios</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/parceiros/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um parceiro</td></tr>
+</tbody></table>
+<h3>Conteúdos <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 12 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/conteudos</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista os conteúdos</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/conteudos</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria um conteúdo</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/conteudos/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Publicados, rascunhos, visualizações e curtidas</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/conteudos/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um conteúdo</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/conteudos/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Abre um conteúdo por ID ou slug</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/conteudos/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um conteúdo</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/conteudos/{id}/curtir</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Alterna a curtida do associado no conteúdo</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/materiais</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista os materiais de divulgação</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/materiais</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria um material de divulgação</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/materiais/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um material</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/materiais/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um material</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/materiais/{id}/baixar</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Registra o download e devolve o arquivo ou o texto</td></tr>
+</tbody></table>
+<h3>Comunidade <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 13 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comunidade/categorias</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista as categorias com contagem de posts</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/comunidade/categorias</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria uma categoria</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/comunidade/comentarios/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Remove um comentário (autor ou administrador)</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comunidade/estatisticas</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Posts, comentários, curtidas e membros ativos</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comunidade/posts</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Feed da comunidade</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/comunidade/posts</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Publica um post</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/comunidade/posts/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Remove um post (autor ou administrador)</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comunidade/posts/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Abre um post com seus comentários</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/comunidade/posts/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Edita o próprio post</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/comunidade/posts/{id}/comentarios</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Comenta em um post</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/comunidade/posts/{id}/curtir</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Curte ou descurte um post</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/comunidade/posts/{id}/fixar/{valor}</code></td><td><span class="selo admin">ADMIN</span></td><td>Fixa ou desafixa um post no topo do feed</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/comunidade/topicos-recentes</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Tópicos recentes para o dashboard</td></tr>
+</tbody></table>
+<h3>Suporte <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 8 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/suporte</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista os chamados com filtros e paginação</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/suporte</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Abre um chamado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/suporte/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Abertos, em andamento, resolvidos e tempo médio de resolução</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/suporte/meus-chamados</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Chamados do associado logado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/suporte/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Abre um chamado por ID ou número (SUP-…)</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/suporte/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza status, prioridade, categoria ou responsável</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/suporte/{id}/atender</code></td><td><span class="selo admin">ADMIN</span></td><td>Assume o atendimento do chamado</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/suporte/{id}/mensagens</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Responde na thread do chamado</td></tr>
+</tbody></table>
+<h3>Serviços (Jurídico e Contábil) <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 13 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/servicos/escritorios</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista os escritórios parceiros</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/servicos/escritorios</code></td><td><span class="selo admin">ADMIN</span></td><td>Cadastra um escritório parceiro</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/servicos/escritorios/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um escritório sem profissionais vinculados</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/servicos/escritorios/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um escritório</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/servicos/estatisticas</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Escritórios, profissionais e solicitações por status</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/servicos/minhas-solicitacoes</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Solicitações do associado logado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/servicos/profissionais</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Lista os profissionais disponíveis</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/servicos/profissionais</code></td><td><span class="selo admin">ADMIN</span></td><td>Cadastra um profissional</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/servicos/profissionais/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Remove um profissional</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/servicos/profissionais/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Atualiza um profissional</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/servicos/solicitacoes</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista todas as solicitações de atendimento</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/servicos/solicitacoes</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Solicita atendimento jurídico ou contábil</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/servicos/solicitacoes/{id}</code></td><td><span class="selo admin">ADMIN</span></td><td>Designa profissional ou atualiza o status da solicitação</td></tr>
+</tbody></table>
+<h3>Notificações e Campanhas <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 11 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/campanhas</code></td><td><span class="selo admin">ADMIN</span></td><td>Lista as campanhas com taxa de abertura</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/campanhas</code></td><td><span class="selo admin">ADMIN</span></td><td>Cria uma campanha (rascunho ou agendada)</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/campanhas/estatisticas</code></td><td><span class="selo admin">ADMIN</span></td><td>Enviadas, agendadas, rascunhos e taxa de abertura geral</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/campanhas/{id}/cancelar</code></td><td><span class="selo admin">ADMIN</span></td><td>Cancela uma campanha ainda não enviada</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/campanhas/{id}/enviar</code></td><td><span class="selo admin">ADMIN</span></td><td>Dispara a campanha para o público-alvo</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/notificacoes</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Notificações do associado logado (inclui broadcasts)</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/notificacoes/enviar</code></td><td><span class="selo admin">ADMIN</span></td><td>Dispara uma notificação</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/notificacoes/ler-todas</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Marca todas as notificações como lidas</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/notificacoes/resumo</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Contadores por tipo, canal e não lidas</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/notificacoes/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Remove uma notificação</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/notificacoes/{id}/ler</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Marca uma notificação como lida</td></tr>
+</tbody></table>
+<h3>Gamificação <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 4 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/gamificacao/conquistas</code></td><td><span class="selo admin">ADMIN</span></td><td>Catálogo de conquistas com quantos associados desbloquearam</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/gamificacao/minhas-conquistas</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Conquistas e progresso do associado logado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/gamificacao/ranking</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Ranking com a posição e o percentil do associado logado</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/gamificacao/recalcular/{associadoId}</code></td><td><span class="selo admin">ADMIN</span></td><td>Recalcula pontuação e conquistas</td></tr>
+</tbody></table>
+<h3>Portal do Associado <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 22 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/comissoes</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Comissões do associado logado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/cupons</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Meus cupons com resumo de uso</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/portal/cupons</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Cria um cupom de desconto</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/portal/cupons/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Remove um cupom ainda não utilizado</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/portal/cupons/{id}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Atualiza ou ativa/desativa um cupom</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/links</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Meus links com cliques, conversões e receita</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/portal/links</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Gera um link rastreável para um produto</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/loja</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Minha loja com vitrine e desempenho</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/portal/loja</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Personaliza a loja</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/portal/loja/produtos/{produtoId}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Remove um produto da minha loja</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/portal/loja/produtos/{produtoId}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Adiciona um produto do marketplace à minha loja</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/perfil</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Perfil do associado logado</td></tr>
+<tr><td><span class="selo patch">PATCH</span></td><td><code>/api/portal/perfil</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Atualiza perfil e preferências de privacidade</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/performance</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Cliques, conversões e receita por dia</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/plano</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Uso do plano atual, ROI e o que o upgrade desbloqueia</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/r/{codigo}</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Redirecionador público do link de afiliado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/redes-sociais</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Contas conectadas e métricas agregadas</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/portal/redes-sociais</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Conecta ou atualiza uma rede social</td></tr>
+<tr><td><span class="selo delete">DELETE</span></td><td><code>/api/portal/redes-sociais/{rede}</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Desconecta uma rede social</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/saldo</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Saldo de comissões do associado logado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/saques</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Saques do associado logado</td></tr>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/portal/vendas</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Vendas do associado logado</td></tr>
+</tbody></table>
+
+
+<!-- ============================================================ 8 — INTERFACE -->
+<h1><span class="cap">Capítulo 8</span>A interface</h1>
+
+<p class="intro">
+  O site tem três faces com públicos e permissões distintos: o painel administrativo, o portal
+  do associado e as páginas abertas. São <strong>40 telas</strong> em React, todas consumindo a
+  mesma API.
+</p>
+
+<h2>8.1 Tecnologias e por que cada uma</h2>
+
+<table>
+  <thead><tr><th style="width:24%">Peça</th><th style="width:12%">Versão</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><strong>React</strong></td><td>19</td>
+        <td>Base da interface. Escolhido também por continuidade: a plataforma original era React.</td></tr>
+    <tr><td><strong>Vite</strong></td><td>8</td>
+        <td>Servidor de desenvolvimento com recarga instantânea e empacotador de produção.
+            Faz proxy de <code>/api</code>, o que elimina CORS no desenvolvimento.</td></tr>
+    <tr><td><strong>TypeScript</strong></td><td>5</td>
+        <td>Os contratos da API são declarados em <code>api/tipos.ts</code>; mudar um campo no
+            backend quebra a compilação do front, em vez de falhar em produção.</td></tr>
+    <tr><td><strong>Ant Design</strong></td><td>5</td>
+        <td>Biblioteca de componentes. Mesma do site original, o que preserva a ergonomia das
+            telas capturadas — tabelas, formulários e feedback já resolvidos.</td></tr>
+    <tr><td><strong>TanStack Query</strong></td><td>5</td>
+        <td>Cache, revalidação e estados de carregamento. Uma escrita invalida as chaves
+            afetadas e a tela se atualiza sozinha, sem recarregar nada à mão.</td></tr>
+    <tr><td><strong>Recharts</strong></td><td>2</td>
+        <td>Gráficos em SVG. Também era a biblioteca do original.</td></tr>
+    <tr><td><strong>Axios</strong></td><td>1</td>
+        <td>Cliente HTTP com interceptadores — é onde vive a renovação automática de token.</td></tr>
+  </tbody>
+</table>
+
+<h2>8.2 As três áreas</h2>
+
+<h3>Painel administrativo — 22 telas</h3>
+<p>
+  Dashboard com oito indicadores e quatro gráficos; listagens de associados, catálogo, lojas,
+  vendas, comissões, parceiros, benefícios, conteúdos e chamados; telas de detalhe para
+  associado, produto, loja e ticket; formulários de cadastro; e as áreas analíticas de
+  financeiro (fluxo de caixa, DRE, projeção de MRR, saques) e relatórios.
+</p>
+
+<h3>Portal do associado — 18 telas</h3>
+<p>
+  Painel pessoal, minha loja (com marketplace para escolher produtos), minhas vendas, financeiro
+  com solicitação de saque, cupons, links de afiliado, performance diária, benefícios, conteúdos,
+  materiais de divulgação, comunidade, ranking e conquistas, assessoria jurídica e contábil,
+  suporte, redes sociais, meu plano e meu perfil.
+</p>
+
+<h3>Páginas públicas — 2 telas</h3>
+<p>
+  A vitrine da loja (<code>/loja/:slug</code>) e o perfil do criador
+  (<code>/perfil/:handle</code>), ambas sem exigir login, mais o gate de código de acesso que
+  precede a tela de entrada.
+</p>
+
+<h2>8.3 Duas decisões que moldam o resto</h2>
+
+<div class="destaque">
+  <span class="rotulo">Filtro no servidor, nunca no cliente</span>
+  <p>
+    O componente <code>TabelaRecurso</code> envia busca, filtros, ordenação e paginação como
+    parâmetros de consulta. Filtrar no navegador só alcançaria a página já carregada — buscar
+    “ana” varreria 10 registros em vez dos 40. Como consequência, a mesma tabela serve a
+    qualquer volume de dados sem mudar de estratégia.
+  </p>
+</div>
+
+<div class="destaque">
+  <span class="rotulo">Renovação de token com corrida única</span>
+  <p>
+    Ao receber <code>401</code>, o cliente renova o token e repete a requisição. Chamadas
+    simultâneas que falhem no mesmo instante aguardam a <em>mesma</em> renovação: o refresh
+    token é rotativo e só vale uma vez, então dispará-las em paralelo invalidaria a sessão do
+    próprio usuário.
+  </p>
+</div>
+
+<h2>8.4 Identidade visual</h2>
+
+<p>
+  A interface segue o brand book oficial. As cores não foram convertidas de tabelas Pantone de
+  memória: foram <strong>amostradas dos pixels</strong> das cartelas do próprio PDF. O
+  <em>Indigo Sloth</em> amostrado coincidiu exatamente com o <code>#230647</code> que o
+  documento declara — o que valida a extração das outras três.
+</p>
+
+<table>
+  <thead><tr><th style="width:20%">Cor</th><th style="width:14%">Hex</th><th style="width:16%">Pantone</th><th>Onde aparece</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Digital Blue</strong></td><td><code>#008EEA</code></td><td>2727 C</td>
+        <td>primária — botões, links, série principal dos gráficos</td></tr>
+    <tr><td><strong>Mint Leaf</strong></td><td><code>#00AD9A</code></td><td>3275 C</td>
+        <td>positivos — receita, comissões pagas, confirmações</td></tr>
+    <tr><td><strong>Violet C</strong></td><td><code>#440099</code></td><td>Violet C</td>
+        <td>acentos e segunda série dos gráficos</td></tr>
+    <tr><td><strong>Indigo Sloth</strong></td><td><code>#230647</code></td><td>—</td>
+        <td>fundos institucionais (acesso e login)</td></tr>
+  </tbody>
+</table>
+
+<p>
+  A tipografia do brand book — <em>Bebas Kai</em> (títulos) e <em>Lufga</em> (texto) — é
+  comercial. A pilha em <code>src/marca.ts</code> declara as originais primeiro e recai sobre
+  <em>Bebas Neue</em> e <em>Poppins</em>, de modo que uma instalação licenciada passa a valer
+  automaticamente, sem tocar no código. Os logos vieram do kit oficial, recortados com fundo
+  transparente para servirem sobre claro e escuro; o favicon sai do símbolo da digital.
+</p>
+
+<!-- ============================================================ 9 — DESENVOLVIMENTO -->
+<h1><span class="cap">Capítulo 9</span>Como foi desenvolvido</h1>
+
+<p class="intro">
+  Este sistema não partiu de uma especificação escrita. Ele foi reconstruído por engenharia
+  reversa a partir de 113 telas capturadas da plataforma original — uma SPA React com Firebase,
+  cujo bundle minificado não permitia recuperar o código-fonte.
+</p>
+
+<h2>9.1 As cinco etapas</h2>
+
+<figure>
+<svg viewBox="0 0 760 118" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="d1" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+  <style>
+    .et { fill:#f6f8fb; stroke:#c8d1e0; stroke-width:1.2; }
+    .em { fill:#e6f4ff; stroke:#1677ff; stroke-width:1.4; }
+    .tt { font-size:10px; font-weight:700; fill:#1f2430; }
+    .ts { font-size:8.2px; fill:#5b6472; }
+  </style>
+  <rect class="et" x="4"   y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="72"  y="47" text-anchor="middle">1 · Captura</text>
+  <text class="ts" x="72"  y="62" text-anchor="middle">Playwright navegando</text>
+  <text class="ts" x="72"  y="73" text-anchor="middle">113 telas renderizadas</text>
+
+  <rect class="et" x="156" y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="224" y="47" text-anchor="middle">2 · Extração</text>
+  <text class="ts" x="224" y="62" text-anchor="middle">parsing do HTML</text>
+  <text class="ts" x="224" y="73" text-anchor="middle">374 registros reais</text>
+
+  <rect class="em" x="308" y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="376" y="47" text-anchor="middle" fill="#002c8c">3 · Modelagem</text>
+  <text class="ts" x="376" y="62" text-anchor="middle">entidades inferidas</text>
+  <text class="ts" x="376" y="73" text-anchor="middle">37 tabelas</text>
+
+  <rect class="et" x="460" y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="528" y="47" text-anchor="middle">4 · Backend</text>
+  <text class="ts" x="528" y="62" text-anchor="middle">regras reimplementadas</text>
+  <text class="ts" x="528" y="73" text-anchor="middle">170 rotas</text>
+
+  <rect class="et" x="612" y="26" width="144" height="56" rx="7"/>
+  <text class="tt" x="684" y="47" text-anchor="middle">5 · Interface</text>
+  <text class="ts" x="684" y="62" text-anchor="middle">React consumindo a API</text>
+  <text class="ts" x="684" y="73" text-anchor="middle">40 telas</text>
+
+  <line x1="142" y1="54" x2="152" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+  <line x1="294" y1="54" x2="304" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+  <line x1="446" y1="54" x2="456" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+  <line x1="598" y1="54" x2="608" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+</svg>
+<figcaption>Do HTML capturado ao sistema em funcionamento.</figcaption>
+</figure>
+
+<p>
+  A etapa 3 é a que decide tudo. Uma coluna “Comissão” numa tabela e uma coluna “%” em outra
+  revelam que comissão é entidade própria, com percentual e valor. Um badge “Intermediário+”
+  num produto revela o campo de exclusividade por plano. Um contador “47 / 100” num cupom
+  revela usos e limite. O schema saiu dessa leitura, não de suposição.
+</p>
+
+<h2>9.2 O elo que ficou reexecutável</h2>
+
+<p>
+  <code>tools/extract.py</code> percorre as capturas e produz 24 arquivos JSON que alimentam o
+  seed. Ele não foi um script descartável: continua rodando e é o que garante que os dados do
+  banco sejam os reais das telas, não invenção.
+</p>
+
+<pre><code>python3 tools/extract.py          <span class="cmt"># capturas -> prisma/seed-data/*.json</span>
+cd apps/api &amp;&amp; npm run seed      <span class="cmt"># JSON -> PostgreSQL</span></code></pre>
+
+<h2>9.3 O que a conferência de números revelou</h2>
+
+<p>
+  Comparar os indicadores calculados com os das telas originais funcionou como teste de
+  modelagem, e expôs dois erros que passariam despercebidos:
+</p>
+
+<table>
+  <thead><tr><th style="width:30%">Sintoma</th><th style="width:34%">Causa</th><th>Correção</th></tr></thead>
+  <tbody>
+    <tr><td>MRR dava R$ 3.497 em vez de R$ 1.998</td>
+        <td>Assinatura de associado suspenso ou inativo contava como vigente</td>
+        <td><code>Assinatura.ativa</code> passou a acompanhar o status do associado</td></tr>
+    <tr><td>Saldo financeiro não fechava</td>
+        <td>O caixa fora modelado como meses acumulados de MRR</td>
+        <td>Entradas = receita das vendas pagas; saídas = comissões pagas + custos</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Depois das correções, treze indicadores coincidem com a fonte — receita, ticket médio,
+  comissões em cada estado, MRR e a composição percentual das saídas do DRE. O detalhamento
+  está no capítulo 12.
+</p>
+
+<!-- ============================================================ 10 — ESCALABILIDADE -->
+<h1><span class="cap">Capítulo 10</span>Escalabilidade e capacidade</h1>
+
+<p class="intro">
+  Este capítulo traz <strong>medições</strong>, não estimativas. Todos os números vieram de
+  testes de carga executados com <code>autocannon</code> contra a API em modo de produção,
+  com o banco populado.
+</p>
+
+<div class="destaque atencao">
+  <span class="rotulo">O que estes números são e o que não são</span>
+  <p>
+    Foram medidos em uma máquina de desenvolvimento (AMD Ryzen AI 9 HX 370, 24 núcleos, 93 GB
+    de RAM), com API e banco no mesmo host e sem latência de rede. Servem para comparar
+    endpoints entre si e revelar gargalos — <strong>não</strong> como promessa de desempenho
+    em produção, onde entram rede, disco compartilhado e recursos menores. Um teste no
+    ambiente real de destino continua necessário.
+  </p>
+</div>
+
+<h2>10.1 Capacidade por endpoint</h2>
+
+<p>Cinquenta conexões simultâneas, 12 segundos por endpoint, após aquecimento:</p>
+
+<table class="compacta">
+  <thead><tr>
+    <th style="width:32%">Endpoint</th><th style="width:14%">req/s</th>
+    <th style="width:12%">p50</th><th style="width:12%">p90</th><th style="width:12%">p99</th><th>Perfil</th>
+  </tr></thead>
+  <tbody>
+    <tr><td><code>GET /planos</code></td><td>1.906</td><td>25 ms</td><td>29 ms</td><td>40 ms</td><td>leitura leve</td></tr>
+    <tr><td><code>GET /vendas</code></td><td>1.174</td><td>38 ms</td><td>44 ms</td><td>59 ms</td><td>lista paginada</td></tr>
+    <tr><td><code>GET /financeiro/visao-geral</code></td><td>1.244</td><td>33 ms</td><td>56 ms</td><td>81 ms</td><td>6 agregações</td></tr>
+    <tr><td><code>GET /comunidade/posts</code></td><td>1.042</td><td>44 ms</td><td>65 ms</td><td>81 ms</td><td>lista com contagens</td></tr>
+    <tr><td><code>GET /catalogo/produtos</code></td><td>1.068</td><td>42 ms</td><td>62 ms</td><td>86 ms</td><td>lista com joins</td></tr>
+    <tr><td><code>GET /associados</code></td><td>868</td><td>55 ms</td><td>80 ms</td><td>104 ms</td><td>joins + subconsultas</td></tr>
+    <tr><td><code>GET /relatorios</code></td><td>754</td><td>62 ms</td><td>89 ms</td><td>140 ms</td><td>analítico pesado</td></tr>
+    <tr><td><code>GET /lojas/publica/:slug</code></td><td>667</td><td>65 ms</td><td>117 ms</td><td>197 ms</td><td>público + escrita de contador</td></tr>
+    <tr><td><code>GET /dashboard/admin</code></td><td>658</td><td>74 ms</td><td>—</td><td>115 ms</td><td>18 agregações paralelas</td></tr>
+    <tr><td><code>POST /auth/login</code></td><td><strong>88</strong></td><td>560 ms</td><td>—</td><td>622 ms</td><td>bcrypt, por natureza caro</td></tr>
+  </tbody>
+</table>
+
+<h2>10.2 Comportamento sob concorrência</h2>
+
+<p>
+  Mesmo endpoint (<code>/associados</code>), concorrência crescente. O throughput satura por
+  volta de 100 conexões; além disso a latência cresce linearmente sem ganho de vazão — a fila
+  apenas aumenta.
+</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:16%">Conexões</th><th style="width:18%">req/s</th><th style="width:16%">p50</th><th style="width:16%">p99</th><th>Leitura</th></tr></thead>
+  <tbody>
+    <tr><td>10</td><td>935</td><td>7 ms</td><td>19 ms</td><td>folgado</td></tr>
+    <tr><td>25</td><td>1.077</td><td>22 ms</td><td>41 ms</td><td>confortável</td></tr>
+    <tr><td>50</td><td>1.185</td><td>40 ms</td><td>58 ms</td><td>bom</td></tr>
+    <tr><td>100</td><td>1.243</td><td>78 ms</td><td>100 ms</td><td><strong>joelho da curva</strong></td></tr>
+    <tr><td>200</td><td>1.214</td><td>160 ms</td><td>221 ms</td><td>saturado — só enfileira</td></tr>
+    <tr><td>400</td><td>1.111</td><td>334 ms</td><td>482 ms</td><td>saturado</td></tr>
+  </tbody>
+</table>
+
+<h2>10.3 Quantos usuários simultâneos</h2>
+
+<p>
+  “Conexões simultâneas” não é “usuários simultâneos”. Uma pessoa navegando não mantém uma
+  requisição contínua: ela carrega uma tela, lê, clica de novo. Com um <em>tempo de leitura</em>
+  típico de 8 a 12 segundos entre ações, e considerando que cada tela dispara em média 3
+  requisições, um usuário gera cerca de <strong>0,3 requisição por segundo</strong>.
+</p>
+
+<div class="cartoes tres">
+  <div class="cartao"><b>~2.500</b><span>usuários ativos</span><small>navegação típica, folga confortável</small></div>
+  <div class="cartao"><b>~4.000</b><span>no limite</span><small>latência ainda aceitável</small></div>
+  <div class="cartao"><b>88/s</b><span>logins</span><small>o verdadeiro teto em picos</small></div>
+</div>
+
+<p>
+  Com throughput sustentado de ~1.200 req/s, a conta é
+  <code>1.200 ÷ 0,3 ≈ 4.000 usuários</code> no limite, e algo perto de
+  <strong>2.500 com folga</strong> — mantendo p99 abaixo de 100 ms.
+  <em>Uma única instância Node</em>, note-se, usando um dos 24 núcleos.
+</p>
+
+<div class="destaque atencao">
+  <span class="rotulo">O login é o gargalo em picos</span>
+  <p>
+    A 88 logins por segundo, um evento que faça 5.000 pessoas entrarem ao mesmo tempo leva
+    cerca de <strong>57 segundos</strong> para escoar a fila. Isso é intrínseco ao bcrypt, que
+    é lento de propósito para resistir a ataques de força bruta — reduzir o custo enfraqueceria
+    as senhas. A saída correta é distribuir a carga entre processos (seção 10.5), não baratear
+    o hash.
+  </p>
+</div>
+
+<h2>10.4 O gargalo que foi corrigido durante a medição</h2>
+
+<p>
+  A primeira rodada mediu <strong>17–20 logins por segundo</strong>, com p50 de 2,5 segundos, e
+  — pior — as leituras <em>também</em> ficavam lentas durante o login. A causa era o
+  <code>bcryptjs</code>, implementação em JavaScript puro que ocupa a thread principal:
+  enquanto calculava um hash, o event loop parava para todos os demais pedidos.
+</p>
+
+<p>
+  A troca pelo <code>@node-rs/bcrypt</code> (binário nativo, que roda no threadpool do libuv)
+  resolveu os dois problemas de uma vez. Os hashes são compatíveis, então nenhuma senha
+  precisou ser redefinida.
+</p>
+
+<table>
+  <thead><tr><th style="width:34%">Medida</th><th style="width:22%">bcryptjs</th><th style="width:22%">nativo</th><th>Ganho</th></tr></thead>
+  <tbody>
+    <tr><td>Logins por segundo</td><td>20</td><td><strong>88</strong></td><td>4,4×</td></tr>
+    <tr><td>p50 do login (50 conexões)</td><td>2.577 ms</td><td><strong>560 ms</strong></td><td>4,6×</td></tr>
+    <tr><td><code>/planos</code> durante carga de login</td><td>degradado</td><td><strong>1.272 req/s, p50 16 ms</strong></td><td>sem bloqueio</td></tr>
+  </tbody>
+</table>
+
+<h2>10.5 Caminhos de crescimento</h2>
+
+<p>
+  A arquitetura não guarda estado em memória — a sessão vive no token e no banco. Isso é o que
+  torna a escala horizontal possível sem reescrever nada.
+</p>
+
+<table>
+  <thead><tr><th style="width:6%">#</th><th style="width:28%">Passo</th><th style="width:18%">Ganho esperado</th><th>Custo</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><strong>Clusterizar o Node</strong> (PM2 ou modo cluster) com 4–8 workers</td>
+        <td>4–8× o throughput e os logins</td>
+        <td>Baixo — uma linha de configuração. É o passo de melhor retorno.</td></tr>
+    <tr><td>2</td><td><strong>Cache nos analíticos</strong> — dashboard e relatórios, 30–60 s</td>
+        <td>Tira as consultas mais caras do caminho quente</td>
+        <td>Baixo — Redis ou cache em memória por worker.</td></tr>
+    <tr><td>3</td><td><strong>Ajustar o pool do Prisma</strong> ao número de workers</td>
+        <td>Evita esgotar as 100 conexões do Postgres</td>
+        <td>Baixo — <code>connection_limit</code> na URL do banco.</td></tr>
+    <tr><td>4</td><td><strong>Réplica de leitura</strong> no Postgres para os relatórios</td>
+        <td>Isola analítico de transacional</td>
+        <td>Médio — exige roteamento de consultas.</td></tr>
+    <tr><td>5</td><td><strong>Várias instâncias atrás de um balanceador</strong></td>
+        <td>Escala praticamente linear</td>
+        <td>Médio — o código já suporta; é infraestrutura.</td></tr>
+    <tr><td>6</td><td><strong>CDN para o front</strong></td>
+        <td>Tira todo o estático da API</td>
+        <td>Baixo — o build do Vite é estático puro.</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Só com o passo 1, a projeção sobe para a faixa de <strong>15.000 a 20.000 usuários ativos</strong>
+  na mesma máquina, com o login saindo de 88 para algo em torno de 500 por segundo.
+</p>
+
+<h2>10.6 Onde o banco vai apertar primeiro</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:28%">Tabela</th><th style="width:24%">Cresce com</th><th>Observação</th></tr></thead>
+  <tbody>
+    <tr><td><code>metricas_diarias</code></td><td>associados × dias</td>
+        <td>10 mil associados × 365 dias = 3,6 M linhas/ano. Já pré-agregada e indexada;
+            particionar por ano quando incomodar.</td></tr>
+    <tr><td><code>notificacoes</code></td><td>associados × eventos</td>
+        <td>A que mais cresce. Precisa de política de expurgo — arquivar o que passou de 90 dias.</td></tr>
+    <tr><td><code>vendas</code> e <code>comissoes</code></td><td>volume transacional</td>
+        <td>Crescimento saudável; os índices por status e data já cobrem as consultas usadas.</td></tr>
+    <tr><td><code>logs_auditoria</code></td><td>toda operação sensível</td>
+        <td>Também exige expurgo ou envio para armazenamento frio.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 11 — SEGURANÇA -->
+<h1><span class="cap">Capítulo 11</span>Análise de segurança</h1>
+
+<p class="intro">
+  Esta análise combina revisão do código com <strong>testes ofensivos executados contra a API
+  em funcionamento</strong> — tentativas reais de ler dados alheios, escalar privilégio e
+  reutilizar tokens.
+</p>
+
+<h2>11.1 Testes de autorização executados</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:52%">Tentativa</th><th style="width:16%">Resultado</th><th>Veredito</th></tr></thead>
+  <tbody>
+    <tr><td>Associado altera cupom de <em>outro</em> associado</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado abre chamado de suporte de outro</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado força <code>associadoId</code> alheio na consulta</td><td><code>400</code></td><td>✅ parâmetro nem é aceito</td></tr>
+    <tr><td>Associado lista todos os associados</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado cria produto no catálogo</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado liquida comissões</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado acessa o financeiro global</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Token adulterado</td><td><code>401</code></td><td>✅ assinatura verificada</td></tr>
+    <tr><td>Requisição sem token</td><td><code>401</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Refresh token usado como access token</td><td><code>401</code></td><td>✅ tipos não se confundem</td></tr>
+    <tr><td>Reutilização de refresh token já consumido</td><td><code>401</code></td><td>✅ rotação funciona</td></tr>
+  </tbody>
+</table>
+
+<h2>11.2 Controles implementados</h2>
+
+<table>
+  <thead><tr><th style="width:30%">Controle</th><th>Como está</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Senhas</strong></td>
+        <td>bcrypt com 10 rounds, implementação nativa. O hash nunca sai da camada de serviço —
+            nenhuma rota o inclui na resposta.</td></tr>
+    <tr><td><strong>Refresh token</strong></td>
+        <td>Guardado como SHA-256, com rotação a cada uso. Um token roubado só serve uma vez, e
+            o uso legítimo seguinte falha — o que denuncia o roubo.</td></tr>
+    <tr><td><strong>Access token</strong></td>
+        <td>Válido por 15 minutos. O usuário é revalidado no banco a cada requisição, então
+            desativar uma conta tem efeito imediato.</td></tr>
+    <tr><td><strong>Injeção de SQL</strong></td>
+        <td>Prisma parametriza tudo. Os dois <code>$queryRaw</code> usam template tag, que também
+            parametriza. O único <code>$executeRawUnsafe</code> está no seed, com SQL fixo e sem
+            entrada de usuário.</td></tr>
+    <tr><td><strong>Mass assignment</strong></td>
+        <td><code>forbidNonWhitelisted</code> rejeita com <code>400</code> qualquer campo não
+            declarado no DTO — foi o que barrou a tentativa de forçar <code>associadoId</code>.</td></tr>
+    <tr><td><strong>Autorização horizontal</strong></td>
+        <td>Verificada no serviço, comparando o dono do recurso com o associado autenticado.
+            As rotas do portal impõem o filtro no servidor.</td></tr>
+    <tr><td><strong>Confidencialidade no suporte</strong></td>
+        <td>Notas internas são filtradas da resposta quando quem consulta não é administrador.</td></tr>
+    <tr><td><strong>Rate limiting</strong></td>
+        <td>300 requisições por minuto por IP.</td></tr>
+    <tr><td><strong>Cabeçalhos</strong></td>
+        <td>Helmet aplicado.</td></tr>
+    <tr><td><strong>Enumeração de contas</strong></td>
+        <td>Mensagem idêntica para email inexistente e senha errada — <em>e</em> tempo de
+            resposta equalizado (ver 11.3).</td></tr>
+  </tbody>
+</table>
+
+<h2>11.3 Vulnerabilidade encontrada e corrigida</h2>
+
+<div class="destaque atencao">
+  <span class="rotulo">Enumeração de usuários por temporização</span>
+  <p>
+    A mensagem de erro já era idêntica nos dois casos, mas o <strong>tempo</strong> não era.
+    Quando o email não existia, o código retornava de imediato (6,7 ms); quando existia, rodava
+    o bcrypt antes de falhar (51,1 ms). A diferença de 44 ms permitia a um atacante descobrir,
+    por cronometragem, quais contas existem — insumo para ataques direcionados de senha.
+  </p>
+  <p>
+    <strong>Correção:</strong> a comparação passou a rodar sempre, contra um hash-isca gerado a
+    cada inicialização quando o email não existe. A diferença caiu para <strong>3,4 ms</strong>,
+    dentro do ruído da rede.
+  </p>
+</div>
+
+<h2>11.4 Pendências antes de expor à internet</h2>
+
+<table>
+  <thead><tr><th style="width:8%">Risco</th><th style="width:30%">Item</th><th>Por quê</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Alto</strong></td><td>Segredos ainda são os de exemplo</td>
+        <td><code>JWT_SECRET</code> e <code>JWT_REFRESH_SECRET</code> continuam com o valor do
+            <code>.env.example</code>, que está no repositório. Quem o lê forja qualquer token.
+            <em>Trocar é obrigatório.</em></td></tr>
+    <tr><td><strong>Alto</strong></td><td>Senhas do seed publicadas</td>
+        <td><code>Admin@2026</code> está nesta documentação e no repositório.</td></tr>
+    <tr><td><strong>Alto</strong></td><td>Sem HTTPS</td>
+        <td>O Bearer token viaja no cabeçalho; sem TLS é interceptável na rede.</td></tr>
+    <tr><td><strong>Médio</strong></td><td><code>CORS_ORIGINS</code> aceita <code>*</code> como padrão</td>
+        <td>Se a variável não for definida em produção, qualquer origem chama a API.</td></tr>
+    <tr><td><strong>Médio</strong></td><td>Rate limit único para todas as rotas</td>
+        <td>300/min é generoso para <code>/auth/login</code>. Um limite específico e mais
+            estrito no login dificultaria força bruta.</td></tr>
+    <tr><td><strong>Médio</strong></td><td>Sem bloqueio após tentativas falhas</td>
+        <td>Não há travamento temporário de conta nem captcha.</td></tr>
+    <tr><td><strong>Baixo</strong></td><td>CSP desativada no Helmet</td>
+        <td><code>contentSecurityPolicy: false</code> foi posto para não atrapalhar o Swagger.
+            Convém ativar em produção, ou publicar o Swagger em rota separada.</td></tr>
+    <tr><td><strong>Baixo</strong></td><td>Sem rotação de logs de auditoria</td>
+        <td>A tabela cresce sem limite.</td></tr>
+    <tr><td><strong>Info</strong></td><td>Gate de código de acesso não é segurança</td>
+        <td>Reproduz o comportamento original, mas é um código compartilhado — trata-se de
+            uma barreira de conveniência, não de um controle de acesso.</td></tr>
+  </tbody>
+</table>
+
+<h3>Dependências</h3>
+<p>
+  O <code>npm audit</code> aponta 3 vulnerabilidades de severidade alta, <strong>todas em
+  dependências de desenvolvimento</strong> (o parser de configuração da CLI do Prisma e o
+  gerador de identificadores do autocannon). Nenhuma alcança o código que roda em produção.
+  Ainda assim, vale acompanhar as atualizações.
+</p>
+
+<!-- ============================================================ 8 -->
+<h1><span class="cap">Capítulo 12</span>Dados e fidelidade</h1>
+
+<p class="intro">
+  O banco não é populado com dados sintéticos. O seed carrega o dataset extraído das telas
+  reais da plataforma original — e os indicadores calculados pela API reproduzem os números
+  que aquelas telas exibiam.
+</p>
+
+<h2>12.1 O pipeline de extração</h2>
+
+<p>
+  <code>tools/extract.py</code> percorre as 113 capturas e produz 24 arquivos JSON. Ele opera em
+  duas frentes: as <strong>tabelas</strong> (parsing das linhas <code>&lt;tr&gt;</code> com o
+  identificador real no atributo <code>data-row-key</code>) e as <strong>telas em cartão</strong>
+  — planos, benefícios, conteúdos, notificações, serviços, materiais, conquistas e comunidade —
+  cujos dados vivem em estruturas visuais do Ant Design.
+</p>
+
+<pre><code>cd digitaisbr-clone
+python3 tools/extract.py       <span class="cmt"># regenera prisma/seed-data/*.json</span>
+cd apps/api &amp;&amp; npm run seed    <span class="cmt"># recarrega o banco</span></code></pre>
+
+<h2>12.2 O que o seed carrega</h2>
+
+<div class="cartoes">
+  <div class="cartao"><b>374</b><span>registros extraídos</span></div>
+  <div class="cartao"><b>24</b><span>arquivos JSON</span></div>
+  <div class="cartao"><b>37</b><span>tabelas populadas</span></div>
+  <div class="cartao"><b>~2s</b><span>tempo de carga</span></div>
+</div>
+
+<table class="compacta">
+  <thead><tr><th>Entidade</th><th style="width:12%">Qtd.</th><th>Entidade</th><th style="width:12%">Qtd.</th></tr></thead>
+  <tbody>
+    <tr><td>Planos</td><td>3</td><td>Benefícios</td><td>19</td></tr>
+    <tr><td>Associados</td><td>40 <sup>1</sup></td><td>Conteúdos</td><td>16</td></tr>
+    <tr><td>Produtos / categorias</td><td>25 / 7</td><td>Materiais de divulgação</td><td>12</td></tr>
+    <tr><td>Lojas / itens de vitrine</td><td>20 / 150</td><td>Posts / comentários / curtidas</td><td>20 / 349 / 498 <sup>2</sup></td></tr>
+    <tr><td>Vendas</td><td>60</td><td>Tickets / mensagens</td><td>21 / 82</td></tr>
+    <tr><td>Comissões</td><td>40</td><td>Escritórios / profissionais</td><td>5 / 6</td></tr>
+    <tr><td>Parceiros</td><td>10</td><td>Notificações / campanhas</td><td>25 / 5</td></tr>
+    <tr><td>Cupons / links / saques</td><td>5 / 5 / 8</td><td>Conquistas</td><td>12</td></tr>
+  </tbody>
+</table>
+
+<p style="font-size:8.8pt;color:#5b6472">
+  <sup>1</sup> São 30 associados da tabela original mais 10 personas que apareciam apenas na
+  comunidade e no suporte (Maria Silva, João Santos, Ana Oliveira e outros). Elas foram criadas
+  como associados para preservar a integridade referencial daquele conteúdo — a alternativa
+  seria descartar os posts e chamados delas.<br>
+  <sup>2</sup> O dataset registrava 576 curtidas, mas a curtida é única por (post, pessoa) e há
+  40 associados. O total possível é 498. Os comentários (349) coincidiram exatamente.
+</p>
+
+<h2>12.3 Conferência com as telas originais</h2>
+
+<p>
+  Esta tabela é a prova de que o modelo está certo: são indicadores calculados por agregação SQL
+  sobre o banco, comparados com o que a plataforma original exibia.
+</p>
+
+<table>
+  <thead><tr><th style="width:38%">Indicador</th><th style="width:22%">Tela original</th><th style="width:22%">API</th><th>Confere</th></tr></thead>
+  <tbody>
+    <tr><td>Receita total</td><td>R$ 4.395,00</td><td>R$ 4.395,00</td><td>✅</td></tr>
+    <tr><td>Ticket médio</td><td>R$ 146,50</td><td>R$ 146,50</td><td>✅</td></tr>
+    <tr><td>Vendas aprovadas</td><td>30</td><td>30</td><td>✅</td></tr>
+    <tr><td>Taxa de cancelamento</td><td>33,3%</td><td>33,3%</td><td>✅</td></tr>
+    <tr><td>Comissões pagas</td><td>R$ 373,02</td><td>R$ 373,02</td><td>✅</td></tr>
+    <tr><td>Comissões em processamento</td><td>R$ 561,45</td><td>R$ 561,45</td><td>✅</td></tr>
+    <tr><td>Comissões aguardando</td><td>R$ 350,92</td><td>R$ 350,92</td><td>✅</td></tr>
+    <tr><td>MRR</td><td>R$ 1.998,00</td><td>R$ 1.998,00</td><td>✅</td></tr>
+    <tr><td>Saldo financeiro</td><td>R$ 3.378,46</td><td>R$ 3.378,50</td><td>≈ <sup>3</sup></td></tr>
+    <tr><td>Margem líquida</td><td>76,8%</td><td>76,9%</td><td>≈ <sup>3</sup></td></tr>
+    <tr><td>Composição de saídas</td><td>36,7 / 23,7 / 19,8 / 11,9 / 7,9 %</td><td>idêntica</td><td>✅</td></tr>
+    <tr><td>Comentários na comunidade</td><td>349</td><td>349</td><td>✅</td></tr>
+    <tr><td>Visualizações de conteúdo</td><td>44.690</td><td>44.690</td><td>✅</td></tr>
+  </tbody>
+</table>
+
+<p style="font-size:8.8pt;color:#5b6472">
+  <sup>3</sup> Diferença de R$ 0,04, decorrente do arredondamento a dois decimais ao ratear os
+  custos operacionais entre os meses de competência.
+</p>
+
+<div class="destaque atencao">
+  <span class="rotulo">Duas correções que esses números revelaram</span>
+  <p>
+    O MRR saía R$ 3.497 até se perceber que assinatura de associado suspenso ou inativo não pode
+    contar como vigente — <code>Assinatura.ativa</code> passou a acompanhar o status do associado.
+    E o saldo só fechou quando o financeiro foi modelado como a plataforma o modelava:
+    <em>entradas = receita das vendas pagas</em> e <em>saídas = comissões pagas + custos
+    operacionais</em>, em vez de meses acumulados de MRR. Conferir com a fonte é o que expõe
+    esse tipo de erro.
+  </p>
+</div>
+
+<!-- ============================================================ 9 -->
+<h1><span class="cap">Capítulo 13</span>Qualidade e testes</h1>
+
+<p class="intro">
+  A suíte end-to-end exercita a API pela porta HTTP, contra um banco real com o seed carregado.
+  Ela não usa mocks: se uma transação estiver quebrada, o teste quebra.
+</p>
+
+<div class="cartoes tres">
+  <div class="cartao"><b>77</b><span>asserções</span><small>todas passando</small></div>
+  <div class="cartao"><b>2</b><span>suítes</span><small>leitura e escrita</small></div>
+  <div class="cartao"><b>0</b><span>mocks</span><small>banco e HTTP reais</small></div>
+</div>
+
+<h2>13.1 O que a suíte cobre</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:28%">Bloco</th><th>Verificações</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Autenticação</strong></td>
+        <td>Rota protegida sem token devolve 401; login de admin e de associado; senha errada
+            rejeitada; código de acesso validado.</td></tr>
+    <tr><td><strong>RBAC</strong></td>
+        <td>Associado bloqueado nas rotas administrativas; admin sem associado bloqueado no portal;
+            cada papel acessa o que lhe cabe.</td></tr>
+    <tr><td><strong>Integridade do seed</strong></td>
+        <td>Contagem exata de cada entidade carregada.</td></tr>
+    <tr><td><strong>Listagens</strong></td>
+        <td>Paginação, total de páginas, busca textual, filtro por status e plano, ordenação e
+            recorte por período.</td></tr>
+    <tr><td><strong>Validação</strong></td>
+        <td>Email malformado, campo desconhecido, UUID inválido, enum inexistente e limite acima
+            do máximo — todos rejeitados com 400.</td></tr>
+    <tr><td><strong>Ciclo da venda</strong></td>
+        <td>Total calculado, comissão gerada com o percentual correto, referência sequencial,
+            transições válidas aceitas, inválidas recusadas, estados finais fechados, e a
+            propagação para a comissão.</td></tr>
+    <tr><td><strong>Cupons</strong></td>
+        <td>Criação, código duplicado recusado, desconto aplicado ao total, cupom inexistente recusado.</td></tr>
+    <tr><td><strong>Comissões e saques</strong></td>
+        <td>Liquidação em lote, repagamento recusado, saque acima do saldo recusado.</td></tr>
+    <tr><td><strong>Limites por plano</strong></td>
+        <td>Limite de produtos do Básico, personalização visual bloqueada, produto exclusivo
+            recusado, e o que é permitido no Básico continua permitido.</td></tr>
+    <tr><td><strong>Comunidade</strong></td>
+        <td>Publicar, curtir, descurtir, comentar, fixar como admin e a recusa ao associado.</td></tr>
+    <tr><td><strong>Suporte</strong></td>
+        <td>Numeração, thread inicial, nota interna recusada ao associado, transição automática
+            de status, e a contagem de mensagens visíveis a cada papel.</td></tr>
+    <tr><td><strong>Isolamento</strong></td>
+        <td>Chamado de outro associado devolve 403.</td></tr>
+    <tr><td><strong>Rotas públicas</strong></td>
+        <td>Vitrine e perfil sem autenticação, privacidade de email respeitada e contabilização
+            de visualização.</td></tr>
+  </tbody>
+</table>
+
+<h2>13.2 Como executar</h2>
+
+<pre><code>cd apps/api
+npm run start:prod &amp;      <span class="cmt"># a API precisa estar no ar</span>
+npm run seed              <span class="cmt"># estado limpo e determinístico</span>
+npm run test:e2e</code></pre>
+
+<div class="destaque nota">
+  <span class="rotulo">Por que reseedar antes</span>
+  <p>
+    A suíte de escrita cria vendas, cupons, posts e chamados reais. Rodá-la duas vezes sem
+    reseedar faz a segunda execução esbarrar nos dados da primeira — um cupom com código
+    duplicado, por exemplo. Isso não é fragilidade do teste: é a API recusando corretamente
+    uma operação inválida.
+  </p>
+</div>
+
+<!-- ============================================================ 10 -->
+<h1><span class="cap">Capítulo 14</span>Operação</h1>
+
+<h2>14.1 Subir o ambiente</h2>
+
+<pre><code><span class="cmt"># 1. banco — Postgres em :5434 e Adminer em :8082</span>
+docker compose up -d
+
+<span class="cmt"># 2. dependências e variáveis</span>
+cd apps/api
+npm install
+cp .env.example .env
+
+<span class="cmt"># 3. schema e dados</span>
+npx prisma migrate deploy
+npm run seed
+
+<span class="cmt"># 4. subir a API</span>
+npm run start:dev</code></pre>
+
+<table class="compacta">
+  <thead><tr><th style="width:26%">Serviço</th><th style="width:28%">Endereço</th><th>Observação</th></tr></thead>
+  <tbody>
+    <tr><td>API</td><td><code>localhost:3000/api</code></td><td>—</td></tr>
+    <tr><td>Swagger</td><td><code>localhost:3000/api/docs</code></td><td>Documentação navegável e testável</td></tr>
+    <tr><td>PostgreSQL</td><td><code>localhost:5434</code></td><td>Porta 5432 evitada por conflito com outros contêineres</td></tr>
+    <tr><td>Adminer</td><td><code>localhost:8082</code></td><td>Servidor <code>db</code>, usuário e senha <code>digitaisbr</code></td></tr>
+  </tbody>
+</table>
+
+<h3>Credenciais do seed</h3>
+<table class="compacta">
+  <thead><tr><th style="width:26%">Perfil</th><th style="width:36%">Email</th><th>Senha</th></tr></thead>
+  <tbody>
+    <tr><td>Administrador</td><td><code>administrador@digitaisbr.com</code></td><td><code>Admin@2026</code></td></tr>
+    <tr><td>Associado</td><td><code>ana-silva@email.com</code></td><td><code>Assoc@2026</code></td></tr>
+  </tbody>
+</table>
+<p style="font-size:9pt;color:#5b6472">
+  Os 40 associados usam a mesma senha, com email no padrão <code>handle@email.com</code>.
+</p>
+
+<h2>14.2 Variáveis de ambiente</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:30%">Variável</th><th style="width:26%">Exemplo</th><th>Função</th></tr></thead>
+  <tbody>
+    <tr><td><code>DATABASE_URL</code></td><td><code>postgresql://…:5434/digitaisbr</code></td><td>Conexão com o Postgres</td></tr>
+    <tr><td><code>PORT</code></td><td><code>3000</code></td><td>Porta HTTP</td></tr>
+    <tr><td><code>API_PREFIX</code></td><td><code>api</code></td><td>Prefixo global das rotas</td></tr>
+    <tr><td><code>CORS_ORIGINS</code></td><td><code>http://localhost:5173</code></td><td>Origens liberadas, separadas por vírgula</td></tr>
+    <tr><td><code>JWT_SECRET</code></td><td>—</td><td>Assinatura do access token</td></tr>
+    <tr><td><code>JWT_EXPIRES_IN</code></td><td><code>15m</code></td><td>Validade do access token</td></tr>
+    <tr><td><code>JWT_REFRESH_SECRET</code></td><td>—</td><td>Segredo do refresh</td></tr>
+    <tr><td><code>JWT_REFRESH_EXPIRES_IN</code></td><td><code>7d</code></td><td>Validade do refresh</td></tr>
+    <tr><td><code>ACCESS_CODE</code></td><td>—</td><td>Código do gate de acesso da plataforma</td></tr>
+    <tr><td><code>SEED_ADMIN_EMAIL</code> · <code>SEED_ADMIN_PASSWORD</code></td><td>—</td><td>Credenciais criadas pelo seed</td></tr>
+    <tr><td><code>SEED_ASSOCIADO_PASSWORD</code></td><td>—</td><td>Senha padrão dos associados do seed</td></tr>
+  </tbody>
+</table>
+
+<h2>14.3 Migrations</h2>
+
+<pre><code>npx prisma migrate dev --name descricao   <span class="cmt"># cria e aplica em desenvolvimento</span>
+npx prisma migrate deploy                 <span class="cmt"># aplica em produção, sem prompts</span>
+npx prisma migrate reset --force          <span class="cmt"># recria do zero e roda o seed</span>
+npx prisma studio                         <span class="cmt"># inspeção visual do banco</span>
+npx prisma generate                       <span class="cmt"># regenera o cliente tipado</span></code></pre>
+
+<h2>14.4 Checklist antes de produção</h2>
+
+<table>
+  <thead><tr><th style="width:6%"></th><th style="width:34%">Item</th><th>Por quê</th></tr></thead>
+  <tbody>
+    <tr><td>☐</td><td>Trocar <code>JWT_SECRET</code> e <code>JWT_REFRESH_SECRET</code></td>
+        <td>Os valores do <code>.env.example</code> são públicos. Use segredos aleatórios de 32+ bytes.</td></tr>
+    <tr><td>☐</td><td>Alterar as senhas do seed</td>
+        <td><code>Admin@2026</code> está nesta documentação e no repositório.</td></tr>
+    <tr><td>☐</td><td>Restringir <code>CORS_ORIGINS</code></td>
+        <td>Listar apenas os domínios do front, sem curinga.</td></tr>
+    <tr><td>☐</td><td>Servir sob HTTPS</td>
+        <td>O Bearer token trafega no cabeçalho; sem TLS ele é interceptável.</td></tr>
+    <tr><td>☐</td><td>Rever o limite do throttler</td>
+        <td>300 req/min por IP serve para desenvolvimento; ajuste ao tráfego real.</td></tr>
+    <tr><td>☐</td><td>Configurar backup do Postgres</td>
+        <td>O volume Docker não é backup.</td></tr>
+    <tr><td>☐</td><td>Rodar <code>migrate deploy</code>, nunca <code>migrate dev</code></td>
+        <td><code>dev</code> pode propor reset destrutivo.</td></tr>
+    <tr><td>☐</td><td>Não rodar o seed em produção</td>
+        <td>O seed trunca todas as tabelas antes de carregar.</td></tr>
+    <tr><td>☐</td><td>Centralizar logs e monitorar 5xx</td>
+        <td>Os filtros já registram stack trace de erro de servidor.</td></tr>
+  </tbody>
+</table>
+
+<div class="destaque atencao">
+  <span class="rotulo">Duas pendências conhecidas</span>
+  <p>
+    <strong>Envio real de email e push</strong> — notificações e campanhas são gravadas no banco
+    e servidas pela API, mas nenhum provedor externo é acionado. Integrar um serviço de envio é
+    trabalho pendente.<br>
+    <strong>Upload de arquivos</strong> — imagens de produto, banner e logo são recebidas como URL.
+    Não há armazenamento de binários; conectar um bucket é o passo natural.
+  </p>
+</div>
+
+
+<!-- ============================================================ 15 — DEPLOY -->
+<h1><span class="cap">Capítulo 15</span>Publicar na internet</h1>
+
+<p class="intro">
+  O que existe hoje roda em <code>localhost</code>, com dados de demonstração e segredos de
+  exemplo. Este capítulo lista o que falta para colocar o sistema no ar de forma segura, em
+  ordem de dependência.
+</p>
+
+<h2>15.1 Arquitetura de produção</h2>
+
+<figure>
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="p1" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+  <style>
+    .cx { fill:#f6f8fb; stroke:#c8d1e0; stroke-width:1.2; }
+    .cd { fill:#e6f4ff; stroke:#1677ff; stroke-width:1.4; }
+    .cg { fill:#e8f8ef; stroke:#12a150; stroke-width:1.4; }
+    .cw { fill:#fffbf0; stroke:#d48806; stroke-width:1.3; }
+    .t1 { font-size:10.5px; font-weight:700; fill:#1f2430; }
+    .t2 { font-size:8.4px; fill:#5b6472; }
+  </style>
+
+  <rect class="cx" x="270" y="6" width="220" height="40" rx="7"/>
+  <text class="t1" x="380" y="24" text-anchor="middle">Usuários · navegador</text>
+  <text class="t2" x="380" y="38" text-anchor="middle">https://digitaisbr.com</text>
+
+  <line x1="380" y1="46" x2="380" y2="62" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+
+  <rect class="cw" x="230" y="66" width="300" height="46" rx="7"/>
+  <text class="t1" x="380" y="85" text-anchor="middle" fill="#8c5800">Nginx / Caddy — proxy reverso</text>
+  <text class="t2" x="380" y="100" text-anchor="middle">TLS (Let's Encrypt) · compressão · cabeçalhos de segurança</text>
+
+  <line x1="300" y1="112" x2="230" y2="140" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+  <line x1="460" y1="112" x2="530" y2="140" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+
+  <rect class="cx" x="60" y="144" width="240" height="52" rx="7"/>
+  <text class="t1" x="180" y="164" text-anchor="middle">Front — arquivos estáticos</text>
+  <text class="t2" x="180" y="178" text-anchor="middle">build do Vite (dist/)</text>
+  <text class="t2" x="180" y="190" text-anchor="middle">servido pelo proxy ou por CDN</text>
+
+  <rect class="cd" x="460" y="144" width="240" height="52" rx="7"/>
+  <text class="t1" x="580" y="164" text-anchor="middle" fill="#002c8c">API — Node em cluster</text>
+  <text class="t2" x="580" y="178" text-anchor="middle">4 a 8 workers (PM2 ou Docker)</text>
+  <text class="t2" x="580" y="190" text-anchor="middle">sem estado — escala horizontal</text>
+
+  <line x1="580" y1="196" x2="580" y2="216" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#p1)"/>
+
+  <rect class="cg" x="460" y="220" width="240" height="46" rx="7"/>
+  <text class="t1" x="580" y="239" text-anchor="middle" fill="#0b6b36">PostgreSQL 16</text>
+  <text class="t2" x="580" y="254" text-anchor="middle">gerenciado, com backup automático</text>
+
+  <rect class="cx" x="60" y="220" width="240" height="46" rx="7"/>
+  <text class="t1" x="180" y="239" text-anchor="middle">Armazenamento de arquivos</text>
+  <text class="t2" x="180" y="254" text-anchor="middle">S3 / R2 — imagens e materiais</text>
+
+  <line x1="460" y1="243" x2="306" y2="243" stroke="#c8d1e0" stroke-width="1.2" stroke-dasharray="3,3"/>
+  <text class="t2" x="380" y="238" text-anchor="middle" fill="#8c94a3">pendente</text>
+
+  <rect class="cx" x="60" y="278" width="640" height="18" rx="4"/>
+  <text class="t2" x="380" y="291" text-anchor="middle">Observabilidade: logs centralizados · métricas · alerta de erro 5xx</text>
+</svg>
+<figcaption>Topologia mínima recomendada. Nada aqui exige mudança no código da aplicação.</figcaption>
+</figure>
+
+<h2>15.2 Checklist obrigatório — sem isto, não publique</h2>
+
+<table>
+  <thead><tr><th style="width:6%"></th><th style="width:32%">Item</th><th>Como fazer</th></tr></thead>
+  <tbody>
+    <tr><td>☐</td><td><strong>Gerar segredos novos</strong></td>
+        <td>O <code>.env.example</code> está no repositório e seus valores são públicos.<br>
+            <code>openssl rand -base64 48</code> para cada um de <code>JWT_SECRET</code> e
+            <code>JWT_REFRESH_SECRET</code>.</td></tr>
+    <tr><td>☐</td><td><strong>Trocar as senhas do seed</strong></td>
+        <td><code>Admin@2026</code> e <code>Assoc@2026</code> estão publicadas nesta documentação.
+            Crie o administrador real e remova as contas de demonstração.</td></tr>
+    <tr><td>☐</td><td><strong>TLS em tudo</strong></td>
+        <td>Let's Encrypt via Caddy (automático) ou Certbot com Nginx. Redirecionar 80 → 443.</td></tr>
+    <tr><td>☐</td><td><strong>Restringir CORS</strong></td>
+        <td><code>CORS_ORIGINS=https://digitaisbr.com</code>. O padrão atual é <code>*</code>.</td></tr>
+    <tr><td>☐</td><td><strong>Não rodar o seed</strong></td>
+        <td>Ele executa <code>TRUNCATE</code> em todas as tabelas antes de carregar.</td></tr>
+    <tr><td>☐</td><td><strong>Usar <code>migrate deploy</code></strong></td>
+        <td>Nunca <code>migrate dev</code> em produção — ele pode propor reset destrutivo.</td></tr>
+    <tr><td>☐</td><td><strong>Backup do banco</strong></td>
+        <td>Volume Docker não é backup. Use um Postgres gerenciado com snapshot diário, ou
+            <code>pg_dump</code> agendado para armazenamento externo.</td></tr>
+    <tr><td>☐</td><td><strong>Senha forte no Postgres</strong></td>
+        <td>Hoje é <code>digitaisbr/digitaisbr</code>. O banco não deve aceitar conexão externa.</td></tr>
+  </tbody>
+</table>
+
+<h2>15.3 Checklist recomendado</h2>
+
+<table>
+  <thead><tr><th style="width:6%"></th><th style="width:32%">Item</th><th>Motivo</th></tr></thead>
+  <tbody>
+    <tr><td>☐</td><td>Cluster de 4 a 8 workers</td>
+        <td>Multiplica o throughput e, principalmente, a capacidade de login (seção 10.5).</td></tr>
+    <tr><td>☐</td><td>Rate limit específico no login</td>
+        <td>Algo como 10 tentativas por minuto por IP, contra força bruta.</td></tr>
+    <tr><td>☐</td><td>Logs centralizados e alerta de 5xx</td>
+        <td>Os filtros já registram stack trace; falta para onde enviar.</td></tr>
+    <tr><td>☐</td><td>Ativar CSP no Helmet</td>
+        <td>Está desligada por causa do Swagger — publique a documentação em rota separada
+            ou restrita.</td></tr>
+    <tr><td>☐</td><td>Swagger fechado em produção</td>
+        <td>Expor o mapa completo da API facilita reconhecimento. Restrinja por IP ou desative.</td></tr>
+    <tr><td>☐</td><td>Cache nos analíticos</td>
+        <td>Dashboard e relatórios são as consultas mais caras.</td></tr>
+    <tr><td>☐</td><td>Expurgo de notificações e auditoria</td>
+        <td>São as tabelas que crescem sem teto.</td></tr>
+    <tr><td>☐</td><td>Healthcheck e reinício automático</td>
+        <td><code>GET /api/planos</code> serve como sonda; PM2 ou Docker reiniciam em falha.</td></tr>
+  </tbody>
+</table>
+
+<h2>15.4 Funcionalidades ainda não implementadas</h2>
+
+<p>
+  Dois recursos são recebidos e armazenados pelo sistema, mas não têm integração externa:
+</p>
+
+<table>
+  <thead><tr><th style="width:28%">Recurso</th><th style="width:30%">Situação</th><th>O que falta</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Email e push</strong></td>
+        <td>Notificações e campanhas são gravadas no banco e servidas pela API; nada sai para
+            fora.</td>
+        <td>Integrar um provedor de envio (Resend, SendGrid, SES) e um serviço de push.
+            O modelo de dados já prevê o canal.</td></tr>
+    <tr><td><strong>Upload de arquivos</strong></td>
+        <td>Imagens de produto, banner e logo são recebidas como URL.</td>
+        <td>Conectar um bucket S3 ou R2 e trocar os campos de URL por upload com validação de
+            tipo e tamanho.</td></tr>
+  </tbody>
+</table>
+
+<h2>15.5 Passo a passo do deploy</h2>
+
+<pre><code><span class="cmt"># 1. servidor: Docker + proxy reverso</span>
+apt update &amp;&amp; apt install -y docker.io docker-compose-plugin caddy
+
+<span class="cmt"># 2. variáveis de produção (fora do repositório)</span>
+JWT_SECRET=$(openssl rand -base64 48)
+JWT_REFRESH_SECRET=$(openssl rand -base64 48)
+DATABASE_URL="postgresql://usuario:SENHA_FORTE@db:5432/digitaisbr?connection_limit=20"
+CORS_ORIGINS="https://digitaisbr.com"
+NODE_ENV=production
+
+<span class="cmt"># 3. banco: aplicar migrations (nunca o seed)</span>
+npx prisma migrate deploy
+
+<span class="cmt"># 4. API em cluster</span>
+npm run build
+pm2 start dist/main.js -i 4 --name digitaisbr-api
+
+<span class="cmt"># 5. front: build estático</span>
+cd apps/web &amp;&amp; npm run build     <span class="cmt"># gera dist/</span></code></pre>
+
+<p>Configuração mínima do Caddy — TLS é automático:</p>
+
+<pre><code>digitaisbr.com {
+    <span class="cmt"># a API responde sob /api</span>
+    handle /api/* {
+        reverse_proxy localhost:3000
+    }
+    <span class="cmt"># todo o resto é o front; fallback para o index (rotas do SPA)</span>
+    handle {
+        root * /var/www/digitaisbr/dist
+        try_files {path} /index.html
+        file_server
+    }
+}</code></pre>
+
+<h2>15.6 Estimativa de infraestrutura</h2>
+
+<table>
+  <thead><tr>
+    <th style="width:22%">Porte</th><th style="width:20%">Usuários ativos</th>
+    <th style="width:28%">Servidor</th><th>Banco</th>
+  </tr></thead>
+  <tbody>
+    <tr><td><strong>Piloto</strong></td><td>até 500</td>
+        <td>2 vCPU · 4 GB — API e banco juntos</td>
+        <td>Postgres no mesmo host</td></tr>
+    <tr><td><strong>Produção inicial</strong></td><td>2.000 – 5.000</td>
+        <td>4 vCPU · 8 GB — 4 workers</td>
+        <td>Gerenciado, 2 vCPU · 4 GB, com backup</td></tr>
+    <tr><td><strong>Crescimento</strong></td><td>15.000 – 20.000</td>
+        <td>8 vCPU · 16 GB — 8 workers, ou 2 instâncias</td>
+        <td>Gerenciado, 4 vCPU · 8 GB + réplica de leitura</td></tr>
+  </tbody>
+</table>
+
+<p style="font-size:9pt;color:#5b6472">
+  Projeção derivada das medições do capítulo 10, assumindo navegação típica (uma ação a cada
+  8–12 segundos). Vale como ponto de partida para dimensionar, não como garantia — confirme com
+  um teste de carga no ambiente real antes de abrir ao público.
+</p>
+
+<div class="rodape-doc">
+  DigitaisBR · Documentação da Plataforma · Versão 1.1 · Agosto de 2026<br>
+  Referência navegável e testável da API: <code>/api/docs</code>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!-- ============================================================ 8 — INTERFACE -->
+<h1><span class="cap">Capítulo 8</span>A interface</h1>
+
+<p class="intro">
+  O site tem três faces com públicos e permissões distintos: o painel administrativo, o portal
+  do associado e as páginas abertas. São <strong>40 telas</strong> em React, todas consumindo a
+  mesma API.
+</p>
+
+<h2>8.1 Tecnologias e por que cada uma</h2>
+
+<table>
+  <thead><tr><th style="width:24%">Peça</th><th style="width:12%">Versão</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><strong>React</strong></td><td>19</td>
+        <td>Base da interface. Escolhido também por continuidade: a plataforma original era React.</td></tr>
+    <tr><td><strong>Vite</strong></td><td>8</td>
+        <td>Servidor de desenvolvimento com recarga instantânea e empacotador de produção.
+            Faz proxy de <code>/api</code>, o que elimina CORS no desenvolvimento.</td></tr>
+    <tr><td><strong>TypeScript</strong></td><td>5</td>
+        <td>Os contratos da API são declarados em <code>api/tipos.ts</code>; mudar um campo no
+            backend quebra a compilação do front, em vez de falhar em produção.</td></tr>
+    <tr><td><strong>Ant Design</strong></td><td>5</td>
+        <td>Biblioteca de componentes. Mesma do site original, o que preserva a ergonomia das
+            telas capturadas — tabelas, formulários e feedback já resolvidos.</td></tr>
+    <tr><td><strong>TanStack Query</strong></td><td>5</td>
+        <td>Cache, revalidação e estados de carregamento. Uma escrita invalida as chaves
+            afetadas e a tela se atualiza sozinha, sem recarregar nada à mão.</td></tr>
+    <tr><td><strong>Recharts</strong></td><td>2</td>
+        <td>Gráficos em SVG. Também era a biblioteca do original.</td></tr>
+    <tr><td><strong>Axios</strong></td><td>1</td>
+        <td>Cliente HTTP com interceptadores — é onde vive a renovação automática de token.</td></tr>
+  </tbody>
+</table>
+
+<h2>8.2 As três áreas</h2>
+
+<h3>Painel administrativo — 22 telas</h3>
+<p>
+  Dashboard com oito indicadores e quatro gráficos; listagens de associados, catálogo, lojas,
+  vendas, comissões, parceiros, benefícios, conteúdos e chamados; telas de detalhe para
+  associado, produto, loja e ticket; formulários de cadastro; e as áreas analíticas de
+  financeiro (fluxo de caixa, DRE, projeção de MRR, saques) e relatórios.
+</p>
+
+<h3>Portal do associado — 18 telas</h3>
+<p>
+  Painel pessoal, minha loja (com marketplace para escolher produtos), minhas vendas, financeiro
+  com solicitação de saque, cupons, links de afiliado, performance diária, benefícios, conteúdos,
+  materiais de divulgação, comunidade, ranking e conquistas, assessoria jurídica e contábil,
+  suporte, redes sociais, meu plano e meu perfil.
+</p>
+
+<h3>Páginas públicas — 2 telas</h3>
+<p>
+  A vitrine da loja (<code>/loja/:slug</code>) e o perfil do criador
+  (<code>/perfil/:handle</code>), ambas sem exigir login, mais o gate de código de acesso que
+  precede a tela de entrada.
+</p>
+
+<h2>8.3 Duas decisões que moldam o resto</h2>
+
+<div class="destaque">
+  <span class="rotulo">Filtro no servidor, nunca no cliente</span>
+  <p>
+    O componente <code>TabelaRecurso</code> envia busca, filtros, ordenação e paginação como
+    parâmetros de consulta. Filtrar no navegador só alcançaria a página já carregada — buscar
+    “ana” varreria 10 registros em vez dos 40. Como consequência, a mesma tabela serve a
+    qualquer volume de dados sem mudar de estratégia.
+  </p>
+</div>
+
+<div class="destaque">
+  <span class="rotulo">Renovação de token com corrida única</span>
+  <p>
+    Ao receber <code>401</code>, o cliente renova o token e repete a requisição. Chamadas
+    simultâneas que falhem no mesmo instante aguardam a <em>mesma</em> renovação: o refresh
+    token é rotativo e só vale uma vez, então dispará-las em paralelo invalidaria a sessão do
+    próprio usuário.
+  </p>
+</div>
+
+<h2>8.4 Identidade visual</h2>
+
+<p>
+  A interface segue o brand book oficial. As cores não foram convertidas de tabelas Pantone de
+  memória: foram <strong>amostradas dos pixels</strong> das cartelas do próprio PDF. O
+  <em>Indigo Sloth</em> amostrado coincidiu exatamente com o <code>#230647</code> que o
+  documento declara — o que valida a extração das outras três.
+</p>
+
+<table>
+  <thead><tr><th style="width:20%">Cor</th><th style="width:14%">Hex</th><th style="width:16%">Pantone</th><th>Onde aparece</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Digital Blue</strong></td><td><code>#008EEA</code></td><td>2727 C</td>
+        <td>primária — botões, links, série principal dos gráficos</td></tr>
+    <tr><td><strong>Mint Leaf</strong></td><td><code>#00AD9A</code></td><td>3275 C</td>
+        <td>positivos — receita, comissões pagas, confirmações</td></tr>
+    <tr><td><strong>Violet C</strong></td><td><code>#440099</code></td><td>Violet C</td>
+        <td>acentos e segunda série dos gráficos</td></tr>
+    <tr><td><strong>Indigo Sloth</strong></td><td><code>#230647</code></td><td>—</td>
+        <td>fundos institucionais (acesso e login)</td></tr>
+  </tbody>
+</table>
+
+<p>
+  A tipografia do brand book — <em>Bebas Kai</em> (títulos) e <em>Lufga</em> (texto) — é
+  comercial. A pilha em <code>src/marca.ts</code> declara as originais primeiro e recai sobre
+  <em>Bebas Neue</em> e <em>Poppins</em>, de modo que uma instalação licenciada passa a valer
+  automaticamente, sem tocar no código. Os logos vieram do kit oficial, recortados com fundo
+  transparente para servirem sobre claro e escuro; o favicon sai do símbolo da digital.
+</p>
+
+<!-- ============================================================ 9 — DESENVOLVIMENTO -->
+<h1><span class="cap">Capítulo 9</span>Como foi desenvolvido</h1>
+
+<p class="intro">
+  Este sistema não partiu de uma especificação escrita. Ele foi reconstruído por engenharia
+  reversa a partir de 113 telas capturadas da plataforma original — uma SPA React com Firebase,
+  cujo bundle minificado não permitia recuperar o código-fonte.
+</p>
+
+<h2>9.1 As cinco etapas</h2>
+
+<figure>
+<svg viewBox="0 0 760 118" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="d1" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+  <style>
+    .et { fill:#f6f8fb; stroke:#c8d1e0; stroke-width:1.2; }
+    .em { fill:#e6f4ff; stroke:#1677ff; stroke-width:1.4; }
+    .tt { font-size:10px; font-weight:700; fill:#1f2430; }
+    .ts { font-size:8.2px; fill:#5b6472; }
+  </style>
+  <rect class="et" x="4"   y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="72"  y="47" text-anchor="middle">1 · Captura</text>
+  <text class="ts" x="72"  y="62" text-anchor="middle">Playwright navegando</text>
+  <text class="ts" x="72"  y="73" text-anchor="middle">113 telas renderizadas</text>
+
+  <rect class="et" x="156" y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="224" y="47" text-anchor="middle">2 · Extração</text>
+  <text class="ts" x="224" y="62" text-anchor="middle">parsing do HTML</text>
+  <text class="ts" x="224" y="73" text-anchor="middle">374 registros reais</text>
+
+  <rect class="em" x="308" y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="376" y="47" text-anchor="middle" fill="#002c8c">3 · Modelagem</text>
+  <text class="ts" x="376" y="62" text-anchor="middle">entidades inferidas</text>
+  <text class="ts" x="376" y="73" text-anchor="middle">37 tabelas</text>
+
+  <rect class="et" x="460" y="26" width="136" height="56" rx="7"/>
+  <text class="tt" x="528" y="47" text-anchor="middle">4 · Backend</text>
+  <text class="ts" x="528" y="62" text-anchor="middle">regras reimplementadas</text>
+  <text class="ts" x="528" y="73" text-anchor="middle">170 rotas</text>
+
+  <rect class="et" x="612" y="26" width="144" height="56" rx="7"/>
+  <text class="tt" x="684" y="47" text-anchor="middle">5 · Interface</text>
+  <text class="ts" x="684" y="62" text-anchor="middle">React consumindo a API</text>
+  <text class="ts" x="684" y="73" text-anchor="middle">40 telas</text>
+
+  <line x1="142" y1="54" x2="152" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+  <line x1="294" y1="54" x2="304" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+  <line x1="446" y1="54" x2="456" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+  <line x1="598" y1="54" x2="608" y2="54" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#d1)"/>
+</svg>
+<figcaption>Do HTML capturado ao sistema em funcionamento.</figcaption>
+</figure>
+
+<p>
+  A etapa 3 é a que decide tudo. Uma coluna “Comissão” numa tabela e uma coluna “%” em outra
+  revelam que comissão é entidade própria, com percentual e valor. Um badge “Intermediário+”
+  num produto revela o campo de exclusividade por plano. Um contador “47 / 100” num cupom
+  revela usos e limite. O schema saiu dessa leitura, não de suposição.
+</p>
+
+<h2>9.2 O elo que ficou reexecutável</h2>
+
+<p>
+  <code>tools/extract.py</code> percorre as capturas e produz 24 arquivos JSON que alimentam o
+  seed. Ele não foi um script descartável: continua rodando e é o que garante que os dados do
+  banco sejam os reais das telas, não invenção.
+</p>
+
+<pre><code>python3 tools/extract.py          <span class="cmt"># capturas -> prisma/seed-data/*.json</span>
+cd apps/api &amp;&amp; npm run seed      <span class="cmt"># JSON -> PostgreSQL</span></code></pre>
+
+<h2>9.3 O que a conferência de números revelou</h2>
+
+<p>
+  Comparar os indicadores calculados com os das telas originais funcionou como teste de
+  modelagem, e expôs dois erros que passariam despercebidos:
+</p>
+
+<table>
+  <thead><tr><th style="width:30%">Sintoma</th><th style="width:34%">Causa</th><th>Correção</th></tr></thead>
+  <tbody>
+    <tr><td>MRR dava R$ 3.497 em vez de R$ 1.998</td>
+        <td>Assinatura de associado suspenso ou inativo contava como vigente</td>
+        <td><code>Assinatura.ativa</code> passou a acompanhar o status do associado</td></tr>
+    <tr><td>Saldo financeiro não fechava</td>
+        <td>O caixa fora modelado como meses acumulados de MRR</td>
+        <td>Entradas = receita das vendas pagas; saídas = comissões pagas + custos</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Depois das correções, treze indicadores coincidem com a fonte — receita, ticket médio,
+  comissões em cada estado, MRR e a composição percentual das saídas do DRE. O detalhamento
+  está no capítulo 12.
+</p>
+
+<!-- ============================================================ 10 — ESCALABILIDADE -->
+<h1><span class="cap">Capítulo 10</span>Escalabilidade e capacidade</h1>
+
+<p class="intro">
+  Este capítulo traz <strong>medições</strong>, não estimativas. Todos os números vieram de
+  testes de carga executados com <code>autocannon</code> contra a API em modo de produção,
+  com o banco populado.
+</p>
+
+<div class="destaque atencao">
+  <span class="rotulo">O que estes números são e o que não são</span>
+  <p>
+    Foram medidos em uma máquina de desenvolvimento (AMD Ryzen AI 9 HX 370, 24 núcleos, 93 GB
+    de RAM), com API e banco no mesmo host e sem latência de rede. Servem para comparar
+    endpoints entre si e revelar gargalos — <strong>não</strong> como promessa de desempenho
+    em produção, onde entram rede, disco compartilhado e recursos menores. Um teste no
+    ambiente real de destino continua necessário.
+  </p>
+</div>
+
+<h2>10.1 Capacidade por endpoint</h2>
+
+<p>Cinquenta conexões simultâneas, 12 segundos por endpoint, após aquecimento:</p>
+
+<table class="compacta">
+  <thead><tr>
+    <th style="width:32%">Endpoint</th><th style="width:14%">req/s</th>
+    <th style="width:12%">p50</th><th style="width:12%">p90</th><th style="width:12%">p99</th><th>Perfil</th>
+  </tr></thead>
+  <tbody>
+    <tr><td><code>GET /planos</code></td><td>1.906</td><td>25 ms</td><td>29 ms</td><td>40 ms</td><td>leitura leve</td></tr>
+    <tr><td><code>GET /vendas</code></td><td>1.174</td><td>38 ms</td><td>44 ms</td><td>59 ms</td><td>lista paginada</td></tr>
+    <tr><td><code>GET /financeiro/visao-geral</code></td><td>1.244</td><td>33 ms</td><td>56 ms</td><td>81 ms</td><td>6 agregações</td></tr>
+    <tr><td><code>GET /comunidade/posts</code></td><td>1.042</td><td>44 ms</td><td>65 ms</td><td>81 ms</td><td>lista com contagens</td></tr>
+    <tr><td><code>GET /catalogo/produtos</code></td><td>1.068</td><td>42 ms</td><td>62 ms</td><td>86 ms</td><td>lista com joins</td></tr>
+    <tr><td><code>GET /associados</code></td><td>868</td><td>55 ms</td><td>80 ms</td><td>104 ms</td><td>joins + subconsultas</td></tr>
+    <tr><td><code>GET /relatorios</code></td><td>754</td><td>62 ms</td><td>89 ms</td><td>140 ms</td><td>analítico pesado</td></tr>
+    <tr><td><code>GET /lojas/publica/:slug</code></td><td>667</td><td>65 ms</td><td>117 ms</td><td>197 ms</td><td>público + escrita de contador</td></tr>
+    <tr><td><code>GET /dashboard/admin</code></td><td>658</td><td>74 ms</td><td>—</td><td>115 ms</td><td>18 agregações paralelas</td></tr>
+    <tr><td><code>POST /auth/login</code></td><td><strong>88</strong></td><td>560 ms</td><td>—</td><td>622 ms</td><td>bcrypt, por natureza caro</td></tr>
+  </tbody>
+</table>
+
+<h2>10.2 Comportamento sob concorrência</h2>
+
+<p>
+  Mesmo endpoint (<code>/associados</code>), concorrência crescente. O throughput satura por
+  volta de 100 conexões; além disso a latência cresce linearmente sem ganho de vazão — a fila
+  apenas aumenta.
+</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:16%">Conexões</th><th style="width:18%">req/s</th><th style="width:16%">p50</th><th style="width:16%">p99</th><th>Leitura</th></tr></thead>
+  <tbody>
+    <tr><td>10</td><td>935</td><td>7 ms</td><td>19 ms</td><td>folgado</td></tr>
+    <tr><td>25</td><td>1.077</td><td>22 ms</td><td>41 ms</td><td>confortável</td></tr>
+    <tr><td>50</td><td>1.185</td><td>40 ms</td><td>58 ms</td><td>bom</td></tr>
+    <tr><td>100</td><td>1.243</td><td>78 ms</td><td>100 ms</td><td><strong>joelho da curva</strong></td></tr>
+    <tr><td>200</td><td>1.214</td><td>160 ms</td><td>221 ms</td><td>saturado — só enfileira</td></tr>
+    <tr><td>400</td><td>1.111</td><td>334 ms</td><td>482 ms</td><td>saturado</td></tr>
+  </tbody>
+</table>
+
+<h2>10.3 Quantos usuários simultâneos</h2>
+
+<p>
+  “Conexões simultâneas” não é “usuários simultâneos”. Uma pessoa navegando não mantém uma
+  requisição contínua: ela carrega uma tela, lê, clica de novo. Com um <em>tempo de leitura</em>
+  típico de 8 a 12 segundos entre ações, e considerando que cada tela dispara em média 3
+  requisições, um usuário gera cerca de <strong>0,3 requisição por segundo</strong>.
+</p>
+
+<div class="cartoes tres">
+  <div class="cartao"><b>~2.500</b><span>usuários ativos</span><small>navegação típica, folga confortável</small></div>
+  <div class="cartao"><b>~4.000</b><span>no limite</span><small>latência ainda aceitável</small></div>
+  <div class="cartao"><b>88/s</b><span>logins</span><small>o verdadeiro teto em picos</small></div>
+</div>
+
+<p>
+  Com throughput sustentado de ~1.200 req/s, a conta é
+  <code>1.200 ÷ 0,3 ≈ 4.000 usuários</code> no limite, e algo perto de
+  <strong>2.500 com folga</strong> — mantendo p99 abaixo de 100 ms.
+  <em>Uma única instância Node</em>, note-se, usando um dos 24 núcleos.
+</p>
+
+<div class="destaque atencao">
+  <span class="rotulo">O login é o gargalo em picos</span>
+  <p>
+    A 88 logins por segundo, um evento que faça 5.000 pessoas entrarem ao mesmo tempo leva
+    cerca de <strong>57 segundos</strong> para escoar a fila. Isso é intrínseco ao bcrypt, que
+    é lento de propósito para resistir a ataques de força bruta — reduzir o custo enfraqueceria
+    as senhas. A saída correta é distribuir a carga entre processos (seção 10.5), não baratear
+    o hash.
+  </p>
+</div>
+
+<h2>10.4 O gargalo que foi corrigido durante a medição</h2>
+
+<p>
+  A primeira rodada mediu <strong>17–20 logins por segundo</strong>, com p50 de 2,5 segundos, e
+  — pior — as leituras <em>também</em> ficavam lentas durante o login. A causa era o
+  <code>bcryptjs</code>, implementação em JavaScript puro que ocupa a thread principal:
+  enquanto calculava um hash, o event loop parava para todos os demais pedidos.
+</p>
+
+<p>
+  A troca pelo <code>@node-rs/bcrypt</code> (binário nativo, que roda no threadpool do libuv)
+  resolveu os dois problemas de uma vez. Os hashes são compatíveis, então nenhuma senha
+  precisou ser redefinida.
+</p>
+
+<table>
+  <thead><tr><th style="width:34%">Medida</th><th style="width:22%">bcryptjs</th><th style="width:22%">nativo</th><th>Ganho</th></tr></thead>
+  <tbody>
+    <tr><td>Logins por segundo</td><td>20</td><td><strong>88</strong></td><td>4,4×</td></tr>
+    <tr><td>p50 do login (50 conexões)</td><td>2.577 ms</td><td><strong>560 ms</strong></td><td>4,6×</td></tr>
+    <tr><td><code>/planos</code> durante carga de login</td><td>degradado</td><td><strong>1.272 req/s, p50 16 ms</strong></td><td>sem bloqueio</td></tr>
+  </tbody>
+</table>
+
+<h2>10.5 Caminhos de crescimento</h2>
+
+<p>
+  A arquitetura não guarda estado em memória — a sessão vive no token e no banco. Isso é o que
+  torna a escala horizontal possível sem reescrever nada.
+</p>
+
+<table>
+  <thead><tr><th style="width:6%">#</th><th style="width:28%">Passo</th><th style="width:18%">Ganho esperado</th><th>Custo</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><strong>Clusterizar o Node</strong> (PM2 ou modo cluster) com 4–8 workers</td>
+        <td>4–8× o throughput e os logins</td>
+        <td>Baixo — uma linha de configuração. É o passo de melhor retorno.</td></tr>
+    <tr><td>2</td><td><strong>Cache nos analíticos</strong> — dashboard e relatórios, 30–60 s</td>
+        <td>Tira as consultas mais caras do caminho quente</td>
+        <td>Baixo — Redis ou cache em memória por worker.</td></tr>
+    <tr><td>3</td><td><strong>Ajustar o pool do Prisma</strong> ao número de workers</td>
+        <td>Evita esgotar as 100 conexões do Postgres</td>
+        <td>Baixo — <code>connection_limit</code> na URL do banco.</td></tr>
+    <tr><td>4</td><td><strong>Réplica de leitura</strong> no Postgres para os relatórios</td>
+        <td>Isola analítico de transacional</td>
+        <td>Médio — exige roteamento de consultas.</td></tr>
+    <tr><td>5</td><td><strong>Várias instâncias atrás de um balanceador</strong></td>
+        <td>Escala praticamente linear</td>
+        <td>Médio — o código já suporta; é infraestrutura.</td></tr>
+    <tr><td>6</td><td><strong>CDN para o front</strong></td>
+        <td>Tira todo o estático da API</td>
+        <td>Baixo — o build do Vite é estático puro.</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Só com o passo 1, a projeção sobe para a faixa de <strong>15.000 a 20.000 usuários ativos</strong>
+  na mesma máquina, com o login saindo de 88 para algo em torno de 500 por segundo.
+</p>
+
+<h2>10.6 Onde o banco vai apertar primeiro</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:28%">Tabela</th><th style="width:24%">Cresce com</th><th>Observação</th></tr></thead>
+  <tbody>
+    <tr><td><code>metricas_diarias</code></td><td>associados × dias</td>
+        <td>10 mil associados × 365 dias = 3,6 M linhas/ano. Já pré-agregada e indexada;
+            particionar por ano quando incomodar.</td></tr>
+    <tr><td><code>notificacoes</code></td><td>associados × eventos</td>
+        <td>A que mais cresce. Precisa de política de expurgo — arquivar o que passou de 90 dias.</td></tr>
+    <tr><td><code>vendas</code> e <code>comissoes</code></td><td>volume transacional</td>
+        <td>Crescimento saudável; os índices por status e data já cobrem as consultas usadas.</td></tr>
+    <tr><td><code>logs_auditoria</code></td><td>toda operação sensível</td>
+        <td>Também exige expurgo ou envio para armazenamento frio.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 11 — SEGURANÇA -->
+<h1><span class="cap">Capítulo 11</span>Análise de segurança</h1>
+
+<p class="intro">
+  Esta análise combina revisão do código com <strong>testes ofensivos executados contra a API
+  em funcionamento</strong> — tentativas reais de ler dados alheios, escalar privilégio e
+  reutilizar tokens.
+</p>
+
+<h2>11.1 Testes de autorização executados</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:52%">Tentativa</th><th style="width:16%">Resultado</th><th>Veredito</th></tr></thead>
+  <tbody>
+    <tr><td>Associado altera cupom de <em>outro</em> associado</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado abre chamado de suporte de outro</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado força <code>associadoId</code> alheio na consulta</td><td><code>400</code></td><td>✅ parâmetro nem é aceito</td></tr>
+    <tr><td>Associado lista todos os associados</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado cria produto no catálogo</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado liquida comissões</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Associado acessa o financeiro global</td><td><code>403</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Token adulterado</td><td><code>401</code></td><td>✅ assinatura verificada</td></tr>
+    <tr><td>Requisição sem token</td><td><code>401</code></td><td>✅ bloqueado</td></tr>
+    <tr><td>Refresh token usado como access token</td><td><code>401</code></td><td>✅ tipos não se confundem</td></tr>
+    <tr><td>Reutilização de refresh token já consumido</td><td><code>401</code></td><td>✅ rotação funciona</td></tr>
+  </tbody>
+</table>
+
+<h2>11.2 Controles implementados</h2>
+
+<table>
+  <thead><tr><th style="width:30%">Controle</th><th>Como está</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Senhas</strong></td>
+        <td>bcrypt com 10 rounds, implementação nativa. O hash nunca sai da camada de serviço —
+            nenhuma rota o inclui na resposta.</td></tr>
+    <tr><td><strong>Refresh token</strong></td>
+        <td>Guardado como SHA-256, com rotação a cada uso. Um token roubado só serve uma vez, e
+            o uso legítimo seguinte falha — o que denuncia o roubo.</td></tr>
+    <tr><td><strong>Access token</strong></td>
+        <td>Válido por 15 minutos. O usuário é revalidado no banco a cada requisição, então
+            desativar uma conta tem efeito imediato.</td></tr>
+    <tr><td><strong>Injeção de SQL</strong></td>
+        <td>Prisma parametriza tudo. Os dois <code>$queryRaw</code> usam template tag, que também
+            parametriza. O único <code>$executeRawUnsafe</code> está no seed, com SQL fixo e sem
+            entrada de usuário.</td></tr>
+    <tr><td><strong>Mass assignment</strong></td>
+        <td><code>forbidNonWhitelisted</code> rejeita com <code>400</code> qualquer campo não
+            declarado no DTO — foi o que barrou a tentativa de forçar <code>associadoId</code>.</td></tr>
+    <tr><td><strong>Autorização horizontal</strong></td>
+        <td>Verificada no serviço, comparando o dono do recurso com o associado autenticado.
+            As rotas do portal impõem o filtro no servidor.</td></tr>
+    <tr><td><strong>Confidencialidade no suporte</strong></td>
+        <td>Notas internas são filtradas da resposta quando quem consulta não é administrador.</td></tr>
+    <tr><td><strong>Rate limiting</strong></td>
+        <td>300 requisições por minuto por IP.</td></tr>
+    <tr><td><strong>Cabeçalhos</strong></td>
+        <td>Helmet aplicado.</td></tr>
+    <tr><td><strong>Enumeração de contas</strong></td>
+        <td>Mensagem idêntica para email inexistente e senha errada — <em>e</em> tempo de
+            resposta equalizado (ver 11.3).</td></tr>
+  </tbody>
+</table>
+
+<h2>11.3 Vulnerabilidade encontrada e corrigida</h2>
+
+<div class="destaque atencao">
+  <span class="rotulo">Enumeração de usuários por temporização</span>
+  <p>
+    A mensagem de erro já era idêntica nos dois casos, mas o <strong>tempo</strong> não era.
+    Quando o email não existia, o código retornava de imediato (6,7 ms); quando existia, rodava
+    o bcrypt antes de falhar (51,1 ms). A diferença de 44 ms permitia a um atacante descobrir,
+    por cronometragem, quais contas existem — insumo para ataques direcionados de senha.
+  </p>
+  <p>
+    <strong>Correção:</strong> a comparação passou a rodar sempre, contra um hash-isca gerado a
+    cada inicialização quando o email não existe. A diferença caiu para <strong>3,4 ms</strong>,
+    dentro do ruído da rede.
+  </p>
+</div>
+
+<h2>11.4 Pendências antes de expor à internet</h2>
+
+<table>
+  <thead><tr><th style="width:8%">Risco</th><th style="width:30%">Item</th><th>Por quê</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Alto</strong></td><td>Segredos ainda são os de exemplo</td>
+        <td><code>JWT_SECRET</code> e <code>JWT_REFRESH_SECRET</code> continuam com o valor do
+            <code>.env.example</code>, que está no repositório. Quem o lê forja qualquer token.
+            <em>Trocar é obrigatório.</em></td></tr>
+    <tr><td><strong>Alto</strong></td><td>Senhas do seed publicadas</td>
+        <td><code>Admin@2026</code> está nesta documentação e no repositório.</td></tr>
+    <tr><td><strong>Alto</strong></td><td>Sem HTTPS</td>
+        <td>O Bearer token viaja no cabeçalho; sem TLS é interceptável na rede.</td></tr>
+    <tr><td><strong>Médio</strong></td><td><code>CORS_ORIGINS</code> aceita <code>*</code> como padrão</td>
+        <td>Se a variável não for definida em produção, qualquer origem chama a API.</td></tr>
+    <tr><td><strong>Médio</strong></td><td>Rate limit único para todas as rotas</td>
+        <td>300/min é generoso para <code>/auth/login</code>. Um limite específico e mais
+            estrito no login dificultaria força bruta.</td></tr>
+    <tr><td><strong>Médio</strong></td><td>Sem bloqueio após tentativas falhas</td>
+        <td>Não há travamento temporário de conta nem captcha.</td></tr>
+    <tr><td><strong>Baixo</strong></td><td>CSP desativada no Helmet</td>
+        <td><code>contentSecurityPolicy: false</code> foi posto para não atrapalhar o Swagger.
+            Convém ativar em produção, ou publicar o Swagger em rota separada.</td></tr>
+    <tr><td><strong>Baixo</strong></td><td>Sem rotação de logs de auditoria</td>
+        <td>A tabela cresce sem limite.</td></tr>
+    <tr><td><strong>Info</strong></td><td>Gate de código de acesso não é segurança</td>
+        <td>Reproduz o comportamento original, mas é um código compartilhado — trata-se de
+            uma barreira de conveniência, não de um controle de acesso.</td></tr>
+  </tbody>
+</table>
+
+<h3>Dependências</h3>
+<p>
+  O <code>npm audit</code> aponta 3 vulnerabilidades de severidade alta, <strong>todas em
+  dependências de desenvolvimento</strong> (o parser de configuração da CLI do Prisma e o
+  gerador de identificadores do autocannon). Nenhuma alcança o código que roda em produção.
+  Ainda assim, vale acompanhar as atualizações.
+</p>

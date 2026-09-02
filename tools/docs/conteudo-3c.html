@@ -1,0 +1,278 @@
+<!-- ============================================================ 8 -->
+<h1><span class="cap">Capítulo 12</span>Dados e fidelidade</h1>
+
+<p class="intro">
+  O banco não é populado com dados sintéticos. O seed carrega o dataset extraído das telas
+  reais da plataforma original — e os indicadores calculados pela API reproduzem os números
+  que aquelas telas exibiam.
+</p>
+
+<h2>12.1 O pipeline de extração</h2>
+
+<p>
+  <code>tools/extract.py</code> percorre as 113 capturas e produz 24 arquivos JSON. Ele opera em
+  duas frentes: as <strong>tabelas</strong> (parsing das linhas <code>&lt;tr&gt;</code> com o
+  identificador real no atributo <code>data-row-key</code>) e as <strong>telas em cartão</strong>
+  — planos, benefícios, conteúdos, notificações, serviços, materiais, conquistas e comunidade —
+  cujos dados vivem em estruturas visuais do Ant Design.
+</p>
+
+<pre><code>cd digitaisbr-clone
+python3 tools/extract.py       <span class="cmt"># regenera prisma/seed-data/*.json</span>
+cd apps/api &amp;&amp; npm run seed    <span class="cmt"># recarrega o banco</span></code></pre>
+
+<h2>12.2 O que o seed carrega</h2>
+
+<div class="cartoes">
+  <div class="cartao"><b>374</b><span>registros extraídos</span></div>
+  <div class="cartao"><b>24</b><span>arquivos JSON</span></div>
+  <div class="cartao"><b>37</b><span>tabelas populadas</span></div>
+  <div class="cartao"><b>~2s</b><span>tempo de carga</span></div>
+</div>
+
+<table class="compacta">
+  <thead><tr><th>Entidade</th><th style="width:12%">Qtd.</th><th>Entidade</th><th style="width:12%">Qtd.</th></tr></thead>
+  <tbody>
+    <tr><td>Planos</td><td>3</td><td>Benefícios</td><td>19</td></tr>
+    <tr><td>Associados</td><td>40 <sup>1</sup></td><td>Conteúdos</td><td>16</td></tr>
+    <tr><td>Produtos / categorias</td><td>25 / 7</td><td>Materiais de divulgação</td><td>12</td></tr>
+    <tr><td>Lojas / itens de vitrine</td><td>20 / 150</td><td>Posts / comentários / curtidas</td><td>20 / 349 / 498 <sup>2</sup></td></tr>
+    <tr><td>Vendas</td><td>60</td><td>Tickets / mensagens</td><td>21 / 82</td></tr>
+    <tr><td>Comissões</td><td>40</td><td>Escritórios / profissionais</td><td>5 / 6</td></tr>
+    <tr><td>Parceiros</td><td>10</td><td>Notificações / campanhas</td><td>25 / 5</td></tr>
+    <tr><td>Cupons / links / saques</td><td>5 / 5 / 8</td><td>Conquistas</td><td>12</td></tr>
+  </tbody>
+</table>
+
+<p style="font-size:8.8pt;color:#5b6472">
+  <sup>1</sup> São 30 associados da tabela original mais 10 personas que apareciam apenas na
+  comunidade e no suporte (Maria Silva, João Santos, Ana Oliveira e outros). Elas foram criadas
+  como associados para preservar a integridade referencial daquele conteúdo — a alternativa
+  seria descartar os posts e chamados delas.<br>
+  <sup>2</sup> O dataset registrava 576 curtidas, mas a curtida é única por (post, pessoa) e há
+  40 associados. O total possível é 498. Os comentários (349) coincidiram exatamente.
+</p>
+
+<h2>12.3 Conferência com as telas originais</h2>
+
+<p>
+  Esta tabela é a prova de que o modelo está certo: são indicadores calculados por agregação SQL
+  sobre o banco, comparados com o que a plataforma original exibia.
+</p>
+
+<table>
+  <thead><tr><th style="width:38%">Indicador</th><th style="width:22%">Tela original</th><th style="width:22%">API</th><th>Confere</th></tr></thead>
+  <tbody>
+    <tr><td>Receita total</td><td>R$ 4.395,00</td><td>R$ 4.395,00</td><td>✅</td></tr>
+    <tr><td>Ticket médio</td><td>R$ 146,50</td><td>R$ 146,50</td><td>✅</td></tr>
+    <tr><td>Vendas aprovadas</td><td>30</td><td>30</td><td>✅</td></tr>
+    <tr><td>Taxa de cancelamento</td><td>33,3%</td><td>33,3%</td><td>✅</td></tr>
+    <tr><td>Comissões pagas</td><td>R$ 373,02</td><td>R$ 373,02</td><td>✅</td></tr>
+    <tr><td>Comissões em processamento</td><td>R$ 561,45</td><td>R$ 561,45</td><td>✅</td></tr>
+    <tr><td>Comissões aguardando</td><td>R$ 350,92</td><td>R$ 350,92</td><td>✅</td></tr>
+    <tr><td>MRR</td><td>R$ 1.998,00</td><td>R$ 1.998,00</td><td>✅</td></tr>
+    <tr><td>Saldo financeiro</td><td>R$ 3.378,46</td><td>R$ 3.378,50</td><td>≈ <sup>3</sup></td></tr>
+    <tr><td>Margem líquida</td><td>76,8%</td><td>76,9%</td><td>≈ <sup>3</sup></td></tr>
+    <tr><td>Composição de saídas</td><td>36,7 / 23,7 / 19,8 / 11,9 / 7,9 %</td><td>idêntica</td><td>✅</td></tr>
+    <tr><td>Comentários na comunidade</td><td>349</td><td>349</td><td>✅</td></tr>
+    <tr><td>Visualizações de conteúdo</td><td>44.690</td><td>44.690</td><td>✅</td></tr>
+  </tbody>
+</table>
+
+<p style="font-size:8.8pt;color:#5b6472">
+  <sup>3</sup> Diferença de R$ 0,04, decorrente do arredondamento a dois decimais ao ratear os
+  custos operacionais entre os meses de competência.
+</p>
+
+<div class="destaque atencao">
+  <span class="rotulo">Duas correções que esses números revelaram</span>
+  <p>
+    O MRR saía R$ 3.497 até se perceber que assinatura de associado suspenso ou inativo não pode
+    contar como vigente — <code>Assinatura.ativa</code> passou a acompanhar o status do associado.
+    E o saldo só fechou quando o financeiro foi modelado como a plataforma o modelava:
+    <em>entradas = receita das vendas pagas</em> e <em>saídas = comissões pagas + custos
+    operacionais</em>, em vez de meses acumulados de MRR. Conferir com a fonte é o que expõe
+    esse tipo de erro.
+  </p>
+</div>
+
+<!-- ============================================================ 9 -->
+<h1><span class="cap">Capítulo 13</span>Qualidade e testes</h1>
+
+<p class="intro">
+  A suíte end-to-end exercita a API pela porta HTTP, contra um banco real com o seed carregado.
+  Ela não usa mocks: se uma transação estiver quebrada, o teste quebra.
+</p>
+
+<div class="cartoes tres">
+  <div class="cartao"><b>77</b><span>asserções</span><small>todas passando</small></div>
+  <div class="cartao"><b>2</b><span>suítes</span><small>leitura e escrita</small></div>
+  <div class="cartao"><b>0</b><span>mocks</span><small>banco e HTTP reais</small></div>
+</div>
+
+<h2>13.1 O que a suíte cobre</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:28%">Bloco</th><th>Verificações</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Autenticação</strong></td>
+        <td>Rota protegida sem token devolve 401; login de admin e de associado; senha errada
+            rejeitada; código de acesso validado.</td></tr>
+    <tr><td><strong>RBAC</strong></td>
+        <td>Associado bloqueado nas rotas administrativas; admin sem associado bloqueado no portal;
+            cada papel acessa o que lhe cabe.</td></tr>
+    <tr><td><strong>Integridade do seed</strong></td>
+        <td>Contagem exata de cada entidade carregada.</td></tr>
+    <tr><td><strong>Listagens</strong></td>
+        <td>Paginação, total de páginas, busca textual, filtro por status e plano, ordenação e
+            recorte por período.</td></tr>
+    <tr><td><strong>Validação</strong></td>
+        <td>Email malformado, campo desconhecido, UUID inválido, enum inexistente e limite acima
+            do máximo — todos rejeitados com 400.</td></tr>
+    <tr><td><strong>Ciclo da venda</strong></td>
+        <td>Total calculado, comissão gerada com o percentual correto, referência sequencial,
+            transições válidas aceitas, inválidas recusadas, estados finais fechados, e a
+            propagação para a comissão.</td></tr>
+    <tr><td><strong>Cupons</strong></td>
+        <td>Criação, código duplicado recusado, desconto aplicado ao total, cupom inexistente recusado.</td></tr>
+    <tr><td><strong>Comissões e saques</strong></td>
+        <td>Liquidação em lote, repagamento recusado, saque acima do saldo recusado.</td></tr>
+    <tr><td><strong>Limites por plano</strong></td>
+        <td>Limite de produtos do Básico, personalização visual bloqueada, produto exclusivo
+            recusado, e o que é permitido no Básico continua permitido.</td></tr>
+    <tr><td><strong>Comunidade</strong></td>
+        <td>Publicar, curtir, descurtir, comentar, fixar como admin e a recusa ao associado.</td></tr>
+    <tr><td><strong>Suporte</strong></td>
+        <td>Numeração, thread inicial, nota interna recusada ao associado, transição automática
+            de status, e a contagem de mensagens visíveis a cada papel.</td></tr>
+    <tr><td><strong>Isolamento</strong></td>
+        <td>Chamado de outro associado devolve 403.</td></tr>
+    <tr><td><strong>Rotas públicas</strong></td>
+        <td>Vitrine e perfil sem autenticação, privacidade de email respeitada e contabilização
+            de visualização.</td></tr>
+  </tbody>
+</table>
+
+<h2>13.2 Como executar</h2>
+
+<pre><code>cd apps/api
+npm run start:prod &amp;      <span class="cmt"># a API precisa estar no ar</span>
+npm run seed              <span class="cmt"># estado limpo e determinístico</span>
+npm run test:e2e</code></pre>
+
+<div class="destaque nota">
+  <span class="rotulo">Por que reseedar antes</span>
+  <p>
+    A suíte de escrita cria vendas, cupons, posts e chamados reais. Rodá-la duas vezes sem
+    reseedar faz a segunda execução esbarrar nos dados da primeira — um cupom com código
+    duplicado, por exemplo. Isso não é fragilidade do teste: é a API recusando corretamente
+    uma operação inválida.
+  </p>
+</div>
+
+<!-- ============================================================ 10 -->
+<h1><span class="cap">Capítulo 14</span>Operação</h1>
+
+<h2>14.1 Subir o ambiente</h2>
+
+<pre><code><span class="cmt"># 1. banco — Postgres em :5434 e Adminer em :8082</span>
+docker compose up -d
+
+<span class="cmt"># 2. dependências e variáveis</span>
+cd apps/api
+npm install
+cp .env.example .env
+
+<span class="cmt"># 3. schema e dados</span>
+npx prisma migrate deploy
+npm run seed
+
+<span class="cmt"># 4. subir a API</span>
+npm run start:dev</code></pre>
+
+<table class="compacta">
+  <thead><tr><th style="width:26%">Serviço</th><th style="width:28%">Endereço</th><th>Observação</th></tr></thead>
+  <tbody>
+    <tr><td>API</td><td><code>localhost:3000/api</code></td><td>—</td></tr>
+    <tr><td>Swagger</td><td><code>localhost:3000/api/docs</code></td><td>Documentação navegável e testável</td></tr>
+    <tr><td>PostgreSQL</td><td><code>localhost:5434</code></td><td>Porta 5432 evitada por conflito com outros contêineres</td></tr>
+    <tr><td>Adminer</td><td><code>localhost:8082</code></td><td>Servidor <code>db</code>, usuário e senha <code>digitaisbr</code></td></tr>
+  </tbody>
+</table>
+
+<h3>Credenciais do seed</h3>
+<table class="compacta">
+  <thead><tr><th style="width:26%">Perfil</th><th style="width:36%">Email</th><th>Senha</th></tr></thead>
+  <tbody>
+    <tr><td>Administrador</td><td><code>administrador@digitaisbr.com</code></td><td><code>Admin@2026</code></td></tr>
+    <tr><td>Associado</td><td><code>ana-silva@email.com</code></td><td><code>Assoc@2026</code></td></tr>
+  </tbody>
+</table>
+<p style="font-size:9pt;color:#5b6472">
+  Os 40 associados usam a mesma senha, com email no padrão <code>handle@email.com</code>.
+</p>
+
+<h2>14.2 Variáveis de ambiente</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:30%">Variável</th><th style="width:26%">Exemplo</th><th>Função</th></tr></thead>
+  <tbody>
+    <tr><td><code>DATABASE_URL</code></td><td><code>postgresql://…:5434/digitaisbr</code></td><td>Conexão com o Postgres</td></tr>
+    <tr><td><code>PORT</code></td><td><code>3000</code></td><td>Porta HTTP</td></tr>
+    <tr><td><code>API_PREFIX</code></td><td><code>api</code></td><td>Prefixo global das rotas</td></tr>
+    <tr><td><code>CORS_ORIGINS</code></td><td><code>http://localhost:5173</code></td><td>Origens liberadas, separadas por vírgula</td></tr>
+    <tr><td><code>JWT_SECRET</code></td><td>—</td><td>Assinatura do access token</td></tr>
+    <tr><td><code>JWT_EXPIRES_IN</code></td><td><code>15m</code></td><td>Validade do access token</td></tr>
+    <tr><td><code>JWT_REFRESH_SECRET</code></td><td>—</td><td>Segredo do refresh</td></tr>
+    <tr><td><code>JWT_REFRESH_EXPIRES_IN</code></td><td><code>7d</code></td><td>Validade do refresh</td></tr>
+    <tr><td><code>ACCESS_CODE</code></td><td>—</td><td>Código do gate de acesso da plataforma</td></tr>
+    <tr><td><code>SEED_ADMIN_EMAIL</code> · <code>SEED_ADMIN_PASSWORD</code></td><td>—</td><td>Credenciais criadas pelo seed</td></tr>
+    <tr><td><code>SEED_ASSOCIADO_PASSWORD</code></td><td>—</td><td>Senha padrão dos associados do seed</td></tr>
+  </tbody>
+</table>
+
+<h2>14.3 Migrations</h2>
+
+<pre><code>npx prisma migrate dev --name descricao   <span class="cmt"># cria e aplica em desenvolvimento</span>
+npx prisma migrate deploy                 <span class="cmt"># aplica em produção, sem prompts</span>
+npx prisma migrate reset --force          <span class="cmt"># recria do zero e roda o seed</span>
+npx prisma studio                         <span class="cmt"># inspeção visual do banco</span>
+npx prisma generate                       <span class="cmt"># regenera o cliente tipado</span></code></pre>
+
+<h2>14.4 Checklist antes de produção</h2>
+
+<table>
+  <thead><tr><th style="width:6%"></th><th style="width:34%">Item</th><th>Por quê</th></tr></thead>
+  <tbody>
+    <tr><td>☐</td><td>Trocar <code>JWT_SECRET</code> e <code>JWT_REFRESH_SECRET</code></td>
+        <td>Os valores do <code>.env.example</code> são públicos. Use segredos aleatórios de 32+ bytes.</td></tr>
+    <tr><td>☐</td><td>Alterar as senhas do seed</td>
+        <td><code>Admin@2026</code> está nesta documentação e no repositório.</td></tr>
+    <tr><td>☐</td><td>Restringir <code>CORS_ORIGINS</code></td>
+        <td>Listar apenas os domínios do front, sem curinga.</td></tr>
+    <tr><td>☐</td><td>Servir sob HTTPS</td>
+        <td>O Bearer token trafega no cabeçalho; sem TLS ele é interceptável.</td></tr>
+    <tr><td>☐</td><td>Rever o limite do throttler</td>
+        <td>300 req/min por IP serve para desenvolvimento; ajuste ao tráfego real.</td></tr>
+    <tr><td>☐</td><td>Configurar backup do Postgres</td>
+        <td>O volume Docker não é backup.</td></tr>
+    <tr><td>☐</td><td>Rodar <code>migrate deploy</code>, nunca <code>migrate dev</code></td>
+        <td><code>dev</code> pode propor reset destrutivo.</td></tr>
+    <tr><td>☐</td><td>Não rodar o seed em produção</td>
+        <td>O seed trunca todas as tabelas antes de carregar.</td></tr>
+    <tr><td>☐</td><td>Centralizar logs e monitorar 5xx</td>
+        <td>Os filtros já registram stack trace de erro de servidor.</td></tr>
+  </tbody>
+</table>
+
+<div class="destaque atencao">
+  <span class="rotulo">Duas pendências conhecidas</span>
+  <p>
+    <strong>Envio real de email e push</strong> — notificações e campanhas são gravadas no banco
+    e servidas pela API, mas nenhum provedor externo é acionado. Integrar um serviço de envio é
+    trabalho pendente.<br>
+    <strong>Upload de arquivos</strong> — imagens de produto, banner e logo são recebidas como URL.
+    Não há armazenamento de binários; conectar um bucket é o passo natural.
+  </p>
+</div>
+

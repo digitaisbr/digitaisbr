@@ -1,0 +1,57 @@
+[
+  {
+    "id": "CAMP-001",
+    "titulo": "Bem-vindo à DigitaisBR!",
+    "previa": "Olá! Sua conta foi ativada com sucesso. Explore seus benefíc...",
+    "canal": "Todos",
+    "publico": "Todos os planos",
+    "enviados": 30,
+    "taxaAbertura": 87.0,
+    "status": "Enviada",
+    "data": "2025-05-01"
+  },
+  {
+    "id": "CAMP-002",
+    "titulo": "Novos produtos no catálogo!",
+    "previa": "Adicionamos 5 novos produtos exclusivos à prateleira. Confir...",
+    "canal": "Email",
+    "publico": "Intermediário Avançado",
+    "enviados": 18,
+    "taxaAbertura": 72.0,
+    "status": "Enviada",
+    "data": "2025-05-15"
+  },
+  {
+    "id": "CAMP-003",
+    "titulo": "Promoção: Upgrade com 20% OFF",
+    "previa": "Faça upgrade do seu plano até sexta-feira e ganhe 20% de des...",
+    "canal": "In-App",
+    "publico": "Básico",
+    "enviados": 10,
+    "taxaAbertura": 65.0,
+    "status": "Enviada",
+    "data": "2025-06-01"
+  },
+  {
+    "id": "CAMP-004",
+    "titulo": "Webinar: Como vender mais na sua loja",
+    "previa": "Participe do nosso webinar gratuito sobre estratégias de ven...",
+    "canal": "Todos",
+    "publico": "Todos os planos",
+    "enviados": null,
+    "taxaAbertura": null,
+    "status": "Agendada",
+    "data": "2025-06-20"
+  },
+  {
+    "id": "CAMP-005",
+    "titulo": "Lembrete: Comissões pendentes de saque",
+    "previa": "Você tem comissões aprovadas disponíveis para saque. Acesse ...",
+    "canal": "Push",
+    "publico": "Todos os planos",
+    "enviados": null,
+    "taxaAbertura": null,
+    "status": "Rascunho",
+    "data": "2025-06-25"
+  }
+]

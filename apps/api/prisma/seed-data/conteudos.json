@@ -1,0 +1,178 @@
+[
+  {
+    "titulo": "Como Criar Reels Virais em 2025",
+    "tipo": "Artigo",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Técnicas de edição, hooks e tendências que estão gerando milhões de views.",
+    "visualizacoes": 4250,
+    "curtidas": 389,
+    "autor": "Equipe DigitaisBR",
+    "publicadoEm": "10 de jun."
+  },
+  {
+    "titulo": "Tutorial: Configurando sua Loja DigitaisBR",
+    "tipo": "Vídeo",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Passo a passo para montar sua vitrine de recomendações e começar a vender.",
+    "visualizacoes": 6200,
+    "curtidas": 545,
+    "autor": "Equipe DigitaisBR",
+    "publicadoEm": "01 de mar."
+  },
+  {
+    "titulo": "MEI para Influencers: Guia Atualizado 2025",
+    "tipo": "Artigo",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Obrigações, limites, impostos e quando migrar para ME. Tudo explicado.",
+    "visualizacoes": 3800,
+    "curtidas": 334,
+    "autor": "Grupo Ubique",
+    "publicadoEm": "10 de abr."
+  },
+  {
+    "titulo": "Podcast: De 0 a 100K Seguidores",
+    "tipo": "Podcast",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Ep. 8 — Como a creator Ana Silva cresceu de 0 a 100K em 6 meses.",
+    "visualizacoes": 2720,
+    "curtidas": 255,
+    "autor": "Equipe DigitaisBR",
+    "publicadoEm": "30 de mai."
+  },
+  {
+    "titulo": "Curso: Tráfego Pago para Creators",
+    "tipo": "Curso",
+    "status": "Publicado",
+    "planoMinimo": "Avançado",
+    "descricao": "Meta Ads e Google Ads para escalar seu perfil e suas vendas.",
+    "visualizacoes": 1280,
+    "curtidas": 122,
+    "autor": "Falcon Tech",
+    "publicadoEm": "15 de jun."
+  },
+  {
+    "titulo": "Declaração de IR para Influencers",
+    "tipo": "Vídeo",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Como declarar receitas de publi, collabs e vendas. Evite a malha fina.",
+    "visualizacoes": 2640,
+    "curtidas": 247,
+    "autor": "Grupo Ubique",
+    "publicadoEm": "10 de mai."
+  },
+  {
+    "titulo": "Algoritmo do Instagram 2025: O Que Mudou",
+    "tipo": "Artigo",
+    "status": "Rascunho",
+    "planoMinimo": "Básico",
+    "descricao": "Análise das últimas mudanças e como adaptar sua estratégia.",
+    "visualizacoes": 0,
+    "curtidas": 0,
+    "autor": "Equipe DigitaisBR",
+    "publicadoEm": null
+  },
+  {
+    "titulo": "Guia de Benefícios DigitaisBR para Creators",
+    "tipo": "E-book",
+    "status": "Rascunho",
+    "planoMinimo": "Básico",
+    "descricao": "Conheça todos os descontos e acessos exclusivos do seu plano.",
+    "visualizacoes": 0,
+    "curtidas": 0,
+    "autor": "Equipe DigitaisBR",
+    "publicadoEm": null
+  },
+  {
+    "titulo": "Guia Completo: Media Kit Profissional",
+    "tipo": "E-book",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Aprenda a montar um media kit que converte marcas em parceiros pagantes.",
+    "visualizacoes": 2890,
+    "curtidas": 267,
+    "autor": "Grupo Ubique",
+    "publicadoEm": "25 de mai."
+  },
+  {
+    "titulo": "Masterclass: Iluminação para Conteúdo",
+    "tipo": "Vídeo",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Setup de iluminação profissional com equipamento acessível.",
+    "visualizacoes": 5100,
+    "curtidas": 456,
+    "autor": "Falcon Tech",
+    "publicadoEm": "01 de jun."
+  },
+  {
+    "titulo": "Curso: Monetização para Creators",
+    "tipo": "Curso",
+    "status": "Publicado",
+    "planoMinimo": "Intermediário+",
+    "descricao": "Das primeiras collabs até contratos de 6 dígitos. Framework completo.",
+    "visualizacoes": 3670,
+    "curtidas": 348,
+    "autor": "Grupo Ubique",
+    "publicadoEm": "15 de mai."
+  },
+  {
+    "titulo": "Direito de Imagem e Contratos de Publi",
+    "tipo": "Artigo",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "O que todo influencer precisa saber antes de assinar com uma marca.",
+    "visualizacoes": 1830,
+    "curtidas": 132,
+    "autor": "Grupo Ubique",
+    "publicadoEm": "05 de jun."
+  },
+  {
+    "titulo": "Podcast: Creator Economy Brasil 2025",
+    "tipo": "Podcast",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Ep. 12 — O mercado de influência no Brasil movimentou R$2.3 bi em 2024.",
+    "visualizacoes": 1560,
+    "curtidas": 141,
+    "autor": "Equipe DigitaisBR",
+    "publicadoEm": "12 de jun."
+  },
+  {
+    "titulo": "Como Usar o TikTok Shop no Brasil",
+    "tipo": "Artigo",
+    "status": "Publicado",
+    "planoMinimo": "Básico",
+    "descricao": "Guia prático para vender produtos diretamente pelo TikTok.",
+    "visualizacoes": 2980,
+    "curtidas": 272,
+    "autor": "Falcon Tech",
+    "publicadoEm": "20 de mai."
+  },
+  {
+    "titulo": "Curso: Edição de Vídeo com CapCut Pro",
+    "tipo": "Curso",
+    "status": "Publicado",
+    "planoMinimo": "Intermediário+",
+    "descricao": "Do básico ao avançado: efeitos, transições, legendas e templates virais.",
+    "visualizacoes": 4450,
+    "curtidas": 410,
+    "autor": "Falcon Tech",
+    "publicadoEm": "20 de abr."
+  },
+  {
+    "titulo": "E-book: Precificação de Publi por Nicho",
+    "tipo": "E-book",
+    "status": "Publicado",
+    "planoMinimo": "Avançado",
+    "descricao": "Tabelas de preço por nicho, seguidores e tipo de entrega. Dados reais.",
+    "visualizacoes": 1320,
+    "curtidas": 128,
+    "autor": "Equipe DigitaisBR",
+    "publicadoEm": "08 de jun."
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "produto": "Plano Odontológico Smile",
+    "codigo": "ANA1",
+    "cliques": 355,
+    "conversoes": 9,
+    "taxa": 2.5,
+    "receita": 809.1,
+    "comissao": 121.36
+  },
+  {
+    "produto": "Assistência Psicológica Online",
+    "codigo": "ANA2",
+    "cliques": 246,
+    "conversoes": 15,
+    "taxa": 6.1,
+    "receita": 2998.5,
+    "comissao": 419.79
+  },
+  {
+    "produto": "Seguro Acidentes Pessoais",
+    "codigo": "ANA3",
+    "cliques": 399,
+    "conversoes": 9,
+    "taxa": 2.3,
+    "receita": 179.1,
+    "comissao": 39.4
+  },
+  {
+    "produto": "Maquininha de Cartão Digital",
+    "codigo": "ANA4",
+    "cliques": 433,
+    "conversoes": 37,
+    "taxa": 8.5,
+    "receita": 0.0,
+    "comissao": 0.0
+  },
+  {
+    "produto": "Hospedagem Cloud VPS",
+    "codigo": "ANA5",
+    "cliques": 133,
+    "conversoes": 4,
+    "taxa": 3.0,
+    "receita": 319.6,
+    "comissao": 79.9
+  }
+]

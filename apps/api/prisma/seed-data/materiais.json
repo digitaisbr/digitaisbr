@@ -1,0 +1,98 @@
+[
+  {
+    "nome": "Banner Promoção Geral",
+    "dimensao": "1200x628",
+    "tipo": "Banner",
+    "categoria": "Promoção",
+    "descricao": "Banner para Facebook/LinkedIn com CTA de compra",
+    "textoCopy": null
+  },
+  {
+    "nome": "Story - Novo Produto",
+    "dimensao": "1080x1920",
+    "tipo": "Story",
+    "categoria": "Lançamento",
+    "descricao": "Template de story para divulgar novos produtos",
+    "textoCopy": null
+  },
+  {
+    "nome": "Post Carrossel",
+    "dimensao": "1080x1080",
+    "tipo": "Post",
+    "categoria": "Educativo",
+    "descricao": "Template de carrossel com 5 slides sobre benefícios",
+    "textoCopy": null
+  },
+  {
+    "nome": "Vídeo Review Template",
+    "dimensao": "16:9",
+    "tipo": "Vídeo",
+    "categoria": "Review",
+    "descricao": "Script e roteiro para review de produtos",
+    "textoCopy": null
+  },
+  {
+    "nome": "Copy - Urgência",
+    "dimensao": "Texto",
+    "tipo": "Copy",
+    "categoria": "Vendas",
+    "descricao": "Texto pronto para postagens com senso de urgência",
+    "textoCopy": "⏰ ÚLTIMAS HORAS! Aproveite essa oferta exclusiva antes que acabe. Produtos selecionados com até 30% ..."
+  },
+  {
+    "nome": "Banner Black Friday",
+    "dimensao": "1200x628",
+    "tipo": "Banner",
+    "categoria": "Sazonal",
+    "descricao": "Banner temático para Black Friday",
+    "textoCopy": null
+  },
+  {
+    "nome": "Story Depoimento",
+    "dimensao": "1080x1920",
+    "tipo": "Story",
+    "categoria": "Social Proof",
+    "descricao": "Template para compartilhar depoimentos de clientes",
+    "textoCopy": null
+  },
+  {
+    "nome": "Copy - Benefícios",
+    "dimensao": "Texto",
+    "tipo": "Copy",
+    "categoria": "Institucional",
+    "descricao": "Texto explicando os benefícios da plataforma",
+    "textoCopy": "🌟 Sabia que como associado DigitaisBR você tem acesso a descontos exclusivos, produtos selecionados..."
+  },
+  {
+    "nome": "Post Feed - Produto",
+    "dimensao": "1080x1080",
+    "tipo": "Post",
+    "categoria": "Produto",
+    "descricao": "Template de post para destacar um produto específico",
+    "textoCopy": null
+  },
+  {
+    "nome": "Copy - Cupom",
+    "dimensao": "Texto",
+    "tipo": "Copy",
+    "categoria": "Cupom",
+    "descricao": "Texto para divulgar cupom de desconto exclusivo",
+    "textoCopy": "🎉 CUPOM EXCLUSIVO! Use o código [SEU_CUPOM] e ganhe desconto na minha loja DigitaisBR. Válido por t..."
+  },
+  {
+    "nome": "Reels Script - Unboxing",
+    "dimensao": "9:16",
+    "tipo": "Vídeo",
+    "categoria": "Unboxing",
+    "descricao": "Roteiro para reels de unboxing com pontos de corte",
+    "textoCopy": null
+  },
+  {
+    "nome": "Banner Dia das Mães",
+    "dimensao": "1200x628",
+    "tipo": "Banner",
+    "categoria": "Sazonal",
+    "descricao": "Banner temático para Dia das Mães",
+    "textoCopy": null
+  }
+]

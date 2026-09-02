@@ -1,0 +1,27 @@
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: #f7f6fa;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; }
+
+/* Bebas Kai/Neue nos títulos, conforme a tipografia principal do brand book */
+h1, h2, h3, h4, h5,
+.ant-typography h1, .ant-typography h2, .ant-typography h3,
+h1.ant-typography, h2.ant-typography, h3.ant-typography, h4.ant-typography {
+  font-family: "Bebas Kai", "Bebas Neue", "Oswald", Impact, sans-serif;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+}
+
+/* números de destaque também usam a display, para peso de marca */
+.ant-statistic-content-value { font-family: "Bebas Kai", "Bebas Neue", "Oswald", sans-serif; }
+
+.ant-table-tbody > tr.ant-table-row:hover > td { background: rgba(0, 142, 234, 0.05); }
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background: #cfc9dd; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #b4abc9; }
+::-webkit-scrollbar-track { background: transparent; }

@@ -1,0 +1,290 @@
+[
+  {
+    "r": "/",
+    "finalUrl": "/",
+    "title": "",
+    "bytes": 538918,
+    "txtlen": 2010,
+    "redirected": false
+  },
+  {
+    "r": "/associados",
+    "finalUrl": "/associados",
+    "title": "",
+    "bytes": 752295,
+    "txtlen": 1545,
+    "redirected": false
+  },
+  {
+    "r": "/associados/novo",
+    "finalUrl": "/associados/novo",
+    "title": "",
+    "bytes": 614516,
+    "txtlen": 500,
+    "redirected": false
+  },
+  {
+    "r": "/planos",
+    "finalUrl": "/planos",
+    "title": "",
+    "bytes": 635303,
+    "txtlen": 1205,
+    "redirected": false
+  },
+  {
+    "r": "/catalogo",
+    "finalUrl": "/catalogo",
+    "title": "",
+    "bytes": 665580,
+    "txtlen": 1657,
+    "redirected": false
+  },
+  {
+    "r": "/catalogo/novo",
+    "finalUrl": "/catalogo/novo",
+    "title": "",
+    "bytes": 691206,
+    "txtlen": 648,
+    "redirected": false
+  },
+  {
+    "r": "/lojas",
+    "finalUrl": "/lojas",
+    "title": "",
+    "bytes": 748923,
+    "txtlen": 1250,
+    "redirected": false
+  },
+  {
+    "r": "/vendas",
+    "finalUrl": "/vendas",
+    "title": "",
+    "bytes": 814021,
+    "txtlen": 2127,
+    "redirected": false
+  },
+  {
+    "r": "/comissoes",
+    "finalUrl": "/comissoes",
+    "title": "",
+    "bytes": 811798,
+    "txtlen": 2688,
+    "redirected": false
+  },
+  {
+    "r": "/financeiro",
+    "finalUrl": "/financeiro",
+    "title": "",
+    "bytes": 776799,
+    "txtlen": 829,
+    "redirected": false
+  },
+  {
+    "r": "/parceiros",
+    "finalUrl": "/parceiros",
+    "title": "",
+    "bytes": 793859,
+    "txtlen": 1401,
+    "redirected": false
+  },
+  {
+    "r": "/conteudos",
+    "finalUrl": "/conteudos",
+    "title": "",
+    "bytes": 866829,
+    "txtlen": 3064,
+    "redirected": false
+  },
+  {
+    "r": "/comunidade",
+    "finalUrl": "/comunidade",
+    "title": "",
+    "bytes": 1024045,
+    "txtlen": 9239,
+    "redirected": false
+  },
+  {
+    "r": "/notificacoes",
+    "finalUrl": "/notificacoes",
+    "title": "",
+    "bytes": 891437,
+    "txtlen": 3519,
+    "redirected": false
+  },
+  {
+    "r": "/servicos",
+    "finalUrl": "/servicos",
+    "title": "",
+    "bytes": 869303,
+    "txtlen": 1392,
+    "redirected": false
+  },
+  {
+    "r": "/suporte",
+    "finalUrl": "/suporte",
+    "title": "",
+    "bytes": 818512,
+    "txtlen": 1889,
+    "redirected": false
+  },
+  {
+    "r": "/comunicacoes",
+    "finalUrl": "/comunicacoes",
+    "title": "",
+    "bytes": 815906,
+    "txtlen": 1330,
+    "redirected": false
+  },
+  {
+    "r": "/relatorios",
+    "finalUrl": "/relatorios",
+    "title": "",
+    "bytes": 845342,
+    "txtlen": 967,
+    "redirected": false
+  },
+  {
+    "r": "/portal",
+    "finalUrl": "/portal",
+    "title": "",
+    "bytes": 854701,
+    "txtlen": 1546,
+    "redirected": false
+  },
+  {
+    "r": "/portal/loja",
+    "finalUrl": "/portal/loja",
+    "title": "",
+    "bytes": 1142400,
+    "txtlen": 6012,
+    "redirected": false
+  },
+  {
+    "r": "/portal/vendas",
+    "finalUrl": "/portal/vendas",
+    "title": "",
+    "bytes": 878813,
+    "txtlen": 803,
+    "redirected": false
+  },
+  {
+    "r": "/portal/beneficios",
+    "finalUrl": "/portal/beneficios",
+    "title": "",
+    "bytes": 871940,
+    "txtlen": 2558,
+    "redirected": false
+  },
+  {
+    "r": "/portal/plano",
+    "finalUrl": "/portal/plano",
+    "title": "",
+    "bytes": 870216,
+    "txtlen": 952,
+    "redirected": false
+  },
+  {
+    "r": "/portal/conteudos",
+    "finalUrl": "/portal/conteudos",
+    "title": "",
+    "bytes": 929201,
+    "txtlen": 2377,
+    "redirected": false
+  },
+  {
+    "r": "/portal/comunidade",
+    "finalUrl": "/portal/comunidade",
+    "title": "",
+    "bytes": 1125949,
+    "txtlen": 9232,
+    "redirected": false
+  },
+  {
+    "r": "/portal/notificacoes",
+    "finalUrl": "/portal/notificacoes",
+    "title": "",
+    "bytes": 906349,
+    "txtlen": 3000,
+    "redirected": false
+  },
+  {
+    "r": "/portal/suporte",
+    "finalUrl": "/portal/suporte",
+    "title": "",
+    "bytes": 857182,
+    "txtlen": 516,
+    "redirected": false
+  },
+  {
+    "r": "/portal/links",
+    "finalUrl": "/portal/links",
+    "title": "",
+    "bytes": 900380,
+    "txtlen": 1024,
+    "redirected": false
+  },
+  {
+    "r": "/portal/materiais",
+    "finalUrl": "/portal/materiais",
+    "title": "",
+    "bytes": 900296,
+    "txtlen": 1972,
+    "redirected": false
+  },
+  {
+    "r": "/portal/financeiro",
+    "finalUrl": "/portal/financeiro",
+    "title": "",
+    "bytes": 871931,
+    "txtlen": 1222,
+    "redirected": false
+  },
+  {
+    "r": "/portal/perfil",
+    "finalUrl": "/portal/perfil",
+    "title": "Ana Silva",
+    "bytes": 884103,
+    "txtlen": 1014,
+    "redirected": false
+  },
+  {
+    "r": "/portal/cupons",
+    "finalUrl": "/portal/cupons",
+    "title": "",
+    "bytes": 887682,
+    "txtlen": 952,
+    "redirected": false
+  },
+  {
+    "r": "/portal/performance",
+    "finalUrl": "/portal/performance",
+    "title": "",
+    "bytes": 889755,
+    "txtlen": 1206,
+    "redirected": false
+  },
+  {
+    "r": "/portal/redes-sociais",
+    "finalUrl": "/portal/redes-sociais",
+    "title": "",
+    "bytes": 882506,
+    "txtlen": 926,
+    "redirected": false
+  },
+  {
+    "r": "/portal/ranking",
+    "finalUrl": "/portal/ranking",
+    "title": "",
+    "bytes": 915282,
+    "txtlen": 1303,
+    "redirected": false
+  },
+  {
+    "r": "/portal/servicos",
+    "finalUrl": "/portal/servicos",
+    "title": "",
+    "bytes": 928064,
+    "txtlen": 1631,
+    "redirected": false
+  }
+]

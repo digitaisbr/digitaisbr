@@ -1,0 +1,486 @@
+<!-- ============================================================ 4 -->
+<h1><span class="cap">Capítulo 4</span>Modelo de dados</h1>
+
+<p class="intro">
+  São 37 tabelas e 23 enums, agrupadas em oito domínios. A maior parte das regras de
+  consistência foi empurrada para o banco — chaves estrangeiras, índices únicos e enums — de
+  modo que um bug na aplicação não consiga produzir um estado impossível.
+</p>
+
+<h2>4.1 Mapa das tabelas</h2>
+
+<h3>Autenticação e auditoria</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>usuarios</code></td><td>email ⟨único⟩, senhaHash, role, ativo, ultimoLogin</td>
+        <td>Credencial de acesso. Um usuário é ADMIN ou ASSOCIADO.</td></tr>
+    <tr><td><code>refresh_tokens</code></td><td>tokenHash ⟨único⟩, expiraEm, revogado</td>
+        <td>Sessões abertas. Permite revogação seletiva ou em massa.</td></tr>
+    <tr><td><code>logs_auditoria</code></td><td>acao, entidade, entidadeId, dados ⟨JSON⟩, ip</td>
+        <td>Rastro de operações sensíveis. Sobrevive à exclusão do usuário.</td></tr>
+  </tbody>
+</table>
+
+<h3>Associados e planos</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>planos</code></td><td>nivel ⟨único⟩, preco, recursos ⟨array⟩, limiteProdutos, comissaoExtraPct</td>
+        <td>Define preço e o que cada nível libera. É referenciado como plano mínimo em outras tabelas.</td></tr>
+    <tr><td><code>associados</code></td><td>handle ⟨único⟩, cpfCnpj ⟨único⟩, nicho, seguidores, engajamento, status, pontuacao</td>
+        <td>O criador de conteúdo. Relaciona-se 1:1 com usuário e 1:1 com loja.</td></tr>
+    <tr><td><code>assinaturas</code></td><td>valor, inicioEm, fimEm, ativa</td>
+        <td>Histórico de planos. Só as ativas compõem o MRR.</td></tr>
+    <tr><td><code>redes_sociais_contas</code></td><td>(associado, rede) ⟨único⟩, handle, seguidores, engajamento</td>
+        <td>Perfis conectados e suas métricas.</td></tr>
+  </tbody>
+</table>
+
+<h3>Catálogo e lojas</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>categorias_produto</code></td><td>nome ⟨único⟩, slug ⟨único⟩, cor</td><td>Taxonomia do catálogo.</td></tr>
+    <tr><td><code>produtos</code></td><td>sku ⟨único⟩, preco, comissaoPct, estoque, planoMinimoId, status</td>
+        <td>Item vendável. <code>estoque = -1</code> significa ilimitado.</td></tr>
+    <tr><td><code>lojas</code></td><td>associadoId ⟨único⟩, slug ⟨único⟩, corPrimaria, ativa, visualizacoes</td>
+        <td>Vitrine pública do associado.</td></tr>
+    <tr><td><code>loja_produtos</code></td><td>(loja, produto) ⟨único⟩, destaque, ordem</td>
+        <td>Curadoria: quais produtos o associado escolheu exibir e em que ordem.</td></tr>
+  </tbody>
+</table>
+
+<h3>Vendas e comissões</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>vendas</code></td><td>ref ⟨único⟩, quantidade, precoUnitario, desconto, total, status, dataVenda</td>
+        <td>Transação. Guarda o preço praticado no momento — mudar o produto depois não reescreve a história.</td></tr>
+    <tr><td><code>comissoes</code></td><td>vendaId ⟨único⟩, percentual, valor, status, pagoEm, saqueId</td>
+        <td>Direito do associado sobre a venda. Relação 1:1 com a venda.</td></tr>
+    <tr><td><code>cupons</code></td><td>(associado, codigo) ⟨único⟩, tipoDesconto, desconto, compraMinima, usos, limiteUsos</td>
+        <td>Desconto criado pelo associado. O contador de usos é incrementado na venda.</td></tr>
+    <tr><td><code>links_afiliado</code></td><td>codigo ⟨único⟩, cliques, conversoes, receita, comissao</td>
+        <td>Link rastreável por produto, com métricas acumuladas.</td></tr>
+    <tr><td><code>metricas_diarias</code></td><td>(associado, data) ⟨único⟩, cliques, conversoes, receita, comissao</td>
+        <td>Série pré-agregada. Evita varrer eventos brutos para montar gráficos.</td></tr>
+  </tbody>
+</table>
+
+<h3>Parceiros e benefícios</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>parceiros</code></td><td>nome ⟨único⟩, cnpj ⟨único⟩, segmento, ativo</td><td>Empresa conveniada.</td></tr>
+    <tr><td><code>beneficios</code></td><td>nome ⟨único⟩, tipo, valorLabel, planoMinimoId, utilizacoes</td>
+        <td>Vantagem oferecida: desconto, acesso, cashback ou serviço.</td></tr>
+    <tr><td><code>beneficios_usos</code></td><td>beneficioId, associadoId, usadoEm</td><td>Resgates, para medir adesão.</td></tr>
+  </tbody>
+</table>
+
+<h3>Conteúdo e comunidade</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>conteudos</code></td><td>slug ⟨único⟩, tipo, status, planoMinimoId, visualizacoes, curtidas</td>
+        <td>Material educativo: artigo, vídeo, podcast, curso ou e-book.</td></tr>
+    <tr><td><code>conteudos_interacoes</code></td><td>(conteudo, associado) ⟨único⟩, visualizado, curtido</td>
+        <td>Garante que a visualização conte uma vez por pessoa.</td></tr>
+    <tr><td><code>materiais_divulgacao</code></td><td>tipo, dimensao, arquivoUrl, textoCopy, downloads</td>
+        <td>Banners, stories, posts, vídeos e textos prontos para o associado divulgar.</td></tr>
+    <tr><td><code>categorias_comunidade</code></td><td>nome ⟨único⟩, slug ⟨único⟩, icone</td><td>Seções do fórum.</td></tr>
+    <tr><td><code>posts_comunidade</code></td><td>autorId, categoriaId, conteudo, fixado, visualizacoes</td><td>Publicação no feed.</td></tr>
+    <tr><td><code>comentarios_post</code></td><td>postId, autorId, conteudo</td><td>Respostas.</td></tr>
+    <tr><td><code>curtidas_post</code></td><td>(post, associado) ⟨único⟩</td>
+        <td>O índice único torna impossível curtir duas vezes — regra no banco, não no código.</td></tr>
+  </tbody>
+</table>
+
+<h3>Suporte e serviços</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>tickets</code></td><td>numero ⟨único⟩, categoria, prioridade, status, atribuidoAId, resolvidoEm</td><td>Chamado de atendimento.</td></tr>
+    <tr><td><code>tickets_mensagens</code></td><td>ticketId, autorId, conteudo, <strong>interna</strong></td>
+        <td>Thread da conversa. <code>interna = true</code> nunca chega ao associado.</td></tr>
+    <tr><td><code>escritorios_parceiros</code></td><td>nome ⟨único⟩, tipo, especialidades ⟨array⟩, atendimentos</td><td>Banca jurídica ou contábil conveniada.</td></tr>
+    <tr><td><code>profissionais</code></td><td>nome, especialidade, nota, avaliacoes, valorHora, disponivel</td><td>Advogado ou contador atendendo.</td></tr>
+    <tr><td><code>solicitacoes_servico</code></td><td>assunto, status, profissionalId, concluidaEm</td><td>Pedido de assessoria feito pelo associado.</td></tr>
+  </tbody>
+</table>
+
+<h3>Comunicação, financeiro e gamificação</h3>
+<table class="compacta">
+  <thead><tr><th style="width:22%">Tabela</th><th style="width:34%">Campos que importam</th><th>Papel</th></tr></thead>
+  <tbody>
+    <tr><td><code>notificacoes</code></td><td>associadoId ⟨anulável⟩, tipo, canal, lida, lidaEm</td>
+        <td><code>associadoId = null</code> representa um comunicado para todos.</td></tr>
+    <tr><td><code>campanhas</code></td><td>codigo ⟨único⟩, publicoAlvo ⟨array de planos⟩, enviados, aberturas, status</td>
+        <td>Disparo em massa segmentado por plano.</td></tr>
+    <tr><td><code>saques</code></td><td>valor, metodo, destino, status, concluidoEm, motivoRejeicao</td><td>Retirada de comissões.</td></tr>
+    <tr><td><code>lancamentos_financeiros</code></td><td>tipo, categoria, valor, competencia</td>
+        <td>Livro-caixa. Sustenta DRE, fluxo de caixa e saldo sem recalcular vendas.</td></tr>
+    <tr><td><code>conquistas</code></td><td>nome ⟨único⟩, meta, pontos, ordem</td><td>Catálogo de metas gamificadas.</td></tr>
+    <tr><td><code>conquistas_associados</code></td><td>(conquista, associado) ⟨único⟩, progresso, desbloqueada</td><td>Progresso individual.</td></tr>
+  </tbody>
+</table>
+
+<h2>4.2 Relacionamentos centrais</h2>
+
+<figure>
+<svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="rel" markerWidth="8" markerHeight="6" refX="7.5" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#8c94a3"/>
+    </marker>
+  </defs>
+  <style>
+    .ent  { fill:#fff; stroke:#1677ff; stroke-width:1.4; }
+    .ent2 { fill:#f6f8fb; stroke:#c8d1e0; stroke-width:1.2; }
+    .tit  { font-size:10px; font-weight:700; fill:#002c8c; }
+    .tit2 { font-size:10px; font-weight:700; fill:#1f2430; }
+    .cmp  { font-size:8px; fill:#5b6472; }
+    .lbl  { font-size:7.6px; fill:#8c94a3; font-style:italic; }
+    .ln   { stroke:#8c94a3; stroke-width:1.2; fill:none; }
+  </style>
+
+  <rect class="ent"  x="300" y="8"   width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="26"  text-anchor="middle">Usuario</text>
+  <text class="cmp"  x="375" y="40"  text-anchor="middle">email · senhaHash · role</text>
+  <text class="cmp"  x="375" y="52"  text-anchor="middle">ADMIN | ASSOCIADO</text>
+
+  <rect class="ent"  x="300" y="96"  width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="114" text-anchor="middle">Associado</text>
+  <text class="cmp"  x="375" y="128" text-anchor="middle">handle · nicho · status</text>
+  <text class="cmp"  x="375" y="140" text-anchor="middle">seguidores · pontuacao</text>
+
+  <rect class="ent2" x="112" y="96"  width="140" height="52" rx="6"/>
+  <text class="tit2" x="182" y="114" text-anchor="middle">Plano</text>
+  <text class="cmp"  x="182" y="128" text-anchor="middle">nivel · preco</text>
+  <text class="cmp"  x="182" y="140" text-anchor="middle">limiteProdutos</text>
+
+  <rect class="ent2" x="500" y="96"  width="150" height="52" rx="6"/>
+  <text class="tit2" x="575" y="114" text-anchor="middle">Loja</text>
+  <text class="cmp"  x="575" y="128" text-anchor="middle">slug · ativa</text>
+  <text class="cmp"  x="575" y="140" text-anchor="middle">visualizacoes</text>
+
+  <rect class="ent2" x="500" y="188" width="150" height="46" rx="6"/>
+  <text class="tit2" x="575" y="206" text-anchor="middle">LojaProduto</text>
+  <text class="cmp"  x="575" y="222" text-anchor="middle">destaque · ordem</text>
+
+  <rect class="ent2" x="500" y="272" width="150" height="52" rx="6"/>
+  <text class="tit2" x="575" y="290" text-anchor="middle">Produto</text>
+  <text class="cmp"  x="575" y="304" text-anchor="middle">sku · preco · comissaoPct</text>
+  <text class="cmp"  x="575" y="316" text-anchor="middle">estoque · planoMinimo</text>
+
+  <rect class="ent"  x="300" y="188" width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="206" text-anchor="middle">Venda</text>
+  <text class="cmp"  x="375" y="220" text-anchor="middle">ref · total · status</text>
+  <text class="cmp"  x="375" y="232" text-anchor="middle">dataVenda</text>
+
+  <rect class="ent"  x="300" y="272" width="150" height="52" rx="6"/>
+  <text class="tit"  x="375" y="290" text-anchor="middle">Comissao</text>
+  <text class="cmp"  x="375" y="304" text-anchor="middle">percentual · valor</text>
+  <text class="cmp"  x="375" y="316" text-anchor="middle">status · pagoEm</text>
+
+  <rect class="ent2" x="112" y="272" width="140" height="52" rx="6"/>
+  <text class="tit2" x="182" y="290" text-anchor="middle">Cupom</text>
+  <text class="cmp"  x="182" y="304" text-anchor="middle">codigo · desconto</text>
+  <text class="cmp"  x="182" y="316" text-anchor="middle">usos / limiteUsos</text>
+
+  <rect class="ent2" x="112" y="188" width="140" height="46" rx="6"/>
+  <text class="tit2" x="182" y="206" text-anchor="middle">Assinatura</text>
+  <text class="cmp"  x="182" y="222" text-anchor="middle">valor · ativa</text>
+
+  <rect class="ent2" x="300" y="352" width="150" height="40" rx="6"/>
+  <text class="tit2" x="375" y="370" text-anchor="middle">Saque</text>
+  <text class="cmp"  x="375" y="384" text-anchor="middle">valor · metodo · status</text>
+
+  <line class="ln" x1="375" y1="60"  x2="375" y2="92"  marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="80">1:1</text>
+
+  <line class="ln" x1="256" y1="122" x2="296" y2="122" marker-end="url(#rel)"/>
+  <text class="lbl" x="260" y="116">N:1</text>
+
+  <line class="ln" x1="454" y1="122" x2="496" y2="122" marker-end="url(#rel)"/>
+  <text class="lbl" x="458" y="116">1:1</text>
+
+  <line class="ln" x1="575" y1="148" x2="575" y2="184" marker-end="url(#rel)"/>
+  <line class="ln" x1="575" y1="234" x2="575" y2="268" marker-end="url(#rel)"/>
+  <text class="lbl" x="582" y="256">N:1</text>
+
+  <line class="ln" x1="375" y1="148" x2="375" y2="184" marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="168">1:N</text>
+
+  <line class="ln" x1="375" y1="240" x2="375" y2="268" marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="258">1:1</text>
+
+  <line class="ln" x1="496" y1="298" x2="454" y2="298" marker-end="url(#rel)"/>
+
+  <line class="ln" x1="256" y1="298" x2="296" y2="212" marker-end="url(#rel)"/>
+  <text class="lbl" x="252" y="262">opcional</text>
+
+  <line class="ln" x1="182" y1="148" x2="182" y2="184" marker-end="url(#rel)"/>
+
+  <line class="ln" x1="375" y1="324" x2="375" y2="348" marker-end="url(#rel)"/>
+  <text class="lbl" x="382" y="342">N:1</text>
+</svg>
+<figcaption>Núcleo transacional. A comissão é 1:1 com a venda e agrupa-se num saque quando liquidada.</figcaption>
+</figure>
+
+<h2>4.3 Decisões de modelagem</h2>
+
+<table>
+  <thead><tr><th style="width:34%">Decisão</th><th>Justificativa</th></tr></thead>
+  <tbody>
+    <tr><td><code>Decimal(10,2)</code> e <code>Decimal(12,2)</code> para dinheiro</td>
+        <td>Ponto flutuante acumula erro em soma de moeda. Numa base com milhares de comissões,
+            o desvio aparece no fechamento. O tipo decimal do Postgres é exato.</td></tr>
+    <tr><td><code>estoque = -1</code> significa ilimitado</td>
+        <td>Preserva a semântica da plataforma original e evita uma coluna booleana extra que
+            poderia divergir do valor numérico.</td></tr>
+    <tr><td><code>Comissao</code> em 1:1 com <code>Venda</code></td>
+        <td>A comissão nasce com a venda e acompanha o destino dela. Manter tabela separada
+            permite ter status e data de pagamento próprios, sem inchar a venda.</td></tr>
+    <tr><td><code>precoUnitario</code> gravado na venda</td>
+        <td>O preço do produto muda com o tempo. Congelar o valor praticado mantém o histórico
+            financeiro correto para sempre.</td></tr>
+    <tr><td><code>Notificacao.associadoId</code> anulável</td>
+        <td><code>null</code> é broadcast. Evita criar 40 mil linhas para um comunicado geral.</td></tr>
+    <tr><td><code>LancamentoFinanceiro</code> como livro-caixa separado</td>
+        <td>DRE e fluxo de caixa consultam uma tabela pequena e indexada por competência, em vez
+            de reagregar todas as vendas e comissões a cada carregamento de tela.</td></tr>
+    <tr><td><code>MetricaDiaria</code> única por (associado, dia)</td>
+        <td>Gráficos de performance leem uma linha por dia. A alternativa — varrer cliques
+            brutos — degradaria à medida que o tráfego crescesse.</td></tr>
+    <tr><td><code>planoMinimoId</code> em produto, benefício e conteúdo</td>
+        <td>A regra de acesso vive no dado. Criar um produto exclusivo é preencher um campo,
+            não alterar código.</td></tr>
+    <tr><td>Índices únicos compostos em curtidas, interações e cupons</td>
+        <td>Transferem a regra de unicidade para o banco. Nem uma condição de corrida consegue
+            gerar duas curtidas da mesma pessoa no mesmo post.</td></tr>
+    <tr><td><code>onDelete</code> explícito em cada relação</td>
+        <td><code>Cascade</code> onde o filho não faz sentido sozinho (loja de um associado);
+            <code>SetNull</code> onde o registro deve sobreviver (autor de um log, atendente de
+            um ticket encerrado).</td></tr>
+  </tbody>
+</table>
+
+<h2>4.4 Enums do domínio</h2>
+
+<p>
+  Vinte e três enums transferem para o banco a consistência de status e tipos. Os principais:
+</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:26%">Enum</th><th>Valores</th></tr></thead>
+  <tbody>
+    <tr><td><code>Role</code></td><td>ADMIN · ASSOCIADO</td></tr>
+    <tr><td><code>NivelPlano</code></td><td>BASICO · INTERMEDIARIO · AVANCADO</td></tr>
+    <tr><td><code>StatusAssociado</code></td><td>ATIVO · INATIVO · SUSPENSO</td></tr>
+    <tr><td><code>StatusProduto</code></td><td>ATIVO · INATIVO · ESGOTADO</td></tr>
+    <tr><td><code>StatusVenda</code></td><td>AGUARDANDO_PGTO · PAGA · CANCELADA · REEMBOLSADA</td></tr>
+    <tr><td><code>StatusComissao</code></td><td>AGUARDANDO_PGTO · PROCESSANDO · PAGA · CANCELADA</td></tr>
+    <tr><td><code>TipoBeneficio</code></td><td>DESCONTO · ACESSO · CASHBACK · SERVICO</td></tr>
+    <tr><td><code>TipoConteudo</code></td><td>ARTIGO · VIDEO · PODCAST · CURSO · EBOOK</td></tr>
+    <tr><td><code>StatusTicket</code></td><td>ABERTO · EM_ANDAMENTO · RESOLVIDO · FECHADO</td></tr>
+    <tr><td><code>PrioridadeTicket</code></td><td>BAIXA · MEDIA · ALTA · URGENTE</td></tr>
+    <tr><td><code>TipoNotificacao</code></td><td>SISTEMA · VENDA · COMISSAO · BENEFICIO · SUPORTE · CONTEUDO</td></tr>
+    <tr><td><code>CanalNotificacao</code></td><td>IN_APP · EMAIL · PUSH</td></tr>
+    <tr><td><code>MetodoSaque</code> · <code>StatusSaque</code></td><td>PIX · TED ⟋ PENDENTE · PROCESSANDO · CONCLUIDO · REJEITADO</td></tr>
+    <tr><td><code>TipoLancamento</code> · <code>CategoriaLancamento</code></td>
+        <td>ENTRADA · SAIDA ⟋ ASSINATURA · VENDA · COMISSAO · INFRAESTRUTURA · MARKETING · SUPORTE · JURIDICO · OUTROS</td></tr>
+    <tr><td><code>RedeSocial</code></td><td>INSTAGRAM · YOUTUBE · TIKTOK · TWITTER · FACEBOOK · LINKEDIN</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 5 -->
+<h1><span class="cap">Capítulo 5</span>Regras de negócio</h1>
+
+<p class="intro">
+  Este capítulo descreve o que a API faz além de guardar e devolver registros. São as regras
+  que, se implementadas errado, produzem prejuízo financeiro ou inconsistência contábil.
+</p>
+
+<h2>5.1 Registro de uma venda</h2>
+
+<p>
+  <code>POST /vendas</code> executa oito passos dentro de <strong>uma única transação</strong>.
+  Se qualquer um falhar, nada é gravado — não existe estado meio-feito em que o estoque baixou
+  mas a comissão não foi criada.
+</p>
+
+<ol class="lista">
+  <li><strong>Valida o produto</strong> — precisa existir e estar <code>ATIVO</code>; senão, <code>409</code>.</li>
+  <li><strong>Calcula o bruto</strong> — <code>preço × quantidade</code>.</li>
+  <li><strong>Aplica o cupom</strong>, se houver. Confere quatro condições: pertence ao associado,
+      está ativo, não expirou, não estourou o limite de usos, e a compra atinge o mínimo exigido.
+      Incrementa o contador de usos.</li>
+  <li><strong>Fecha o total</strong> — <code>bruto − desconto</code>, arredondado a dois decimais.</li>
+  <li><strong>Calcula a comissão</strong> — percentual do produto <em>somado</em> ao bônus do plano.</li>
+  <li><strong>Baixa o estoque</strong> — se finito; se zerar, o produto vira <code>ESGOTADO</code>.</li>
+  <li><strong>Gera a referência</strong> — <code>CHK-NNNNN</code>, sequencial e contínuo com o histórico.</li>
+  <li><strong>Cria venda + comissão e notifica</strong> o associado.</li>
+</ol>
+
+<h3>A fórmula da comissão</h3>
+
+<pre><code><span class="cmt">// percentual efetivo = o do produto + o bônus do plano do associado</span>
+percentual = produto.comissaoPct + associado.plano.comissaoExtraPct
+valor      = total × percentual / 100</code></pre>
+
+<p>
+  Um exemplo concreto: um produto de R$ 149,90 com 18% de comissão, vendido em duas unidades
+  por um associado do plano Básico (bônus 0%), gera <code>299,80 × 18% = R$ 53,96</code>.
+  O mesmo produto vendido por um associado Avançado (bônus +5%) renderia
+  <code>299,80 × 23% = R$ 68,95</code>. O plano se paga pelo próprio volume.
+</p>
+
+<h2>5.2 Ciclo de vida da venda</h2>
+
+<p>
+  O status da venda é uma máquina de estados fechada. Transições fora do diagrama devolvem
+  <code>409 Conflict</code> com a lista do que seria permitido — o que impede, por exemplo,
+  reembolsar uma venda que nunca foi paga.
+</p>
+
+<figure>
+<svg viewBox="0 0 760 176" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="s5" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+
+  <rect x="24"  y="60" width="150" height="50" rx="8" fill="#fffbf0" stroke="#d48806" stroke-width="1.5"/>
+  <text x="99"  y="82" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8c5800">AGUARDANDO_PGTO</text>
+  <text x="99"  y="98" text-anchor="middle" font-size="8.4" fill="#5b6472">estado inicial</text>
+
+  <rect x="292" y="18" width="150" height="50" rx="8" fill="#e8f8ef" stroke="#12a150" stroke-width="1.5"/>
+  <text x="367" y="40" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0b6b36">PAGA</text>
+  <text x="367" y="56" text-anchor="middle" font-size="8.4" fill="#5b6472">comissão → PROCESSANDO</text>
+
+  <rect x="292" y="104" width="150" height="50" rx="8" fill="#ffefe8" stroke="#d4380d" stroke-width="1.5"/>
+  <text x="367" y="126" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a8280b">CANCELADA</text>
+  <text x="367" y="142" text-anchor="middle" font-size="8.4" fill="#5b6472">estoque devolvido</text>
+
+  <rect x="560" y="18" width="176" height="50" rx="8" fill="#ffefe8" stroke="#d4380d" stroke-width="1.5"/>
+  <text x="648" y="40" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a8280b">REEMBOLSADA</text>
+  <text x="648" y="56" text-anchor="middle" font-size="8.4" fill="#5b6472">comissão → CANCELADA</text>
+
+  <path d="M176 76 L288 46" class="ln" stroke="#12a150" stroke-width="1.6" fill="none" marker-end="url(#s5)"/>
+  <path d="M176 96 L288 124" stroke="#d4380d" stroke-width="1.6" fill="none" marker-end="url(#s5)"/>
+  <path d="M444 43 L556 43" stroke="#d4380d" stroke-width="1.6" fill="none" marker-end="url(#s5)"/>
+
+  <text x="214" y="50"  font-size="8.4" fill="#0b6b36" font-weight="600">pagamento confirmado</text>
+  <text x="206" y="122" font-size="8.4" fill="#a8280b" font-weight="600">cancelamento</text>
+  <text x="470" y="34"  font-size="8.4" fill="#a8280b" font-weight="600">reembolso</text>
+
+  <text x="367" y="172" text-anchor="middle" font-size="8.4" fill="#8c94a3" font-style="italic">
+    CANCELADA e REEMBOLSADA são estados finais — nenhuma transição sai deles</text>
+</svg>
+<figcaption>Máquina de estados da venda e os efeitos colaterais de cada transição.</figcaption>
+</figure>
+
+<p>Cada transição propaga consequências, que também correm em transação:</p>
+
+<table>
+  <thead><tr><th style="width:26%">Transição</th><th style="width:26%">Comissão</th><th style="width:24%">Estoque</th><th>Contador do produto</th></tr></thead>
+  <tbody>
+    <tr><td>→ <strong>PAGA</strong></td><td>vai a PROCESSANDO</td><td>permanece baixado</td><td>incrementa</td></tr>
+    <tr><td>→ <strong>CANCELADA</strong></td><td>vai a CANCELADA</td><td>devolvido; se estava esgotado, reativa</td><td>—</td></tr>
+    <tr><td>→ <strong>REEMBOLSADA</strong></td><td>vai a CANCELADA</td><td>devolvido; se estava esgotado, reativa</td><td>decrementa</td></tr>
+  </tbody>
+</table>
+
+<h2>5.3 Comissões e liquidação</h2>
+
+<p>
+  A comissão percorre quatro estados. Ela nasce <code>AGUARDANDO_PGTO</code> junto com a venda,
+  vai a <code>PROCESSANDO</code> quando a venda é paga, e só chega a <code>PAGA</code> quando o
+  administrador a liquida — individualmente ou em lote.
+</p>
+
+<p>
+  O pagamento em lote (<code>POST /comissoes/pagar</code>) recebe uma lista de identificadores e,
+  antes de qualquer escrita, verifica que todas existem e todas estão em estado liquidável.
+  Se uma única já estiver paga, o lote inteiro é recusado com <code>409</code> — evitando
+  pagamento duplicado por clique repetido. Ao final, consolida os valores por associado e
+  envia <strong>uma</strong> notificação por pessoa, com o total, em vez de uma por comissão.
+</p>
+
+<h2>5.4 Saldo e saques</h2>
+
+<p>
+  O saldo disponível não é um campo guardado — seria uma fonte constante de divergência. Ele é
+  calculado no momento da consulta:
+</p>
+
+<pre><code>disponivel = comissoes(PAGA)
+           − saques(CONCLUIDO)
+           − saques(PENDENTE + PROCESSANDO)   <span class="cmt">← reserva o que já foi pedido</span></code></pre>
+
+<p>
+  Subtrair os saques em andamento é o que impede o saque duplo: pedir R$ 500 duas vezes seguidas
+  falha na segunda tentativa, porque o primeiro pedido já reservou o valor.
+</p>
+
+<table>
+  <thead><tr><th style="width:26%">Estado do saque</th><th>Transições possíveis</th></tr></thead>
+  <tbody>
+    <tr><td><strong>PENDENTE</strong></td><td>→ PROCESSANDO · → REJEITADO <em>(exige motivo)</em></td></tr>
+    <tr><td><strong>PROCESSANDO</strong></td><td>→ CONCLUIDO · → REJEITADO <em>(exige motivo)</em></td></tr>
+    <tr><td><strong>CONCLUIDO</strong></td><td>estado final — gera lançamento de saída no caixa</td></tr>
+    <tr><td><strong>REJEITADO</strong></td><td>estado final</td></tr>
+  </tbody>
+</table>
+
+<h2>5.5 Limites e exclusividades por plano</h2>
+
+<table>
+  <thead><tr><th style="width:30%">Regra</th><th style="width:24%">Onde é checada</th><th>Comportamento</th></tr></thead>
+  <tbody>
+    <tr><td>Limite de produtos na loja</td><td><code>LojasService</code></td>
+        <td>Básico até 20, Intermediário até 100, Avançado ilimitado. Estourar devolve
+            <code>409</code> sugerindo upgrade.</td></tr>
+    <tr><td>Produto exclusivo de plano</td><td><code>LojasService</code></td>
+        <td>Adicionar produto acima do plano devolve <code>403</code> nomeando o plano exigido.</td></tr>
+    <tr><td>Personalização visual da loja</td><td><code>PortalService</code></td>
+        <td>Cor, banner e logo exigem Intermediário. Renomear e descrever é livre.</td></tr>
+    <tr><td>Benefício acima do plano</td><td><code>ParceirosService</code></td>
+        <td>Resgatar devolve <code>403</code>; listar devolve com <code>bloqueado: true</code>.</td></tr>
+    <tr><td>Conteúdo acima do plano</td><td><code>ConteudosService</code></td>
+        <td>Abrir devolve <code>403</code>; listar marca como bloqueado.</td></tr>
+    <tr><td>Rotas com <code>@PlanoMinimo</code></td><td><code>PlanoGuard</code></td>
+        <td>Bloqueio no nível da rota, antes de tocar o service.</td></tr>
+  </tbody>
+</table>
+
+<h2>5.6 Suporte: isolamento e notas internas</h2>
+
+<p>
+  Duas regras de confidencialidade governam o módulo de atendimento, e ambas são testadas na
+  suíte end-to-end:
+</p>
+
+<ul class="lista">
+  <li><strong>Isolamento horizontal</strong> — um associado que tente abrir o chamado de outro
+      recebe <code>403</code>, mesmo conhecendo o identificador. A checagem compara o dono do
+      ticket com o associado autenticado.</li>
+  <li><strong>Notas internas</strong> — mensagens com <code>interna: true</code> são filtradas
+      da resposta quando quem consulta não é administrador. Um associado tentando criar uma
+      recebe <code>403</code>.</li>
+</ul>
+
+<p>
+  Além disso, a primeira resposta do atendimento move o ticket de <code>ABERTO</code> para
+  <code>EM_ANDAMENTO</code> automaticamente, e apenas mensagens públicas geram notificação
+  para o associado — uma nota interna não avisa ninguém de fora.
+</p>
+
+<h2>5.7 Gamificação</h2>
+
+<p>
+  A pontuação do ranking é derivada dos dados reais, não digitada:
+  <code>vendas × 100 + comissões pagas acumuladas</code>. O endpoint de recálculo reprocessa
+  também o progresso das conquistas, medindo cada uma contra a métrica que lhe corresponde —
+  volume de vendas, comissão acumulada, produtos na loja, cupons criados ou posts publicados.
+</p>

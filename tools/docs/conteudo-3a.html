@@ -1,0 +1,239 @@
+<!-- ============================================================ 6 -->
+<h1><span class="cap">Capítulo 6</span>Módulos funcionais</h1>
+
+<p class="intro">
+  Dezessete módulos, cada um responsável por um domínio. Abaixo, o que cada um entrega e as
+  operações que vão além do CRUD.
+</p>
+
+<h2>6.1 Área administrativa</h2>
+
+<h3>Dashboard e relatórios</h3>
+<p>
+  Consolida em uma chamada os cartões da home: associados ativos, vendas aprovadas, receita,
+  lojas ativas, comissões pagas e pendentes, saldo financeiro e produtos ativos. Fornece ainda a
+  série mensal de receita × comissões (SQL agregado direto, não N+1) e o relatório analítico com
+  vendas por status, associados por plano, e os cinco produtos e associados de maior receita —
+  tudo filtrável por período.
+</p>
+
+<h3>Associados</h3>
+<p>
+  Cadastro completo com busca textual, filtros por status, plano, nicho e faixa de seguidores,
+  e ordenação por qualquer campo permitido. Criar um associado é uma operação composta: gera o
+  usuário com senha (retornada uma única vez se não informada), a assinatura do plano e a loja
+  virtual — tudo de uma vez.
+</p>
+<p>
+  Duas operações merecem nota. <strong>Trocar de plano</strong> encerra a assinatura vigente,
+  abre uma nova e notifica o associado, em transação. <strong>Alterar status</strong> propaga:
+  inativar um associado também desativa o acesso dele e tira a loja do ar. E a
+  <strong>exclusão</strong> é recusada com <code>409</code> se houver vendas registradas —
+  histórico financeiro não se apaga; inativa-se.
+</p>
+
+<h3>Catálogo</h3>
+<p>
+  Produtos e categorias. Cada produto responde com <code>ganhoEstimado</code> já calculado e,
+  para associados, o campo <code>bloqueado</code>. Os filtros cobrem faixa de preço, comissão
+  mínima, categoria, status e exclusividade. Remover um produto com vendas é recusado — a
+  orientação é inativá-lo, preservando o histórico.
+</p>
+
+<h3>Lojas</h3>
+<p>
+  Gestão das vitrines: curadoria de produtos com destaque e ordenação, personalização visual e
+  ativação. O endpoint de detalhe traz desempenho calculado — vendas aprovadas, receita,
+  visualizações e taxa de conversão.
+</p>
+
+<h3>Vendas</h3>
+<p>
+  Registro transacional (seção 5.1), máquina de estados (5.2), indicadores do topo da tela e
+  <strong>exportação CSV</strong> da listagem filtrada, com escape correto de aspas — o
+  equivalente ao botão “Exportar CSV” da tela original, agora funcional.
+</p>
+
+<h3>Comissões</h3>
+<p>
+  Listagem com filtros por status, associado e período; liquidação em lote com validação prévia;
+  consulta de saldo por associado; e ranking dos que mais receberam.
+</p>
+
+<h3>Financeiro</h3>
+<p>
+  A área mais analítica. Entrega visão geral (saldo, MRR, ARR, margem líquida, comissões a pagar),
+  fluxo de caixa mensal, DRE com composição percentual por categoria, projeção de MRR baseada no
+  crescimento observado nos últimos 30 dias (limitada a 20% ao mês para não extrapolar), gestão
+  de saques e extrato consolidado por associado.
+</p>
+
+<h3>Parceiros, benefícios e conteúdos</h3>
+<p>
+  Cadastro de parceiros com CNPJ validado por formato, benefícios tipados (desconto, acesso,
+  cashback, serviço) com plano mínimo e contador de utilizações, e uma biblioteca de conteúdos
+  com controle de publicação. Materiais de divulgação — banners, stories, posts, vídeos e copies
+  — com contagem de downloads.
+</p>
+
+<h3>Comunidade, suporte e serviços</h3>
+<p>
+  Feed com categorias, fixação de posts, curtidas, comentários e moderação. Central de
+  atendimento com thread, prioridade, atribuição e notas internas. Rede de escritórios jurídicos
+  e contábeis com profissionais, avaliações e solicitações de atendimento.
+</p>
+
+<h3>Notificações e campanhas</h3>
+<p>
+  Notificações individuais ou em broadcast, com tipo e canal. Campanhas segmentadas por plano,
+  com estados de rascunho, agendada, enviada e cancelada; o disparo cria uma notificação por
+  destinatário e registra a contagem de envios.
+</p>
+
+<h2>6.2 Portal do associado</h2>
+
+<table>
+  <thead><tr><th style="width:26%">Área</th><th>O que o associado faz</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Painel</strong></td>
+        <td>Vê vendas, receita, comissões recebidas e pendentes, uso do plano e as vendas recentes.</td></tr>
+    <tr><td><strong>Perfil</strong></td>
+        <td>Edita bio, nicho e contato; controla se email e telefone aparecem no perfil público.</td></tr>
+    <tr><td><strong>Meu plano</strong></td>
+        <td>Vê o consumo (produtos, benefícios, conteúdos), o ROI da mensalidade e exatamente o
+            que o próximo plano desbloquearia — número de benefícios, conteúdos e comissão extra.</td></tr>
+    <tr><td><strong>Minha loja</strong></td>
+        <td>Escolhe produtos do marketplace, ordena, destaca e personaliza a vitrine.</td></tr>
+    <tr><td><strong>Cupons</strong></td>
+        <td>Cria códigos de desconto com validade, limite de usos e compra mínima. Cupom já
+            utilizado não pode ser excluído — apenas desativado.</td></tr>
+    <tr><td><strong>Links de afiliado</strong></td>
+        <td>Gera links rastreáveis por produto e acompanha cliques, conversões, taxa e receita.</td></tr>
+    <tr><td><strong>Performance</strong></td>
+        <td>Série diária de cliques e conversões, com os produtos de maior receita.</td></tr>
+    <tr><td><strong>Financeiro</strong></td>
+        <td>Consulta saldo e solicita saque por PIX ou TED.</td></tr>
+    <tr><td><strong>Benefícios e conteúdos</strong></td>
+        <td>Resgata benefícios e consome material educativo, dentro do que o plano libera.</td></tr>
+    <tr><td><strong>Comunidade e suporte</strong></td>
+        <td>Publica, comenta, curte; abre e acompanha os próprios chamados.</td></tr>
+    <tr><td><strong>Ranking</strong></td>
+        <td>Vê a própria posição, o percentil e o progresso das conquistas.</td></tr>
+    <tr><td><strong>Redes sociais</strong></td>
+        <td>Conecta perfis e acompanha seguidores, engajamento e volume de posts.</td></tr>
+  </tbody>
+</table>
+
+<h2>6.3 Área pública</h2>
+
+<table>
+  <thead><tr><th style="width:34%">Rota</th><th>Comportamento</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /lojas/publica/:slug</code></td>
+        <td>Vitrine da loja. Devolve apenas produtos ativos, contabiliza uma visualização por
+            acesso e recusa lojas desativadas com <code>403</code>.</td></tr>
+    <tr><td><code>GET /associados/perfil/:handle</code></td>
+        <td>Perfil público do criador, respeitando as preferências de privacidade: email e
+            telefone só aparecem se o associado permitiu.</td></tr>
+    <tr><td><code>GET /portal/r/:codigo</code></td>
+        <td>Redirecionador do link de afiliado. Registra o clique, soma na métrica diária e
+            devolve o destino.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 7 -->
+<h1><span class="cap">Capítulo 7</span>Referência da API</h1>
+
+<p class="intro">
+  170 rotas em 17 módulos. Esta referência lista todas, agrupadas por área. A versão navegável,
+  com schemas de entrada e saída e formulário de teste, está no Swagger em <code>/api/docs</code>.
+</p>
+
+<h2>7.1 Convenções</h2>
+
+<table>
+  <thead><tr><th style="width:26%">Item</th><th>Convenção</th></tr></thead>
+  <tbody>
+    <tr><td>URL base</td><td><code>http://localhost:3000/api</code></td></tr>
+    <tr><td>Autenticação</td><td><code>Authorization: Bearer &lt;access token&gt;</code></td></tr>
+    <tr><td>Formato</td><td>JSON em requisição e resposta; UTF-8</td></tr>
+    <tr><td>Valores monetários</td><td>número com dois decimais (ex.: <code>149.9</code>), nunca string</td></tr>
+    <tr><td>Datas</td><td>ISO 8601 na resposta; <code>YYYY-MM-DD</code> aceito em filtros</td></tr>
+    <tr><td>Identificadores</td><td>UUID v4; algumas rotas aceitam também o código natural
+        (<code>CHK-10056</code>, <code>SUP-001</code>, SKU, slug)</td></tr>
+  </tbody>
+</table>
+
+<h2>7.2 Paginação, busca, filtro e ordenação</h2>
+
+<p>Toda listagem aceita os mesmos parâmetros e devolve a mesma envelopagem:</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:16%">Parâmetro</th><th style="width:14%">Padrão</th><th>Efeito</th></tr></thead>
+  <tbody>
+    <tr><td><code>page</code></td><td>1</td><td>Página, começando em 1</td></tr>
+    <tr><td><code>limit</code></td><td>10</td><td>Itens por página; máximo 100 — acima disso, <code>400</code></td></tr>
+    <tr><td><code>search</code></td><td>—</td><td>Busca textual, sem distinção de maiúsculas, nos campos relevantes do recurso</td></tr>
+    <tr><td><code>sort</code></td><td>—</td><td>Campo de ordenação; só nomes de uma lista permitida por recurso</td></tr>
+    <tr><td><code>order</code></td><td>desc</td><td><code>asc</code> ou <code>desc</code></td></tr>
+    <tr><td><code>de</code> / <code>ate</code></td><td>—</td><td>Recorte de período nos recursos com data</td></tr>
+  </tbody>
+</table>
+
+<pre><code>GET /api/associados?search=ana&amp;status=ATIVO&amp;plano=AVANCADO&amp;sort=seguidores&amp;order=desc&amp;limit=20
+
+{
+  <span class="str">"data"</span>: [ … ],
+  <span class="str">"meta"</span>: {
+    <span class="str">"total"</span>: 40,  <span class="str">"page"</span>: 1,     <span class="str">"limit"</span>: 20,
+    <span class="str">"totalPages"</span>: 2, <span class="str">"hasNext"</span>: true, <span class="str">"hasPrev"</span>: false
+  }
+}</code></pre>
+
+<div class="destaque">
+  <span class="rotulo">Ordenação segura</span>
+  <p>
+    O parâmetro <code>sort</code> é confrontado com uma lista branca por recurso antes de virar
+    cláusula <code>ORDER BY</code>. Um nome fora da lista cai silenciosamente no padrão, em vez
+    de vazar estrutura interna ou permitir injeção.
+  </p>
+</div>
+
+<h2>7.3 Erros</h2>
+
+<p>
+  Toda resposta de erro segue o mesmo formato, e os erros do Prisma são traduzidos para
+  mensagens em português antes de chegar ao cliente.
+</p>
+
+<table class="compacta">
+  <thead><tr><th style="width:12%">Código</th><th style="width:28%">Quando ocorre</th><th>Exemplo de mensagem</th></tr></thead>
+  <tbody>
+    <tr><td><code>400</code></td><td>Entrada inválida</td><td>“A senha deve ter ao menos 8 caracteres.”</td></tr>
+    <tr><td><code>401</code></td><td>Sem token, token expirado ou credenciais erradas</td><td>“Email ou senha inválidos.”</td></tr>
+    <tr><td><code>403</code></td><td>Papel ou plano insuficiente, ou recurso de outro associado</td>
+        <td>“Recurso disponível a partir do plano AVANCADO.”</td></tr>
+    <tr><td><code>404</code></td><td>Registro inexistente <em>(P2025)</em></td><td>“Registro não encontrado.”</td></tr>
+    <tr><td><code>409</code></td><td>Conflito de estado ou violação de unicidade <em>(P2002)</em></td>
+        <td>“Transição inválida: PAGA → AGUARDANDO_PGTO.”</td></tr>
+    <tr><td><code>429</code></td><td>Acima de 300 requisições por minuto</td><td>“ThrottlerException: Too Many Requests”</td></tr>
+  </tbody>
+</table>
+
+<pre><code>{
+  <span class="str">"statusCode"</span>: 409,
+  <span class="str">"path"</span>: <span class="str">"/api/vendas/…/status"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-08-27T21:14:02.881Z"</span>,
+  <span class="str">"message"</span>: <span class="str">"Transição inválida: AGUARDANDO_PGTO → REEMBOLSADA. Permitidas: PAGA, CANCELADA."</span>
+}</code></pre>
+
+<h2>7.4 As rotas</h2>
+
+<p>
+  Legenda: <span class="selo admin">ADMIN</span> exige papel de administrador ·
+  <span class="selo pub">PÚBLICO</span> dispensa autenticação ·
+  as demais exigem apenas estar autenticado.
+</p>
+
+<!--ROTAS-->
+

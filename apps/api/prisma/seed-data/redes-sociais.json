@@ -1,0 +1,34 @@
+[
+  {
+    "rede": "Instagram",
+    "conectada": true,
+    "handle": "@maria.influencer",
+    "seguidores": 45200,
+    "engajamento": 4.8,
+    "posts": 892
+  },
+  {
+    "rede": "YouTube",
+    "conectada": true,
+    "handle": "Maria Influencer",
+    "seguidores": 12800,
+    "engajamento": 6.2,
+    "posts": 156
+  },
+  {
+    "rede": "TikTok",
+    "conectada": true,
+    "handle": "@maria.tk",
+    "seguidores": 78500,
+    "engajamento": 8.1,
+    "posts": 342
+  },
+  {
+    "rede": "Twitter / X",
+    "conectada": false,
+    "handle": null,
+    "seguidores": null,
+    "engajamento": null,
+    "posts": null
+  }
+]

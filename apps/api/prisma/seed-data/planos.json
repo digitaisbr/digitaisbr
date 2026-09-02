@@ -1,0 +1,43 @@
+[
+  {
+    "nome": "Básico",
+    "preco": 49.9,
+    "descricao": "Ideal para quem está começando. Acesso aos benefícios essenciais e loja padrão.",
+    "associadosAtivos": 10,
+    "recursos": [
+      "Benefícios básicos",
+      "Conteúdos educacionais",
+      "Acesso à comunidade",
+      "Loja virtual padrão",
+      "Suporte por email"
+    ]
+  },
+  {
+    "nome": "Intermediário",
+    "preco": 99.9,
+    "descricao": "Para quem quer crescer. Inclui suporte jurídico, contábil e personalização da loja.",
+    "associadosAtivos": 10,
+    "recursos": [
+      "Tudo do plano Básico",
+      "Suporte jurídico",
+      "Suporte contábil",
+      "Personalização da loja (cores, banner, logo)",
+      "Até 100 produtos na loja",
+      "Relatórios avançados"
+    ]
+  },
+  {
+    "nome": "Avançado",
+    "preco": 199.9,
+    "descricao": "Máximo potencial. Produtos exclusivos, assessoria completa e suporte prioritário.",
+    "associadosAtivos": 10,
+    "recursos": [
+      "Tudo do plano Intermediário",
+      "Produtos exclusivos",
+      "Assessoria completa",
+      "Suporte prioritário",
+      "Produtos ilimitados na loja",
+      "Consultoria mensal"
+    ]
+  }
+]

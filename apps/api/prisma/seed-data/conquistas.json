@@ -1,0 +1,86 @@
+[
+  {
+    "nome": "Primeira Venda",
+    "desbloqueada": true,
+    "progressoPct": 100.0,
+    "progressoAtual": null,
+    "progressoMeta": null
+  },
+  {
+    "nome": "Vendedor Bronze",
+    "desbloqueada": true,
+    "progressoPct": 100.0,
+    "progressoAtual": null,
+    "progressoMeta": null
+  },
+  {
+    "nome": "Vendedor Prata",
+    "desbloqueada": true,
+    "progressoPct": 100.0,
+    "progressoAtual": null,
+    "progressoMeta": null
+  },
+  {
+    "nome": "Vendedor Ouro",
+    "desbloqueada": false,
+    "progressoPct": 67.0,
+    "progressoAtual": 67,
+    "progressoMeta": 100
+  },
+  {
+    "nome": "R$ 1.000 em Comissões",
+    "desbloqueada": true,
+    "progressoPct": 100.0,
+    "progressoAtual": null,
+    "progressoMeta": null
+  },
+  {
+    "nome": "R$ 5.000 em Comissões",
+    "desbloqueada": false,
+    "progressoPct": 64.0,
+    "progressoAtual": 3200,
+    "progressoMeta": 5000
+  },
+  {
+    "nome": "Loja Completa",
+    "desbloqueada": false,
+    "progressoPct": 60.0,
+    "progressoAtual": 12,
+    "progressoMeta": 20
+  },
+  {
+    "nome": "Influencer Popular",
+    "desbloqueada": true,
+    "progressoPct": 100.0,
+    "progressoAtual": null,
+    "progressoMeta": null
+  },
+  {
+    "nome": "Cupom Master",
+    "desbloqueada": false,
+    "progressoPct": 60.0,
+    "progressoAtual": 3,
+    "progressoMeta": 5
+  },
+  {
+    "nome": "Networker",
+    "desbloqueada": false,
+    "progressoPct": 40.0,
+    "progressoAtual": 4,
+    "progressoMeta": 10
+  },
+  {
+    "nome": "Raio",
+    "desbloqueada": false,
+    "progressoPct": 60.0,
+    "progressoAtual": 3,
+    "progressoMeta": 5
+  },
+  {
+    "nome": "Fã Fiel",
+    "desbloqueada": true,
+    "progressoPct": 100.0,
+    "progressoAtual": null,
+    "progressoMeta": null
+  }
+]

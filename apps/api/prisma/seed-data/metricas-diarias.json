@@ -1,0 +1,58 @@
+[
+  {
+    "data": "2026-08-17",
+    "cliques": 55,
+    "conversoes": 1,
+    "taxa": 1.8,
+    "receita": 45.11,
+    "comissao": 5.41
+  },
+  {
+    "data": "2026-08-16",
+    "cliques": 25,
+    "conversoes": 0,
+    "taxa": 0.0,
+    "receita": 0.0,
+    "comissao": 0.0
+  },
+  {
+    "data": "2026-08-15",
+    "cliques": 53,
+    "conversoes": 1,
+    "taxa": 1.9,
+    "receita": 53.59,
+    "comissao": 6.43
+  },
+  {
+    "data": "2026-08-14",
+    "cliques": 86,
+    "conversoes": 4,
+    "taxa": 4.7,
+    "receita": 495.79,
+    "comissao": 59.5
+  },
+  {
+    "data": "2026-08-13",
+    "cliques": 13,
+    "conversoes": 0,
+    "taxa": 0.0,
+    "receita": 0.0,
+    "comissao": 0.0
+  },
+  {
+    "data": "2026-08-12",
+    "cliques": 69,
+    "conversoes": 3,
+    "taxa": 4.3,
+    "receita": 127.19,
+    "comissao": 15.26
+  },
+  {
+    "data": "2026-08-11",
+    "cliques": 59,
+    "conversoes": 2,
+    "taxa": 3.4,
+    "receita": 69.11,
+    "comissao": 8.29
+  }
+]

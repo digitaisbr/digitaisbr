@@ -1,0 +1,310 @@
+[
+  {
+    "route": "/associados/assoc-1",
+    "slug": "associados_assoc-1"
+  },
+  {
+    "route": "/associados/assoc-2",
+    "slug": "associados_assoc-2"
+  },
+  {
+    "route": "/associados/assoc-3",
+    "slug": "associados_assoc-3"
+  },
+  {
+    "route": "/associados/assoc-4",
+    "slug": "associados_assoc-4"
+  },
+  {
+    "route": "/associados/assoc-5",
+    "slug": "associados_assoc-5"
+  },
+  {
+    "route": "/associados/assoc-6",
+    "slug": "associados_assoc-6"
+  },
+  {
+    "route": "/associados/assoc-7",
+    "slug": "associados_assoc-7"
+  },
+  {
+    "route": "/associados/assoc-8",
+    "slug": "associados_assoc-8"
+  },
+  {
+    "route": "/associados/assoc-9",
+    "slug": "associados_assoc-9"
+  },
+  {
+    "route": "/associados/assoc-10",
+    "slug": "associados_assoc-10"
+  },
+  {
+    "route": "/associados/assoc-11",
+    "slug": "associados_assoc-11"
+  },
+  {
+    "route": "/associados/assoc-12",
+    "slug": "associados_assoc-12"
+  },
+  {
+    "route": "/associados/assoc-13",
+    "slug": "associados_assoc-13"
+  },
+  {
+    "route": "/associados/assoc-14",
+    "slug": "associados_assoc-14"
+  },
+  {
+    "route": "/associados/assoc-15",
+    "slug": "associados_assoc-15"
+  },
+  {
+    "route": "/associados/assoc-16",
+    "slug": "associados_assoc-16"
+  },
+  {
+    "route": "/associados/assoc-17",
+    "slug": "associados_assoc-17"
+  },
+  {
+    "route": "/associados/assoc-18",
+    "slug": "associados_assoc-18"
+  },
+  {
+    "route": "/associados/assoc-19",
+    "slug": "associados_assoc-19"
+  },
+  {
+    "route": "/associados/assoc-20",
+    "slug": "associados_assoc-20"
+  },
+  {
+    "route": "/associados/assoc-21",
+    "slug": "associados_assoc-21"
+  },
+  {
+    "route": "/associados/assoc-22",
+    "slug": "associados_assoc-22"
+  },
+  {
+    "route": "/associados/assoc-23",
+    "slug": "associados_assoc-23"
+  },
+  {
+    "route": "/associados/assoc-24",
+    "slug": "associados_assoc-24"
+  },
+  {
+    "route": "/associados/assoc-25",
+    "slug": "associados_assoc-25"
+  },
+  {
+    "route": "/associados/assoc-26",
+    "slug": "associados_assoc-26"
+  },
+  {
+    "route": "/associados/assoc-27",
+    "slug": "associados_assoc-27"
+  },
+  {
+    "route": "/associados/assoc-28",
+    "slug": "associados_assoc-28"
+  },
+  {
+    "route": "/associados/assoc-29",
+    "slug": "associados_assoc-29"
+  },
+  {
+    "route": "/associados/assoc-30",
+    "slug": "associados_assoc-30"
+  },
+  {
+    "route": "/catalogo/prod-1",
+    "slug": "catalogo_prod-1"
+  },
+  {
+    "route": "/catalogo/prod-2",
+    "slug": "catalogo_prod-2"
+  },
+  {
+    "route": "/catalogo/prod-3",
+    "slug": "catalogo_prod-3"
+  },
+  {
+    "route": "/catalogo/prod-4",
+    "slug": "catalogo_prod-4"
+  },
+  {
+    "route": "/catalogo/prod-5",
+    "slug": "catalogo_prod-5"
+  },
+  {
+    "route": "/catalogo/prod-6",
+    "slug": "catalogo_prod-6"
+  },
+  {
+    "route": "/catalogo/prod-7",
+    "slug": "catalogo_prod-7"
+  },
+  {
+    "route": "/catalogo/prod-8",
+    "slug": "catalogo_prod-8"
+  },
+  {
+    "route": "/catalogo/prod-9",
+    "slug": "catalogo_prod-9"
+  },
+  {
+    "route": "/catalogo/prod-10",
+    "slug": "catalogo_prod-10"
+  },
+  {
+    "route": "/catalogo/prod-11",
+    "slug": "catalogo_prod-11"
+  },
+  {
+    "route": "/catalogo/prod-12",
+    "slug": "catalogo_prod-12"
+  },
+  {
+    "route": "/catalogo/prod-13",
+    "slug": "catalogo_prod-13"
+  },
+  {
+    "route": "/catalogo/prod-14",
+    "slug": "catalogo_prod-14"
+  },
+  {
+    "route": "/catalogo/prod-15",
+    "slug": "catalogo_prod-15"
+  },
+  {
+    "route": "/catalogo/prod-16",
+    "slug": "catalogo_prod-16"
+  },
+  {
+    "route": "/catalogo/prod-17",
+    "slug": "catalogo_prod-17"
+  },
+  {
+    "route": "/catalogo/prod-18",
+    "slug": "catalogo_prod-18"
+  },
+  {
+    "route": "/catalogo/prod-19",
+    "slug": "catalogo_prod-19"
+  },
+  {
+    "route": "/catalogo/prod-20",
+    "slug": "catalogo_prod-20"
+  },
+  {
+    "route": "/catalogo/prod-21",
+    "slug": "catalogo_prod-21"
+  },
+  {
+    "route": "/catalogo/prod-22",
+    "slug": "catalogo_prod-22"
+  },
+  {
+    "route": "/catalogo/prod-23",
+    "slug": "catalogo_prod-23"
+  },
+  {
+    "route": "/catalogo/prod-24",
+    "slug": "catalogo_prod-24"
+  },
+  {
+    "route": "/catalogo/prod-25",
+    "slug": "catalogo_prod-25"
+  },
+  {
+    "route": "/lojas/store-1/preview",
+    "slug": "lojas_store-1_preview"
+  },
+  {
+    "route": "/lojas/store-2/preview",
+    "slug": "lojas_store-2_preview"
+  },
+  {
+    "route": "/lojas/store-3/preview",
+    "slug": "lojas_store-3_preview"
+  },
+  {
+    "route": "/lojas/store-4/preview",
+    "slug": "lojas_store-4_preview"
+  },
+  {
+    "route": "/lojas/store-5/preview",
+    "slug": "lojas_store-5_preview"
+  },
+  {
+    "route": "/lojas/store-6/preview",
+    "slug": "lojas_store-6_preview"
+  },
+  {
+    "route": "/lojas/store-7/preview",
+    "slug": "lojas_store-7_preview"
+  },
+  {
+    "route": "/lojas/store-8/preview",
+    "slug": "lojas_store-8_preview"
+  },
+  {
+    "route": "/lojas/store-9/preview",
+    "slug": "lojas_store-9_preview"
+  },
+  {
+    "route": "/lojas/store-10/preview",
+    "slug": "lojas_store-10_preview"
+  },
+  {
+    "route": "/lojas/store-11/preview",
+    "slug": "lojas_store-11_preview"
+  },
+  {
+    "route": "/lojas/store-12/preview",
+    "slug": "lojas_store-12_preview"
+  },
+  {
+    "route": "/lojas/store-13/preview",
+    "slug": "lojas_store-13_preview"
+  },
+  {
+    "route": "/lojas/store-14/preview",
+    "slug": "lojas_store-14_preview"
+  },
+  {
+    "route": "/lojas/store-15/preview",
+    "slug": "lojas_store-15_preview"
+  },
+  {
+    "route": "/lojas/store-16/preview",
+    "slug": "lojas_store-16_preview"
+  },
+  {
+    "route": "/lojas/store-17/preview",
+    "slug": "lojas_store-17_preview"
+  },
+  {
+    "route": "/lojas/store-18/preview",
+    "slug": "lojas_store-18_preview"
+  },
+  {
+    "route": "/lojas/store-19/preview",
+    "slug": "lojas_store-19_preview"
+  },
+  {
+    "route": "/lojas/store-20/preview",
+    "slug": "lojas_store-20_preview"
+  },
+  {
+    "route": "/associados/assoc-1/editar",
+    "slug": "associados_assoc-1_editar"
+  },
+  {
+    "route": "/catalogo/prod-1/editar",
+    "slug": "catalogo_prod-1_editar"
+  }
+]

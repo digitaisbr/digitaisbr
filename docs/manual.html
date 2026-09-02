@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>DigitaisBR — Manual de Uso</title>
+<style>
+/* ============================================================
+   DigitaisBR — folha de estilo da documentação (impressão A4)
+   ============================================================ */
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 16mm 16mm;
+}
+@page :first {
+  margin: 0;
+}
+
+:root {
+  --azul: #1677ff;
+  --azul-escuro: #0958d9;
+  --azul-tinta: #002c8c;
+  --grafite: #1f2430;
+  --texto: #2b3038;
+  --suave: #5b6472;
+  --tenue: #8c94a3;
+  --linha: #e3e7ee;
+  --fundo-suave: #f6f8fb;
+  --verde: #12a150;
+  --ambar: #d48806;
+  --vermelho: #d4380d;
+  --roxo: #722ed1;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 10.2pt;
+  line-height: 1.62;
+  color: var(--texto);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------- capa */
+
+.capa {
+  height: 297mm;
+  padding: 34mm 24mm 20mm;
+  background: linear-gradient(158deg, #062a63 0%, #0d47a1 46%, #1677ff 100%);
+  color: #fff;
+  page-break-after: always;
+  position: relative;
+  /* clipa o círculo decorativo: sem isto ele transborda e o Chromium
+     reduz a escala da página inteira para caber */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.capa::after {
+  content: "";
+  position: absolute;
+  right: -60mm; top: 96mm;
+  width: 170mm; height: 170mm;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.055);
+}
+.capa-marca {
+  font-size: 12pt;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  opacity: 0.82;
+  font-weight: 600;
+}
+.capa-titulo {
+  font-size: 40pt;
+  line-height: 1.06;
+  font-weight: 700;
+  margin: 14mm 0 0;
+  letter-spacing: -1.2px;
+}
+.capa-sub {
+  font-size: 14.5pt;
+  font-weight: 300;
+  opacity: 0.93;
+  margin-top: 7mm;
+  max-width: 128mm;
+  line-height: 1.5;
+}
+.capa-regua {
+  width: 34mm; height: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  margin: 12mm 0;
+  border-radius: 2px;
+}
+.capa-nums {
+  display: flex;
+  gap: 14mm;
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+}
+.capa-num b {
+  display: block;
+  font-size: 25pt;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.capa-num span {
+  font-size: 8.6pt;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  opacity: 0.78;
+}
+.capa-rodape {
+  margin-top: 12mm;
+  padding-top: 6mm;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  font-size: 9.2pt;
+  opacity: 0.85;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------- sumário */
+
+.sumario { page-break-after: always; }
+.sumario ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: cap;
+}
+.sumario > ol > li {
+  counter-increment: cap;
+  border-bottom: 1px solid var(--linha);
+  padding: 5.5px 0;
+  font-size: 11pt;
+  font-weight: 600;
+  color: var(--grafite);
+}
+.sumario > ol > li::before {
+  content: counter(cap) ".";
+  color: var(--azul);
+  font-weight: 700;
+  display: inline-block;
+  width: 9mm;
+}
+/* subitens em linha, separados por ponto médio — cabe tudo numa página */
+.sumario ul {
+  list-style: none;
+  padding: 1.5px 0 0 9mm;
+  margin: 0;
+  font-weight: 400;
+  font-size: 9.2pt;
+  color: var(--suave);
+  line-height: 1.45;
+}
+.sumario ul li { display: inline; }
+.sumario ul li + li::before { content: " · "; color: var(--tenue); }
+
+/* ---------------------------------------------------------- títulos */
+
+h1 {
+  font-size: 21pt;
+  color: var(--azul-tinta);
+  margin: 0 0 2mm;
+  padding-bottom: 3mm;
+  border-bottom: 2.5px solid var(--azul);
+  page-break-before: always;
+  page-break-after: avoid;
+  letter-spacing: -0.4px;
+}
+h1 .cap {
+  display: block;
+  font-size: 8.6pt;
+  letter-spacing: 2.6px;
+  color: var(--tenue);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 2mm;
+  letter-spacing: 2.6px;
+}
+h1.sem-quebra { page-break-before: auto; }
+
+h2 {
+  font-size: 13.6pt;
+  color: var(--grafite);
+  margin: 9mm 0 3mm;
+  page-break-after: avoid;
+  letter-spacing: -0.2px;
+}
+h3 {
+  font-size: 11.2pt;
+  color: var(--azul-escuro);
+  margin: 6mm 0 2mm;
+  page-break-after: avoid;
+}
+h4 {
+  font-size: 10pt;
+  color: var(--grafite);
+  margin: 4mm 0 1.5mm;
+  page-break-after: avoid;
+}
+
+p { margin: 0 0 3mm; }
+p.intro {
+  font-size: 11.4pt;
+  color: var(--suave);
+  line-height: 1.62;
+  margin-bottom: 6mm;
+}
+
+a { color: var(--azul-escuro); text-decoration: none; }
+
+/* ---------------------------------------------------------- tabelas */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9.1pt;
+  page-break-inside: auto;
+}
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; }
+th {
+  background: var(--fundo-suave);
+  color: var(--grafite);
+  text-align: left;
+  font-weight: 600;
+  padding: 5.5px 8px;
+  border-bottom: 1.5px solid var(--linha);
+  font-size: 8.6pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+td {
+  padding: 5.5px 8px;
+  border-bottom: 1px solid var(--linha);
+  vertical-align: top;
+}
+td code, th code { font-size: 8.4pt; }
+tbody tr:nth-child(even) td { background: #fbfcfe; }
+table.compacta { font-size: 8.5pt; }
+table.compacta td, table.compacta th { padding: 4px 7px; }
+
+/* ---------------------------------------------------------- código */
+
+code {
+  font-family: "Cascadia Mono", "SF Mono", Consolas, "Liberation Mono", monospace;
+  font-size: 8.8pt;
+  background: #eef2f8;
+  color: var(--azul-tinta);
+  padding: 1px 4.5px;
+  border-radius: 3px;
+}
+pre {
+  background: #10151f;
+  color: #dfe6f0;
+  padding: 4mm 5mm;
+  border-radius: 5px;
+  font-size: 8.5pt;
+  line-height: 1.55;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  page-break-inside: avoid;
+  margin: 3mm 0 5mm;
+}
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+pre .cmt { color: #7d8da5; }
+pre .kw  { color: #79b8ff; }
+pre .str { color: #9ae6a0; }
+
+/* ---------------------------------------------------------- blocos */
+
+.destaque {
+  background: var(--fundo-suave);
+  border-left: 3.5px solid var(--azul);
+  padding: 4mm 5mm;
+  margin: 4mm 0 5mm;
+  border-radius: 0 5px 5px 0;
+  page-break-inside: avoid;
+}
+.destaque.atencao { border-left-color: var(--ambar); background: #fffbf0; }
+.destaque.nota    { border-left-color: var(--roxo);  background: #f9f6ff; }
+.destaque p:last-child { margin-bottom: 0; }
+.destaque .rotulo {
+  display: block;
+  font-size: 8.2pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--azul);
+  margin-bottom: 1.5mm;
+}
+.destaque.atencao .rotulo { color: var(--ambar); }
+.destaque.nota .rotulo    { color: var(--roxo); }
+
+/* cartões de métrica */
+.cartoes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3mm;
+  margin: 4mm 0 6mm;
+  page-break-inside: avoid;
+}
+.cartoes.tres { grid-template-columns: repeat(3, 1fr); }
+.cartao {
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  padding: 3.5mm 4mm;
+  background: #fff;
+  border-top: 3px solid var(--azul);
+}
+.cartao b {
+  display: block;
+  font-size: 16pt;
+  color: var(--azul-tinta);
+  line-height: 1.15;
+  font-weight: 700;
+}
+.cartao span {
+  display: block;
+  font-size: 8.2pt;
+  color: var(--suave);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 1mm;
+}
+.cartao small {
+  display: block;
+  font-size: 8.4pt;
+  color: var(--tenue);
+  margin-top: 1.5mm;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* selos */
+.selo {
+  display: inline-block;
+  font-size: 7.6pt;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.6px;
+  vertical-align: 1px;
+}
+.selo.get    { background: #e6f4ff; color: #0958d9; }
+.selo.post   { background: #e8f8ef; color: #12a150; }
+.selo.patch  { background: #fff4e0; color: #ad6800; }
+.selo.delete { background: #ffefe8; color: #cf1322; }
+.selo.admin  { background: #f4edff; color: #531dab; }
+.selo.pub    { background: #e8f8ef; color: #12a150; }
+.selo.assoc  { background: #eaf1ff; color: #0958d9; }
+
+ul.lista, ol.lista { margin: 0 0 4mm; padding-left: 5mm; }
+ul.lista li, ol.lista li { margin-bottom: 1.6mm; }
+
+.duas-colunas { column-count: 2; column-gap: 8mm; }
+
+figure { margin: 4mm 0 6mm; page-break-inside: avoid; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption {
+  font-size: 8.4pt;
+  color: var(--tenue);
+  margin-top: 2mm;
+  text-align: center;
+  font-style: italic;
+}
+
+hr.fina { border: none; border-top: 1px solid var(--linha); margin: 6mm 0; }
+
+.rodape-doc {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--linha);
+  font-size: 8.4pt;
+  color: var(--tenue);
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<!-- ============================================================ CAPA -->
+<div class="capa">
+  <div class="capa-marca">DigitaisBR</div>
+  <h1 class="capa-titulo" style="page-break-before:auto;border:none;color:#fff">Manual<br>de Uso</h1>
+  <div class="capa-regua"></div>
+  <div class="capa-sub">
+    Como usar a plataforma no dia a dia — para a administração da associação
+    e para o criador associado.
+  </div>
+
+  <div class="capa-nums">
+    <div class="capa-num"><b>2</b><span>perfis</span></div>
+    <div class="capa-num"><b>40</b><span>telas</span></div>
+    <div class="capa-num"><b>0</b><span>pré-requisito técnico</span></div>
+  </div>
+
+  <div class="capa-rodape">
+    <span>Versão 1.0 · Agosto de 2026</span>
+    <span>Guia do usuário</span>
+  </div>
+</div>
+
+<!-- ============================================================ SUMÁRIO -->
+<div class="sumario">
+  <h1 class="sem-quebra"><span class="cap">Índice</span>Sumário</h1>
+  <ol>
+    <li>Primeiros passos
+      <ul><li>Entrar na plataforma</li><li>Qual é o seu perfil</li><li>Como as telas funcionam</li></ul></li>
+    <li>Guia da administração
+      <ul><li>O painel</li><li>Cadastrar um associado</li><li>Montar o catálogo</li><li>Acompanhar vendas</li><li>Pagar comissões</li><li>Financeiro e saques</li><li>Parceiros e benefícios</li><li>Conteúdos e comunicação</li><li>Atender o suporte</li></ul></li>
+    <li>Guia do associado
+      <ul><li>Seu painel</li><li>Montar sua loja</li><li>Divulgar com links e cupons</li><li>Acompanhar vendas</li><li>Sacar suas comissões</li><li>Usar benefícios</li><li>Comunidade e suporte</li></ul></li>
+    <li>Tarefas passo a passo
+      <ul><li>As doze operações mais comuns</li></ul></li>
+    <li>Perguntas frequentes
+      <ul><li>Dúvidas e mensagens de erro</li></ul></li>
+  </ol>
+</div>
+
+<!-- ============================================================ 1 -->
+<h1><span class="cap">Capítulo 1</span>Primeiros passos</h1>
+
+<h2>1.1 Entrar na plataforma</h2>
+
+<p>O acesso tem duas etapas:</p>
+
+<ol class="lista">
+  <li><strong>Código de acesso.</strong> A plataforma é fechada. Na primeira visita, informe o
+      código fornecido pela associação. Ele vale para a sessão do navegador — você não
+      precisará digitá-lo de novo até fechar o navegador.</li>
+  <li><strong>Login.</strong> Email e senha da sua conta.</li>
+</ol>
+
+<div class="destaque">
+  <span class="rotulo">Esqueceu a senha?</span>
+  <p>
+    Não há recuperação automática por email. Peça à administração da associação para redefinir.
+    Quem administra faz isso pela ficha do associado.
+  </p>
+</div>
+
+<h2>1.2 Qual é o seu perfil</h2>
+
+<p>O que você vê depende de quem você é na associação:</p>
+
+<table>
+  <thead><tr><th style="width:24%">Perfil</th><th style="width:26%">Onde você entra</th><th>O que faz</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Administração</strong></td><td>Painel administrativo</td>
+        <td>Gerencia associados, catálogo, vendas, comissões, financeiro, parceiros, conteúdo,
+            comunidade, suporte e campanhas.</td></tr>
+    <tr><td><strong>Associado</strong></td><td>Portal do associado</td>
+        <td>Cuida da própria loja, divulgação, vendas, comissões, benefícios e chamados.</td></tr>
+  </tbody>
+</table>
+
+<div class="destaque nota">
+  <span class="rotulo">Por que não vejo o portal?</span>
+  <p>
+    Se sua conta é de administração e não está vinculada a um associado, o portal não tem o que
+    mostrar — você não tem loja nem vendas. A plataforma explica isso ao entrar lá e oferece o
+    caminho de volta. Para ver os dados de um associado específico, abra a
+    <strong>ficha dele</strong> em Cadastros → Associados.
+  </p>
+</div>
+
+<h2>1.3 Como as telas funcionam</h2>
+
+<p>Quase toda tela segue o mesmo desenho, então aprender uma é aprender todas:</p>
+
+<table>
+  <thead><tr><th style="width:26%">Elemento</th><th>Como usar</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Cartões no topo</strong></td>
+        <td>Os números-resumo da área. Sempre refletem o conjunto inteiro, não a página exibida.</td></tr>
+    <tr><td><strong>Campo de busca</strong></td>
+        <td>Procura enquanto você digita, em todos os registros — não apenas nos visíveis.</td></tr>
+    <tr><td><strong>Filtros</strong></td>
+        <td>Listas suspensas ao lado da busca. Combinam entre si e com a busca.</td></tr>
+    <tr><td><strong>Cabeçalho da tabela</strong></td>
+        <td>Colunas com seta ordenam. Clique uma vez para crescente, de novo para decrescente.</td></tr>
+    <tr><td><strong>Linha clicável</strong></td>
+        <td>Nas listas de associados, produtos, lojas e chamados, clicar abre o detalhe.</td></tr>
+    <tr><td><strong>Paginação</strong></td>
+        <td>No rodapé. Dá para mudar quantos itens aparecem por página (10, 20, 50 ou 100).</td></tr>
+    <tr><td><strong>Sino</strong></td>
+        <td>Notificações não lidas.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 2 -->
+<h1><span class="cap">Capítulo 2</span>Guia da administração</h1>
+
+<h2>2.1 O painel</h2>
+
+<p>
+  É a primeira tela ao entrar. Ela responde “como está a operação hoje?” com oito indicadores
+  e quatro gráficos.
+</p>
+
+<table>
+  <thead><tr><th style="width:32%">Indicador</th><th>O que significa</th></tr></thead>
+  <tbody>
+    <tr><td>Associados ativos</td><td>Quantos estão com status Ativo, do total cadastrado.</td></tr>
+    <tr><td>Vendas aprovadas</td><td>Vendas efetivamente pagas, do total registrado.</td></tr>
+    <tr><td>Receita total</td><td>Soma das vendas pagas.</td></tr>
+    <tr><td>Lojas ativas</td><td>Vitrines no ar, do total.</td></tr>
+    <tr><td>Comissões pagas</td><td>Já liquidadas aos associados.</td></tr>
+    <tr><td>Comissões pendentes</td><td><strong>O quanto a associação deve.</strong> Acompanhe de perto.</td></tr>
+    <tr><td>Saldo financeiro</td><td>Entradas menos saídas do caixa.</td></tr>
+    <tr><td>Produtos ativos</td><td>Disponíveis para as lojas, do total do catálogo.</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Os seis cartõezinhos no rodapé (benefícios, parceiros, conteúdos, tópicos, não lidas, tickets)
+  são atalhos: clique para ir direto à área.
+</p>
+
+<h2>2.2 Cadastrar um associado</h2>
+
+<p><strong>Cadastros → Associados → Novo associado</strong></p>
+
+<p>
+  Um cadastro cria três coisas de uma vez: a <em>conta de acesso</em>, a <em>assinatura do
+  plano</em> e a <em>loja virtual</em>. Você não precisa criar cada uma separadamente.
+</p>
+
+<table>
+  <thead><tr><th style="width:26%">Campo</th><th>Observação</th></tr></thead>
+  <tbody>
+    <tr><td>Nome completo</td><td>Obrigatório.</td></tr>
+    <tr><td><strong>Handle</strong></td>
+        <td>É o endereço público — a loja fica em <code>/loja/handle</code> e o perfil em
+            <code>/perfil/handle</code>. Sugerido a partir do nome, mas você pode editar.
+            Só letras minúsculas, números e hífens. <strong>Não pode repetir.</strong></td></tr>
+    <tr><td>Email</td><td>É o login. Não pode repetir.</td></tr>
+    <tr><td>Plano</td><td>Define limites e benefícios. Pode ser trocado depois.</td></tr>
+    <tr><td>Demais campos</td><td>Opcionais — podem ser preenchidos depois pelo próprio associado.</td></tr>
+  </tbody>
+</table>
+
+<div class="destaque atencao">
+  <span class="rotulo">A senha aparece uma única vez</span>
+  <p>
+    Se você não definir uma senha, o sistema gera uma e a mostra <strong>só na tela de
+    confirmação</strong>. Copie e repasse ao associado naquele momento — ela não pode ser
+    consultada depois.
+  </p>
+</div>
+
+<h3>Depois de cadastrado</h3>
+<p>Na ficha do associado (clique na linha da lista) você pode:</p>
+<ul class="lista">
+  <li><strong>Trocar o plano</strong> — encerra a assinatura atual, abre a nova e avisa o associado.</li>
+  <li><strong>Mudar o status</strong> — atenção: inativar ou suspender também <em>bloqueia o
+      acesso</em> e <em>tira a loja do ar</em>. É a forma correta de desligar alguém.</li>
+</ul>
+
+<div class="destaque">
+  <span class="rotulo">Excluir ou inativar?</span>
+  <p>
+    Associado com vendas registradas <strong>não pode ser excluído</strong> — a plataforma
+    recusa, para preservar o histórico financeiro. Use <em>Inativo</em>. Excluir só funciona
+    para cadastros que nunca venderam.
+  </p>
+</div>
+
+<h2>2.3 Montar o catálogo</h2>
+
+<p><strong>Comercial → Catálogo</strong></p>
+
+<p>
+  O catálogo é a prateleira comum: os associados escolhem dali o que exibir nas próprias lojas.
+</p>
+
+<table>
+  <thead><tr><th style="width:26%">Campo</th><th>Como preencher</th></tr></thead>
+  <tbody>
+    <tr><td>SKU</td><td>Código único do produto. Ex.: <code>SAU-001</code>.</td></tr>
+    <tr><td>Preço e Comissão (%)</td>
+        <td>A tela mostra o <em>ganho estimado</em> por venda enquanto você digita.</td></tr>
+    <tr><td><strong>Estoque</strong></td>
+        <td>Use <code>-1</code> para ilimitado — o caso de serviços e assinaturas. Com estoque
+            finito, ele baixa a cada venda e o produto vira “Esgotado” ao zerar.</td></tr>
+    <tr><td><strong>Exclusividade por plano</strong></td>
+        <td>Vazio libera a todos. Escolhendo Intermediário ou Avançado, o produto aparece
+            <em>bloqueado</em> para quem está abaixo — o que estimula o upgrade.</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Produto com vendas <strong>não pode ser excluído</strong>. Mude o status para Inativo: ele
+  some das novas vitrines e o histórico continua íntegro.
+</p>
+
+<h2>2.4 Acompanhar vendas</h2>
+
+<p><strong>Comercial → Vendas</strong></p>
+
+<p>Toda venda passa por estados, e cada um tem consequência:</p>
+
+<figure>
+<svg viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="m1" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+  <rect x="14"  y="52" width="152" height="46" rx="8" fill="#fffbf0" stroke="#d48806" stroke-width="1.5"/>
+  <text x="90"  y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#8c5800">Aguardando pgto</text>
+  <text x="90"  y="88" text-anchor="middle" font-size="8.5" fill="#5b6472">estado inicial</text>
+
+  <rect x="270" y="14" width="140" height="46" rx="8" fill="#e8f8ef" stroke="#12a150" stroke-width="1.5"/>
+  <text x="340" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#0b6b36">Paga</text>
+  <text x="340" y="50" text-anchor="middle" font-size="8.5" fill="#5b6472">comissão liberada</text>
+
+  <rect x="270" y="90" width="140" height="46" rx="8" fill="#ffefe8" stroke="#d4380d" stroke-width="1.5"/>
+  <text x="340" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="#a8280b">Cancelada</text>
+  <text x="340" y="126" text-anchor="middle" font-size="8.5" fill="#5b6472">estoque devolvido</text>
+
+  <rect x="512" y="14" width="164" height="46" rx="8" fill="#ffefe8" stroke="#d4380d" stroke-width="1.5"/>
+  <text x="594" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#a8280b">Reembolsada</text>
+  <text x="594" y="50" text-anchor="middle" font-size="8.5" fill="#5b6472">comissão cancelada</text>
+
+  <path d="M168 68 L266 40" stroke="#12a150" stroke-width="1.6" fill="none" marker-end="url(#m1)"/>
+  <path d="M168 84 L266 110" stroke="#d4380d" stroke-width="1.6" fill="none" marker-end="url(#m1)"/>
+  <path d="M412 37 L508 37" stroke="#d4380d" stroke-width="1.6" fill="none" marker-end="url(#m1)"/>
+  <text x="196" y="44"  font-size="8.5" fill="#0b6b36" font-weight="600">pagamento confirmado</text>
+  <text x="192" y="110" font-size="8.5" fill="#a8280b" font-weight="600">cancelamento</text>
+  <text x="432" y="28"  font-size="8.5" fill="#a8280b" font-weight="600">reembolso</text>
+</svg>
+<figcaption>Cancelada e Reembolsada são finais — não há como voltar atrás.</figcaption>
+</figure>
+
+<ul class="lista">
+  <li><strong>Marcar paga</strong> — confirma o pagamento e libera a comissão do associado.</li>
+  <li><strong>Reembolsar</strong> — só para vendas já pagas. Cancela a comissão e devolve o
+      estoque. <em>Não tem volta.</em></li>
+  <li><strong>Exportar CSV</strong> — baixa a listagem <em>com os filtros aplicados</em>.
+      Filtre primeiro, exporte depois.</li>
+</ul>
+
+<h2>2.5 Pagar comissões</h2>
+
+<p><strong>Comercial → Comissões</strong></p>
+
+<p>A comissão nasce com a venda e percorre quatro estados:</p>
+
+<table>
+  <thead><tr><th style="width:26%">Estado</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td>Aguardando pgto</td><td>A venda ainda não foi paga.</td></tr>
+    <tr><td>Processando</td><td>A venda foi paga — a comissão está pronta para ser liquidada.</td></tr>
+    <tr><td>Paga</td><td>Liquidada. Entra no saldo sacável do associado.</td></tr>
+    <tr><td>Cancelada</td><td>A venda foi cancelada ou reembolsada.</td></tr>
+  </tbody>
+</table>
+
+<h3>Liquidar em lote</h3>
+<ol class="lista">
+  <li>Filtre por <em>Processando</em> para ver o que está pronto.</li>
+  <li>Marque as caixas das linhas desejadas — as já pagas ficam bloqueadas.</li>
+  <li>Clique em <strong>Liquidar N selecionada(s)</strong> e confirme.</li>
+</ol>
+
+<div class="destaque">
+  <span class="rotulo">Proteção contra pagamento duplo</span>
+  <p>
+    Se qualquer comissão do lote já estiver paga, a plataforma <strong>recusa o lote
+    inteiro</strong> em vez de pagar parte. Cada associado recebe uma única notificação com o
+    total, não uma por comissão.
+  </p>
+</div>
+
+<h2>2.6 Financeiro e saques</h2>
+
+<p><strong>Financeiro</strong> — quatro abas:</p>
+
+<table>
+  <thead><tr><th style="width:22%">Aba</th><th>O que mostra</th></tr></thead>
+  <tbody>
+    <tr><td>Fluxo de caixa</td><td>Entradas e saídas mês a mês.</td></tr>
+    <tr><td>DRE</td><td>Composição das receitas e dos custos, com percentuais.</td></tr>
+    <tr><td>Projeção MRR</td><td>Estimativa da receita recorrente, com base no crescimento recente.</td></tr>
+    <tr><td>Saques</td><td>Solicitações dos associados e seus estados.</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Um saque percorre:</strong> Pendente → Processando → Concluído. Rejeitar exige
+informar o motivo, que o associado vê. Ao concluir, o valor entra como saída no caixa
+automaticamente.</p>
+
+<h2>2.7 Parceiros e benefícios</h2>
+
+<p><strong>Cadastros → Parceiros</strong> e <strong>Benefícios</strong></p>
+
+<p>
+  Parceiros são as empresas conveniadas; benefícios são as vantagens que elas oferecem. Cada
+  benefício tem um <strong>plano mínimo</strong> — associados abaixo dele veem o item marcado
+  como bloqueado, com o plano exigido à vista.
+</p>
+
+<p>Tipos: <strong>desconto</strong>, <strong>acesso</strong> (algo liberado),
+<strong>cashback</strong> e <strong>serviço</strong>.</p>
+
+<h2>2.8 Conteúdos e comunicação</h2>
+
+<ul class="lista">
+  <li><strong>Conteúdos</strong> — artigos, vídeos, podcasts, cursos e e-books. Rascunhos não
+      aparecem para os associados; publique quando estiver pronto. Também têm plano mínimo.</li>
+  <li><strong>Comunidade</strong> — o feed. Você pode <em>fixar</em> um post no topo (avisos
+      importantes) e remover conteúdo impróprio.</li>
+  <li><strong>Comunicações</strong> — campanhas segmentadas por plano. Uma campanha nasce como
+      rascunho; ao <strong>Enviar</strong>, cria uma notificação para cada associado do
+      público-alvo. <em>Envio não se desfaz.</em></li>
+</ul>
+
+<h2>2.9 Atender o suporte</h2>
+
+<p><strong>Suporte</strong> — a lista traz número, assunto, quem abriu, categoria, prioridade e
+estado. Clique na linha para abrir a conversa.</p>
+
+<ul class="lista">
+  <li><strong>Atender</strong> — assume o chamado e o coloca em andamento.</li>
+  <li><strong>Responder</strong> — a primeira resposta move o chamado para “Em andamento”
+      sozinha. O associado é notificado.</li>
+  <li><strong>Nota interna</strong> — marque a caixa para registrar algo que
+      <strong>o associado nunca verá</strong>. Útil para combinar com a equipe. Notas internas
+      não geram notificação.</li>
+  <li><strong>Resolvido</strong> — encerra e avisa o associado.</li>
+</ul>
+
+<!-- ============================================================ 3 -->
+<h1><span class="cap">Capítulo 3</span>Guia do associado</h1>
+
+<h2>3.1 Seu painel</h2>
+
+<p>
+  A faixa colorida no topo traz seu nome, plano, seguidores, engajamento e visitas à loja, com
+  o botão <strong>Copiar meu link</strong> — é o endereço da sua loja para colar na bio das
+  redes.
+</p>
+
+<p>
+  Abaixo: vendas aprovadas, receita, comissões recebidas e pendentes; e três blocos com seu
+  plano, sua loja e seus benefícios.
+</p>
+
+<h2>3.2 Montar sua loja</h2>
+
+<p><strong>Minha Loja</strong> — duas abas:</p>
+
+<ul class="lista">
+  <li><strong>Marketplace</strong> — tudo que a associação oferece. Cada cartão mostra preço,
+      percentual de comissão e <em>quanto você ganha por venda</em>. Clique em
+      <strong>Adicionar</strong> para pôr na sua vitrine.</li>
+  <li><strong>Minha Loja</strong> — o que já está publicado. <strong>Remover</strong> tira da
+      vitrine (não apaga nada).</li>
+</ul>
+
+<div class="destaque atencao">
+  <span class="rotulo">Dois limites que você vai encontrar</span>
+  <p>
+    <strong>Quantidade.</strong> Básico permite 20 produtos, Intermediário 100, Avançado
+    ilimitado. Ao atingir o teto, a plataforma avisa e sugere o upgrade.<br>
+    <strong>Exclusividade.</strong> Produtos marcados com um plano superior aparecem com
+    “Requer <em>plano</em>” e não podem ser adicionados.
+  </p>
+</div>
+
+<p>
+  <strong>Ver como cliente</strong> abre sua vitrine pública, exatamente como seus seguidores
+  a veem. Vale conferir antes de divulgar.
+</p>
+
+<h2>3.3 Divulgar com links e cupons</h2>
+
+<h3>Links de afiliado</h3>
+<p>
+  <strong>Links de Afiliado → Gerar link.</strong> Escolha o produto e receba um código
+  rastreável. Cada clique é contabilizado, e a tela mostra cliques, conversões, taxa, receita e
+  sua comissão por link — assim você descobre o que funciona.
+</p>
+
+<h3>Cupons</h3>
+<p><strong>Cupons → Criar cupom.</strong> Você define:</p>
+<ul class="lista">
+  <li><strong>Código</strong> — o que o cliente digita. Letras maiúsculas e números.</li>
+  <li><strong>Tipo</strong> — percentual (10%) ou valor fixo (R$ 25).</li>
+  <li><strong>Compra mínima</strong> — opcional, para proteger a margem.</li>
+  <li><strong>Limite de usos</strong> e <strong>validade</strong> — ambos opcionais.</li>
+</ul>
+<p>
+  Cupom já utilizado não pode ser excluído — apenas desativado, pelo interruptor na lista.
+  Isso preserva o histórico das vendas que o usaram.
+</p>
+
+<h2>3.4 Acompanhar vendas e performance</h2>
+
+<ul class="lista">
+  <li><strong>Minhas Vendas</strong> — todas as vendas originadas por você, com sua comissão e
+      o estado dela em cada linha.</li>
+  <li><strong>Performance</strong> — cliques e conversões dia a dia, com os produtos que mais
+      renderam. Dá para filtrar por período.</li>
+  <li><strong>Ranking</strong> — sua posição entre os associados e o progresso das conquistas.
+      A pontuação vem das suas vendas e comissões.</li>
+</ul>
+
+<h2>3.5 Sacar suas comissões</h2>
+
+<p><strong>Financeiro</strong> — quatro números explicam seu dinheiro:</p>
+
+<table>
+  <thead><tr><th style="width:30%">Indicador</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td>Total ganho</td><td>Tudo que já virou comissão paga.</td></tr>
+    <tr><td><strong>Disponível para saque</strong></td>
+        <td>O que você pode pedir <em>agora</em>: o ganho menos o que já sacou e menos os
+            pedidos em andamento.</td></tr>
+    <tr><td>Saques realizados</td><td>Já recebidos.</td></tr>
+    <tr><td>Em processamento</td><td>Pedidos que ainda não caíram.</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Para sacar: <strong>Solicitar saque</strong> → valor (mínimo R$ 10) → PIX ou TED → chave ou
+  dados bancários. O pedido entra como Pendente; você é notificado a cada mudança.
+</p>
+
+<div class="destaque">
+  <span class="rotulo">Por que não posso sacar tudo?</span>
+  <p>
+    Só comissões <em>pagas</em> pela associação entram no disponível. Comissões pendentes
+    aguardam a liquidação. E pedidos em andamento já ficam reservados — é o que impede pedir o
+    mesmo valor duas vezes.
+  </p>
+</div>
+
+<h2>3.6 Usar benefícios e conteúdos</h2>
+
+<p>
+  <strong>Benefícios</strong> lista o que seu plano libera e, abaixo, o que está bloqueado com
+  o plano exigido. Clique em <strong>Resgatar</strong> e a plataforma mostra as instruções de
+  uso.
+</p>
+
+<p>
+  <strong>Conteúdos</strong> traz o material educativo; <strong>Materiais</strong> tem peças
+  prontas para publicar — banners, stories, posts e textos. Nos textos, o botão copia direto
+  para a área de transferência.
+</p>
+
+<h2>3.7 Comunidade e suporte</h2>
+
+<ul class="lista">
+  <li><strong>Comunidade</strong> — publique escolhendo uma categoria; curta e comente.
+      Posts fixados no topo são avisos da administração.</li>
+  <li><strong>Suporte</strong> — <em>Novo chamado</em> com assunto, categoria, prioridade e
+      descrição. Acompanhe a conversa na mesma tela.</li>
+  <li><strong>Assessoria</strong> — escolha um profissional jurídico ou contábil conveniado e
+      solicite atendimento.</li>
+</ul>
+
+<h2>3.8 Seu perfil e seu plano</h2>
+
+<p>
+  <strong>Meu Perfil</strong> — edite bio, nicho e contato, e <em>controle o que aparece
+  publicamente</em>: os interruptores de email e telefone decidem se eles constam do seu perfil
+  aberto. Desligados, nem a API os devolve.
+</p>
+
+<p>
+  <strong>Meu Plano</strong> — mostra seu consumo (produtos, benefícios, conteúdos), o
+  <em>ROI</em> (quantas vezes sua receita cobre a mensalidade) e exatamente o que o próximo
+  plano desbloquearia. A troca de plano é feita pela administração.
+</p>
+
+<!-- ============================================================ 4 -->
+<h1><span class="cap">Capítulo 4</span>Tarefas passo a passo</h1>
+
+<h3>Administração</h3>
+
+<table class="compacta">
+  <thead><tr><th style="width:34%">Tarefa</th><th>Caminho</th></tr></thead>
+  <tbody>
+    <tr><td>Cadastrar associado</td>
+        <td>Cadastros → Associados → <em>Novo associado</em> → preencher → <em>Criar</em> →
+            <strong>copiar a senha exibida</strong></td></tr>
+    <tr><td>Trocar o plano de alguém</td>
+        <td>Associados → clicar na linha → seletor de plano no topo → confirmar</td></tr>
+    <tr><td>Desligar um associado</td>
+        <td>Associados → linha → seletor de status → <em>Inativo</em>
+            (bloqueia acesso e tira a loja do ar)</td></tr>
+    <tr><td>Publicar um produto</td>
+        <td>Comercial → Catálogo → <em>Novo produto</em> → preencher → <em>Criar</em></td></tr>
+    <tr><td>Tornar produto exclusivo</td>
+        <td>Catálogo → produto → campo <em>Exclusividade por plano</em></td></tr>
+    <tr><td>Confirmar pagamento de venda</td>
+        <td>Comercial → Vendas → <em>Marcar paga</em> na linha</td></tr>
+    <tr><td>Reembolsar</td>
+        <td>Vendas → <em>Reembolsar</em> (só em vendas pagas; não tem volta)</td></tr>
+    <tr><td>Pagar comissões do mês</td>
+        <td>Comissões → filtrar <em>Processando</em> → marcar as linhas → <em>Liquidar</em></td></tr>
+    <tr><td>Aprovar um saque</td>
+        <td>Financeiro → aba Saques → mudar para Processando → depois Concluído</td></tr>
+    <tr><td>Enviar comunicado</td>
+        <td>Comunicações → criar campanha → escolher público → <em>Enviar</em></td></tr>
+    <tr><td>Fixar aviso na comunidade</td>
+        <td>Comunidade → botão <em>Fixar</em> no post</td></tr>
+    <tr><td>Atender um chamado</td>
+        <td>Suporte → linha → <em>Atender</em> → responder → marcar <em>Resolvido</em></td></tr>
+  </tbody>
+</table>
+
+<h3>Associado</h3>
+
+<table class="compacta">
+  <thead><tr><th style="width:34%">Tarefa</th><th>Caminho</th></tr></thead>
+  <tbody>
+    <tr><td>Publicar um produto na loja</td>
+        <td>Minha Loja → aba <em>Marketplace</em> → <em>Adicionar</em></td></tr>
+    <tr><td>Ver a loja como cliente</td>
+        <td>Minha Loja → <em>Ver como cliente</em></td></tr>
+    <tr><td>Pegar o link da loja</td>
+        <td>Início → <em>Copiar meu link</em></td></tr>
+    <tr><td>Criar cupom de desconto</td>
+        <td>Cupons → <em>Criar cupom</em></td></tr>
+    <tr><td>Gerar link rastreável</td>
+        <td>Links de Afiliado → <em>Gerar link</em> → escolher produto</td></tr>
+    <tr><td>Solicitar saque</td>
+        <td>Financeiro → <em>Solicitar saque</em> → valor, método e destino</td></tr>
+    <tr><td>Resgatar benefício</td>
+        <td>Benefícios → <em>Resgatar</em> no cartão</td></tr>
+    <tr><td>Baixar material de divulgação</td>
+        <td>Materiais → <em>Baixar</em> (ou <em>Copiar texto</em>, nos copies)</td></tr>
+    <tr><td>Abrir chamado</td>
+        <td>Suporte → <em>Novo chamado</em></td></tr>
+    <tr><td>Pedir assessoria</td>
+        <td>Assessoria → escolher profissional → <em>Solicitar atendimento</em></td></tr>
+    <tr><td>Esconder email do perfil público</td>
+        <td>Meu Perfil → Privacidade → desligar o interruptor → <em>Salvar</em></td></tr>
+    <tr><td>Publicar na comunidade</td>
+        <td>Comunidade → escrever → escolher categoria → <em>Publicar</em></td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ 5 -->
+<h1><span class="cap">Capítulo 5</span>Perguntas frequentes</h1>
+
+<h3>“Esta área é exclusiva de associados”</h3>
+<p>
+  Sua conta é de administração e não tem associado vinculado, então o portal não teria o que
+  mostrar. Use o painel administrativo. Para ver os dados de alguém, abra a ficha em
+  Cadastros → Associados.
+</p>
+
+<h3>“Este handle já está em uso”</h3>
+<p>
+  O handle é o endereço público e precisa ser único. Escolha outro — por exemplo, acrescente o
+  sobrenome.
+</p>
+
+<h3>“Associado possui vendas registradas”</h3>
+<p>
+  A exclusão é bloqueada de propósito, para preservar o histórico financeiro. Mude o status
+  para <em>Inativo</em>: o efeito prático é o mesmo (sem acesso, sem loja no ar) e os registros
+  permanecem íntegros.
+</p>
+
+<h3>“O plano X permite até N produtos na loja”</h3>
+<p>
+  Sua vitrine atingiu o limite do plano. Remova algum produto ou faça upgrade — a tela
+  <em>Meu Plano</em> mostra exatamente o que o próximo nível libera.
+</p>
+
+<h3>“Transição inválida”</h3>
+<p>
+  A venda não pode ir daquele estado para o pretendido. Só é possível reembolsar uma venda já
+  <em>paga</em>; canceladas e reembolsadas são estados finais.
+</p>
+
+<h3>“Saldo insuficiente”</h3>
+<p>
+  O disponível considera apenas comissões já <em>pagas</em>, menos saques concluídos e menos os
+  que estão em andamento. Comissões pendentes ainda não contam.
+</p>
+
+<h3>“Cupom atingiu o limite de usos” / “Cupom expirado”</h3>
+<p>
+  O cupom bateu o teto ou passou da validade. Crie um novo — cupom usado não pode ser
+  excluído, apenas desativado.</p>
+
+<h3>Por que alguns produtos aparecem apagados?</h3>
+<p>
+  São exclusivos de um plano superior ao seu. O cartão informa qual plano é necessário.
+</p>
+
+<h3>Onde vejo minhas notificações?</h3>
+<p>
+  No sino, no topo da tela. A página de notificações permite filtrar por tipo e canal, e marcar
+  todas como lidas de uma vez.
+</p>
+
+<h3>Alterei meu perfil e não mudou no perfil público</h3>
+<p>
+  Confira os interruptores de privacidade em Meu Perfil. Com email ou telefone desligados, eles
+  não aparecem publicamente — é intencional.
+</p>
+
+<h3>Preciso mudar minha senha</h3>
+<p>
+  A troca encerra <strong>todas as sessões abertas</strong>, inclusive em outros dispositivos.
+  Você precisará entrar novamente.
+</p>
+
+<div class="rodape-doc">
+  DigitaisBR · Manual de Uso · Versão 1.0 · Agosto de 2026<br>
+  Documentação técnica: <code>DigitaisBR-Documentacao.pdf</code>
+</div>
+
+</body>
+</html>

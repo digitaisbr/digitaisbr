@@ -1,0 +1,56 @@
+[
+  {
+    "nome": "Dr. Marcos Almeida",
+    "especialidade": "Contratos e LGPD",
+    "bio": "Especialista em direito digital e proteção de dados com 12 anos de experiência.",
+    "nota": 4.0,
+    "avaliacoes": 28,
+    "valorHora": 250.0,
+    "disponivel": true
+  },
+  {
+    "nome": "Dra. Carla Vieira",
+    "especialidade": "Direito Digital e Marcas",
+    "bio": "Advogada especializada em propriedade intelectual e registro de marcas.",
+    "nota": 4.0,
+    "avaliacoes": 22,
+    "valorHora": 280.0,
+    "disponivel": true
+  },
+  {
+    "nome": "Contador Ricardo Lopes",
+    "especialidade": null,
+    "bio": "Contador digital focado em influenciadores e criadores de conteúdo.",
+    "nota": 4.0,
+    "avaliacoes": 35,
+    "valorHora": 180.0,
+    "disponivel": true
+  },
+  {
+    "nome": "Contadora Ana Beatriz",
+    "especialidade": null,
+    "bio": "Planejamento tributário para pequenas empresas e MEIs.",
+    "nota": 4.0,
+    "avaliacoes": 19,
+    "valorHora": 200.0,
+    "disponivel": false
+  },
+  {
+    "nome": "Dr. Paulo Henrique",
+    "especialidade": "Trabalhista e Contratos",
+    "bio": "Advogado autônomo com foco em relações de trabalho para criadores.",
+    "nota": 4.0,
+    "avaliacoes": 14,
+    "valorHora": 220.0,
+    "disponivel": true
+  },
+  {
+    "nome": "Contadora Juliana Martins",
+    "especialidade": null,
+    "bio": "Contadora independente, atende remotamente todo o Brasil.",
+    "nota": 4.0,
+    "avaliacoes": 11,
+    "valorHora": 160.0,
+    "disponivel": true
+  }
+]

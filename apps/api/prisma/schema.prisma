@@ -1,0 +1,903 @@
+// =============================================================================
+//  DigitaisBR — Schema do banco de dados
+//  Modelado a partir do domínio real extraído das 113 telas capturadas.
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+  // "native" cobre a máquina de desenvolvimento; o alvo Debian é o da imagem
+  // de produção — sem ele, o binário do engine não existiria no contêiner
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================ ENUMS
+
+enum Role {
+  ADMIN
+  ASSOCIADO
+}
+
+enum StatusAssociado {
+  ATIVO
+  INATIVO
+  SUSPENSO
+}
+
+enum NivelPlano {
+  BASICO
+  INTERMEDIARIO
+  AVANCADO
+}
+
+enum StatusProduto {
+  ATIVO
+  INATIVO
+  ESGOTADO
+}
+
+enum StatusVenda {
+  AGUARDANDO_PGTO
+  PAGA
+  CANCELADA
+  REEMBOLSADA
+}
+
+enum StatusComissao {
+  AGUARDANDO_PGTO
+  PROCESSANDO
+  PAGA
+  CANCELADA
+}
+
+enum TipoBeneficio {
+  DESCONTO
+  ACESSO
+  CASHBACK
+  SERVICO
+}
+
+enum TipoConteudo {
+  ARTIGO
+  VIDEO
+  PODCAST
+  CURSO
+  EBOOK
+}
+
+enum StatusConteudo {
+  PUBLICADO
+  RASCUNHO
+  ARQUIVADO
+}
+
+enum StatusTicket {
+  ABERTO
+  EM_ANDAMENTO
+  RESOLVIDO
+  FECHADO
+}
+
+enum PrioridadeTicket {
+  BAIXA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
+enum TipoNotificacao {
+  SISTEMA
+  VENDA
+  COMISSAO
+  BENEFICIO
+  SUPORTE
+  CONTEUDO
+}
+
+enum CanalNotificacao {
+  IN_APP
+  EMAIL
+  PUSH
+}
+
+enum StatusCampanha {
+  RASCUNHO
+  AGENDADA
+  ENVIADA
+  CANCELADA
+}
+
+enum TipoDesconto {
+  PERCENTUAL
+  VALOR
+}
+
+enum MetodoSaque {
+  PIX
+  TED
+}
+
+enum StatusSaque {
+  PENDENTE
+  PROCESSANDO
+  CONCLUIDO
+  REJEITADO
+}
+
+enum TipoLancamento {
+  ENTRADA
+  SAIDA
+}
+
+enum CategoriaLancamento {
+  ASSINATURA
+  VENDA
+  COMISSAO
+  INFRAESTRUTURA
+  MARKETING
+  SUPORTE
+  JURIDICO
+  OUTROS
+}
+
+enum TipoEscritorio {
+  JURIDICO
+  CONTABIL
+  JURIDICO_CONTABIL
+}
+
+enum StatusSolicitacao {
+  ABERTA
+  EM_ANDAMENTO
+  CONCLUIDA
+  CANCELADA
+}
+
+enum RedeSocial {
+  INSTAGRAM
+  YOUTUBE
+  TIKTOK
+  TWITTER
+  FACEBOOK
+  LINKEDIN
+}
+
+enum TipoMaterial {
+  BANNER
+  STORY
+  POST
+  VIDEO
+  COPY
+}
+
+// ============================================================ AUTENTICAÇÃO
+
+model Usuario {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  senhaHash    String
+  nome         String
+  role         Role      @default(ASSOCIADO)
+  ativo        Boolean   @default(true)
+  ultimoLogin  DateTime?
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+
+  associado         Associado?
+  refreshTokens     RefreshToken[]
+  ticketsAtribuidos Ticket[]         @relation("TicketAtribuido")
+  mensagensTicket   TicketMensagem[]
+  logsAuditoria     LogAuditoria[]
+
+  @@index([role, ativo])
+  @@map("usuarios")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  usuarioId String
+  expiraEm  DateTime
+  revogado  Boolean  @default(false)
+  criadoEm  DateTime @default(now())
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, revogado])
+  @@map("refresh_tokens")
+}
+
+model LogAuditoria {
+  id         String   @id @default(uuid())
+  usuarioId  String?
+  acao       String
+  entidade   String
+  entidadeId String?
+  dados      Json?
+  ip         String?
+  criadoEm   DateTime @default(now())
+
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+
+  @@index([entidade, entidadeId])
+  @@index([criadoEm])
+  @@map("logs_auditoria")
+}
+
+// ============================================================ PLANOS
+
+model Plano {
+  id               String     @id @default(uuid())
+  nivel            NivelPlano @unique
+  nome             String     @unique
+  preco            Decimal    @db.Decimal(10, 2)
+  descricao        String
+  recursos         String[]
+  limiteProdutos   Int        @default(20)
+  comissaoExtraPct Decimal    @default(0) @db.Decimal(5, 2)
+  suporte          String     @default("Email")
+  ordem            Int
+  ativo            Boolean    @default(true)
+  criadoEm         DateTime   @default(now())
+  atualizadoEm     DateTime   @updatedAt
+
+  associados  Associado[]
+  assinaturas Assinatura[]
+  beneficios  Beneficio[]
+  conteudos   Conteudo[]
+  produtos    Produto[]
+
+  @@map("planos")
+}
+
+// ============================================================ ASSOCIADOS
+
+model Associado {
+  id              String          @id @default(uuid())
+  usuarioId       String          @unique
+  planoId         String
+  nome            String
+  handle          String          @unique
+  email           String          @unique
+  cpfCnpj         String?         @unique
+  telefone        String?
+  nicho           String?
+  bio             String?
+  seguidores      Int             @default(0)
+  engajamento     Decimal         @default(0) @db.Decimal(5, 2)
+  endereco        String?
+  cidade          String?
+  uf              String?         @db.VarChar(2)
+  status          StatusAssociado @default(ATIVO)
+  pontuacao       Int             @default(0)
+  mostrarEmail    Boolean         @default(false)
+  mostrarTelefone Boolean         @default(false)
+  membroDesde     DateTime        @default(now())
+  criadoEm        DateTime        @default(now())
+  atualizadoEm    DateTime        @updatedAt
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  plano   Plano   @relation(fields: [planoId], references: [id])
+
+  loja            Loja?
+  assinaturas     Assinatura[]
+  vendas          Venda[]
+  comissoes       Comissao[]
+  cupons          Cupom[]
+  linksAfiliado   LinkAfiliado[]
+  beneficiosUso   BeneficioUso[]
+  redesSociais    RedeSocialConta[]
+  posts           PostComunidade[]
+  comentarios     ComentarioPost[]
+  curtidas        CurtidaPost[]
+  tickets         Ticket[]
+  notificacoes    Notificacao[]
+  saques          Saque[]
+  conquistas      ConquistaAssociado[]
+  metricas        MetricaDiaria[]
+  solicitacoes    SolicitacaoServico[]
+  conteudosVistos ConteudoInteracao[]
+
+  @@index([status, planoId])
+  @@index([nicho])
+  @@map("associados")
+}
+
+model RedeSocialConta {
+  id             String     @id @default(uuid())
+  associadoId    String
+  rede           RedeSocial
+  handle         String?
+  url            String?
+  seguidores     Int        @default(0)
+  engajamento    Decimal    @default(0) @db.Decimal(5, 2)
+  posts          Int        @default(0)
+  conectada      Boolean    @default(false)
+  sincronizadaEm DateTime?
+
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+
+  @@unique([associadoId, rede])
+  @@map("redes_sociais_contas")
+}
+
+model Assinatura {
+  id          String    @id @default(uuid())
+  associadoId String
+  planoId     String
+  valor       Decimal   @db.Decimal(10, 2)
+  inicioEm    DateTime  @default(now())
+  fimEm       DateTime?
+  ativa       Boolean   @default(true)
+  criadoEm    DateTime  @default(now())
+
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+  plano     Plano     @relation(fields: [planoId], references: [id])
+
+  @@index([associadoId, ativa])
+  @@map("assinaturas")
+}
+
+// ============================================================ CATÁLOGO E LOJAS
+
+model CategoriaProduto {
+  id       String    @id @default(uuid())
+  nome     String    @unique
+  slug     String    @unique
+  cor      String?
+  ordem    Int       @default(0)
+  produtos Produto[]
+
+  @@map("categorias_produto")
+}
+
+model Produto {
+  id            String        @id @default(uuid())
+  sku           String        @unique
+  nome          String
+  descricao     String?
+  categoriaId   String
+  preco         Decimal       @db.Decimal(10, 2)
+  comissaoPct   Decimal       @db.Decimal(5, 2)
+  estoque       Int           @default(-1) // -1 = ilimitado
+  planoMinimoId String?
+  status        StatusProduto @default(ATIVO)
+  checkoutUrl   String?
+  imagemUrl     String?
+  totalVendas   Int           @default(0)
+  criadoEm      DateTime      @default(now())
+  atualizadoEm  DateTime      @updatedAt
+
+  categoria   CategoriaProduto @relation(fields: [categoriaId], references: [id])
+  planoMinimo Plano?           @relation(fields: [planoMinimoId], references: [id])
+
+  lojas         LojaProduto[]
+  vendas        Venda[]
+  linksAfiliado LinkAfiliado[]
+
+  @@index([status, categoriaId])
+  @@map("produtos")
+}
+
+model Loja {
+  id            String   @id @default(uuid())
+  associadoId   String   @unique
+  nome          String
+  slug          String   @unique
+  descricao     String?
+  corPrimaria   String?  @default("#1677ff")
+  bannerUrl     String?
+  logoUrl       String?
+  ativa         Boolean  @default(true)
+  visualizacoes Int      @default(0)
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  associado Associado     @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+  produtos  LojaProduto[]
+  vendas    Venda[]
+
+  @@map("lojas")
+}
+
+model LojaProduto {
+  id           String   @id @default(uuid())
+  lojaId       String
+  produtoId    String
+  destaque     Boolean  @default(false)
+  ordem        Int      @default(0)
+  adicionadoEm DateTime @default(now())
+
+  loja    Loja    @relation(fields: [lojaId], references: [id], onDelete: Cascade)
+  produto Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@unique([lojaId, produtoId])
+  @@map("loja_produtos")
+}
+
+// ============================================================ VENDAS E COMISSÕES
+
+model Venda {
+  id            String      @id @default(uuid())
+  ref           String      @unique // CHK-10000
+  produtoId     String
+  associadoId   String
+  lojaId        String?
+  cupomId       String?
+  clienteNome   String
+  clienteEmail  String?
+  quantidade    Int         @default(1)
+  precoUnitario Decimal     @db.Decimal(10, 2)
+  desconto      Decimal     @default(0) @db.Decimal(10, 2)
+  total         Decimal     @db.Decimal(10, 2)
+  status        StatusVenda @default(AGUARDANDO_PGTO)
+  dataVenda     DateTime
+  reembolsadaEm DateTime?
+  criadoEm      DateTime    @default(now())
+  atualizadoEm  DateTime    @updatedAt
+
+  produto   Produto   @relation(fields: [produtoId], references: [id])
+  associado Associado @relation(fields: [associadoId], references: [id])
+  loja      Loja?     @relation(fields: [lojaId], references: [id])
+  cupom     Cupom?    @relation(fields: [cupomId], references: [id])
+  comissao  Comissao?
+
+  @@index([status, dataVenda])
+  @@index([associadoId, dataVenda])
+  @@map("vendas")
+}
+
+model Comissao {
+  id           String         @id @default(uuid())
+  vendaId      String         @unique
+  associadoId  String
+  percentual   Decimal        @db.Decimal(5, 2)
+  valor        Decimal        @db.Decimal(10, 2)
+  status       StatusComissao @default(AGUARDANDO_PGTO)
+  pagoEm       DateTime?
+  saqueId      String?
+  criadoEm     DateTime       @default(now())
+  atualizadoEm DateTime       @updatedAt
+
+  venda     Venda     @relation(fields: [vendaId], references: [id], onDelete: Cascade)
+  associado Associado @relation(fields: [associadoId], references: [id])
+  saque     Saque?    @relation(fields: [saqueId], references: [id])
+
+  @@index([associadoId, status])
+  @@map("comissoes")
+}
+
+model Cupom {
+  id           String       @id @default(uuid())
+  associadoId  String
+  codigo       String
+  tipoDesconto TipoDesconto @default(PERCENTUAL)
+  desconto     Decimal      @db.Decimal(10, 2)
+  compraMinima Decimal?     @db.Decimal(10, 2)
+  usos         Int          @default(0)
+  limiteUsos   Int?
+  validoAte    DateTime?
+  ativo        Boolean      @default(true)
+  criadoEm     DateTime     @default(now())
+
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+  vendas    Venda[]
+
+  @@unique([associadoId, codigo])
+  @@map("cupons")
+}
+
+model LinkAfiliado {
+  id          String   @id @default(uuid())
+  associadoId String
+  produtoId   String
+  codigo      String   @unique
+  cliques     Int      @default(0)
+  conversoes  Int      @default(0)
+  receita     Decimal  @default(0) @db.Decimal(12, 2)
+  comissao    Decimal  @default(0) @db.Decimal(12, 2)
+  ativo       Boolean  @default(true)
+  criadoEm    DateTime @default(now())
+
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+  produto   Produto   @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@unique([associadoId, produtoId])
+  @@map("links_afiliado")
+}
+
+model MetricaDiaria {
+  id          String   @id @default(uuid())
+  associadoId String
+  data        DateTime @db.Date
+  cliques     Int      @default(0)
+  conversoes  Int      @default(0)
+  receita     Decimal  @default(0) @db.Decimal(12, 2)
+  comissao    Decimal  @default(0) @db.Decimal(12, 2)
+
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+
+  @@unique([associadoId, data])
+  @@index([data])
+  @@map("metricas_diarias")
+}
+
+// ============================================================ PARCEIROS E BENEFÍCIOS
+
+model Parceiro {
+  id           String   @id @default(uuid())
+  nome         String   @unique
+  segmento     String?
+  cnpj         String?  @unique
+  email        String?
+  telefone     String?
+  site         String?
+  logoUrl      String?
+  ativo        Boolean  @default(true)
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  beneficios Beneficio[]
+
+  @@map("parceiros")
+}
+
+model Beneficio {
+  id            String        @id @default(uuid())
+  parceiroId    String?
+  planoMinimoId String
+  nome          String        @unique
+  descricao     String?
+  tipo          TipoBeneficio @default(DESCONTO)
+  valorLabel    String? // "50%", "30 dias grátis", "R$ 49,90/mês"
+  instrucoes    String?
+  utilizacoes   Int           @default(0)
+  ativo         Boolean       @default(true)
+  criadoEm      DateTime      @default(now())
+  atualizadoEm  DateTime      @updatedAt
+
+  parceiro    Parceiro?      @relation(fields: [parceiroId], references: [id], onDelete: SetNull)
+  planoMinimo Plano          @relation(fields: [planoMinimoId], references: [id])
+  usos        BeneficioUso[]
+
+  @@index([ativo, planoMinimoId])
+  @@map("beneficios")
+}
+
+model BeneficioUso {
+  id          String   @id @default(uuid())
+  beneficioId String
+  associadoId String
+  usadoEm     DateTime @default(now())
+
+  beneficio Beneficio @relation(fields: [beneficioId], references: [id], onDelete: Cascade)
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+
+  @@index([associadoId, usadoEm])
+  @@map("beneficios_usos")
+}
+
+// ============================================================ CONTEÚDOS
+
+model Conteudo {
+  id            String         @id @default(uuid())
+  titulo        String
+  slug          String         @unique
+  descricao     String?
+  corpo         String?
+  tipo          TipoConteudo
+  status        StatusConteudo @default(RASCUNHO)
+  planoMinimoId String
+  autor         String?
+  capaUrl       String?
+  visualizacoes Int            @default(0)
+  curtidas      Int            @default(0)
+  publicadoEm   DateTime?
+  criadoEm      DateTime       @default(now())
+  atualizadoEm  DateTime       @updatedAt
+
+  planoMinimo Plano               @relation(fields: [planoMinimoId], references: [id])
+  interacoes  ConteudoInteracao[]
+
+  @@index([status, tipo])
+  @@map("conteudos")
+}
+
+model ConteudoInteracao {
+  id          String   @id @default(uuid())
+  conteudoId  String
+  associadoId String
+  visualizado Boolean  @default(true)
+  curtido     Boolean  @default(false)
+  criadoEm    DateTime @default(now())
+
+  conteudo  Conteudo  @relation(fields: [conteudoId], references: [id], onDelete: Cascade)
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+
+  @@unique([conteudoId, associadoId])
+  @@map("conteudos_interacoes")
+}
+
+model MaterialDivulgacao {
+  id         String       @id @default(uuid())
+  nome       String
+  descricao  String?
+  tipo       TipoMaterial
+  categoria  String?
+  dimensao   String?
+  arquivoUrl String?
+  textoCopy  String?
+  downloads  Int          @default(0)
+  ativo      Boolean      @default(true)
+  criadoEm   DateTime     @default(now())
+
+  @@map("materiais_divulgacao")
+}
+
+// ============================================================ COMUNIDADE
+
+model CategoriaComunidade {
+  id    String  @id @default(uuid())
+  nome  String  @unique
+  slug  String  @unique
+  icone String?
+  ordem Int     @default(0)
+
+  posts PostComunidade[]
+
+  @@map("categorias_comunidade")
+}
+
+model PostComunidade {
+  id            String   @id @default(uuid())
+  autorId       String
+  categoriaId   String?
+  conteudo      String
+  imagemUrl     String?
+  legendaImagem String?
+  fixado        Boolean  @default(false)
+  visualizacoes Int      @default(0)
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  autor     Associado            @relation(fields: [autorId], references: [id], onDelete: Cascade)
+  categoria CategoriaComunidade? @relation(fields: [categoriaId], references: [id], onDelete: SetNull)
+
+  comentarios ComentarioPost[]
+  curtidas    CurtidaPost[]
+
+  @@index([fixado, criadoEm])
+  @@map("posts_comunidade")
+}
+
+model ComentarioPost {
+  id       String   @id @default(uuid())
+  postId   String
+  autorId  String
+  conteudo String
+  criadoEm DateTime @default(now())
+
+  post  PostComunidade @relation(fields: [postId], references: [id], onDelete: Cascade)
+  autor Associado      @relation(fields: [autorId], references: [id], onDelete: Cascade)
+
+  @@index([postId, criadoEm])
+  @@map("comentarios_post")
+}
+
+model CurtidaPost {
+  id          String   @id @default(uuid())
+  postId      String
+  associadoId String
+  criadoEm    DateTime @default(now())
+
+  post      PostComunidade @relation(fields: [postId], references: [id], onDelete: Cascade)
+  associado Associado      @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, associadoId])
+  @@map("curtidas_post")
+}
+
+// ============================================================ SUPORTE
+
+model Ticket {
+  id           String           @id @default(uuid())
+  numero       String           @unique // SUP-001
+  associadoId  String?
+  atribuidoAId String?
+  assunto      String
+  categoria    String
+  prioridade   PrioridadeTicket @default(MEDIA)
+  status       StatusTicket     @default(ABERTO)
+  resolvidoEm  DateTime?
+  criadoEm     DateTime         @default(now())
+  atualizadoEm DateTime         @updatedAt
+
+  associado  Associado? @relation(fields: [associadoId], references: [id], onDelete: SetNull)
+  atribuidoA Usuario?   @relation("TicketAtribuido", fields: [atribuidoAId], references: [id], onDelete: SetNull)
+
+  mensagens TicketMensagem[]
+
+  @@index([status, prioridade])
+  @@map("tickets")
+}
+
+model TicketMensagem {
+  id       String   @id @default(uuid())
+  ticketId String
+  autorId  String?
+  conteudo String
+  interna  Boolean  @default(false)
+  criadoEm DateTime @default(now())
+
+  ticket Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  autor  Usuario? @relation(fields: [autorId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, criadoEm])
+  @@map("tickets_mensagens")
+}
+
+// ============================================================ SERVIÇOS (JURÍDICO/CONTÁBIL)
+
+model EscritorioParceiro {
+  id             String         @id @default(uuid())
+  nome           String         @unique
+  tipo           TipoEscritorio
+  especialidades String[]
+  responsavel    String?
+  email          String?
+  telefone       String?
+  localizacao    String?
+  nota           Decimal?       @db.Decimal(3, 2)
+  atendimentos   Int            @default(0)
+  ativo          Boolean        @default(true)
+  criadoEm       DateTime       @default(now())
+
+  profissionais Profissional[]
+
+  @@map("escritorios_parceiros")
+}
+
+model Profissional {
+  id            String   @id @default(uuid())
+  escritorioId  String?
+  nome          String
+  especialidade String?
+  bio           String?
+  nota          Decimal? @db.Decimal(3, 2)
+  avaliacoes    Int      @default(0)
+  valorHora     Decimal? @db.Decimal(10, 2)
+  disponivel    Boolean  @default(true)
+  criadoEm      DateTime @default(now())
+
+  escritorio   EscritorioParceiro?  @relation(fields: [escritorioId], references: [id], onDelete: SetNull)
+  solicitacoes SolicitacaoServico[]
+
+  @@map("profissionais")
+}
+
+model SolicitacaoServico {
+  id             String            @id @default(uuid())
+  associadoId    String
+  profissionalId String?
+  assunto        String
+  descricao      String?
+  status         StatusSolicitacao @default(ABERTA)
+  concluidaEm    DateTime?
+  criadoEm       DateTime          @default(now())
+  atualizadoEm   DateTime          @updatedAt
+
+  associado    Associado     @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+  profissional Profissional? @relation(fields: [profissionalId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@map("solicitacoes_servico")
+}
+
+// ============================================================ NOTIFICAÇÕES E CAMPANHAS
+
+model Notificacao {
+  id          String           @id @default(uuid())
+  associadoId String? // null = broadcast
+  titulo      String
+  mensagem    String
+  tipo        TipoNotificacao  @default(SISTEMA)
+  canal       CanalNotificacao @default(IN_APP)
+  lida        Boolean          @default(false)
+  lidaEm      DateTime?
+  link        String?
+  criadoEm    DateTime         @default(now())
+
+  associado Associado? @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+
+  @@index([associadoId, lida])
+  @@index([criadoEm])
+  @@map("notificacoes")
+}
+
+model Campanha {
+  id           String            @id @default(uuid())
+  codigo       String            @unique // CAMP-001
+  titulo       String
+  corpo        String
+  canal        CanalNotificacao?
+  publicoAlvo  NivelPlano[]
+  enviados     Int               @default(0)
+  aberturas    Int               @default(0)
+  status       StatusCampanha    @default(RASCUNHO)
+  agendadaPara DateTime?
+  enviadaEm    DateTime?
+  criadoEm     DateTime          @default(now())
+  atualizadoEm DateTime          @updatedAt
+
+  @@index([status])
+  @@map("campanhas")
+}
+
+// ============================================================ FINANCEIRO
+
+model Saque {
+  id             String      @id @default(uuid())
+  associadoId    String
+  valor          Decimal     @db.Decimal(12, 2)
+  metodo         MetodoSaque @default(PIX)
+  destino        String
+  status         StatusSaque @default(PENDENTE)
+  solicitadoEm   DateTime    @default(now())
+  concluidoEm    DateTime?
+  motivoRejeicao String?
+
+  associado Associado  @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+  comissoes Comissao[]
+
+  @@index([associadoId, status])
+  @@map("saques")
+}
+
+model LancamentoFinanceiro {
+  id          String              @id @default(uuid())
+  tipo        TipoLancamento
+  categoria   CategoriaLancamento
+  descricao   String
+  valor       Decimal             @db.Decimal(12, 2)
+  competencia DateTime            @db.Date
+  referencia  String?
+  criadoEm    DateTime            @default(now())
+
+  @@index([competencia, tipo])
+  @@map("lancamentos_financeiros")
+}
+
+// ============================================================ GAMIFICAÇÃO
+
+model Conquista {
+  id        String  @id @default(uuid())
+  nome      String  @unique
+  descricao String?
+  icone     String?
+  meta      Int     @default(1)
+  pontos    Int     @default(0)
+  ordem     Int     @default(0)
+
+  associados ConquistaAssociado[]
+
+  @@map("conquistas")
+}
+
+model ConquistaAssociado {
+  id             String    @id @default(uuid())
+  conquistaId    String
+  associadoId    String
+  progresso      Int       @default(0)
+  desbloqueada   Boolean   @default(false)
+  desbloqueadaEm DateTime?
+
+  conquista Conquista @relation(fields: [conquistaId], references: [id], onDelete: Cascade)
+  associado Associado @relation(fields: [associadoId], references: [id], onDelete: Cascade)
+
+  @@unique([conquistaId, associadoId])
+  @@map("conquistas_associados")
+}

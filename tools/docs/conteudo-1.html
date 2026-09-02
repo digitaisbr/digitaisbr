@@ -1,0 +1,493 @@
+<!-- ============================================================ CAPA -->
+<div class="capa">
+  <div class="capa-marca">DigitaisBR</div>
+  <h1 class="capa-titulo" style="page-break-before:auto;border:none;color:#fff">Documentação<br>da Plataforma</h1>
+  <div class="capa-regua"></div>
+  <div class="capa-sub">
+    Associação de criadores digitais — arquitetura, modelo de dados, regras de negócio,
+    interface, capacidade medida, análise de segurança e guia de publicação.
+  </div>
+
+  <div class="capa-nums">
+    <div class="capa-num"><b>37</b><span>tabelas</span></div>
+    <div class="capa-num"><b>170</b><span>rotas</span></div>
+    <div class="capa-num"><b>40</b><span>telas</span></div>
+    <div class="capa-num"><b>77</b><span>testes e2e</span></div>
+  </div>
+
+  <div class="capa-rodape">
+    <span>Versão 1.1 · Agosto de 2026</span>
+    <span>NestJS · Prisma · PostgreSQL · React</span>
+  </div>
+</div>
+
+<!-- ============================================================ SUMÁRIO -->
+<div class="sumario">
+  <h1 class="sem-quebra"><span class="cap">Índice</span>Sumário</h1>
+  <ol>
+    <li>Visão geral do produto
+      <ul><li>O que é a DigitaisBR</li><li>As duas áreas</li><li>Os três planos</li><li>Como o dinheiro circula</li></ul></li>
+    <li>Arquitetura
+      <ul><li>Visão em camadas</li><li>Stack e escolhas</li><li>Estrutura do código</li><li>Origem do domínio</li></ul></li>
+    <li>Autenticação e autorização
+      <ul><li>Fluxo de login</li><li>Tokens e rotação</li><li>Os quatro guards</li><li>Matriz de permissões</li></ul></li>
+    <li>Modelo de dados
+      <ul><li>Mapa das 37 tabelas</li><li>Diagrama de relacionamentos</li><li>Decisões de modelagem</li><li>Enums</li></ul></li>
+    <li>Regras de negócio
+      <ul><li>Ciclo de vida da venda</li><li>Cálculo da comissão</li><li>Cupons</li><li>Saques e saldo</li><li>Limites por plano</li></ul></li>
+    <li>Módulos funcionais
+      <ul><li>Área administrativa</li><li>Portal do associado</li><li>Área pública</li></ul></li>
+    <li>Referência da API
+      <ul><li>Convenções</li><li>Paginação, busca e filtros</li><li>Erros</li><li>As 170 rotas</li></ul></li>
+    <li>A interface
+      <ul><li>Tecnologias</li><li>As três áreas · 40 telas</li><li>Decisões estruturais</li><li>Identidade visual</li></ul></li>
+    <li>Como foi desenvolvido
+      <ul><li>As cinco etapas</li><li>Pipeline reexecutável</li><li>O que a conferência revelou</li></ul></li>
+    <li>Escalabilidade e capacidade
+      <ul><li>Capacidade medida por endpoint</li><li>Comportamento sob concorrência</li><li>Quantos usuários simultâneos</li><li>Gargalo corrigido</li><li>Caminhos de crescimento</li></ul></li>
+    <li>Análise de segurança
+      <ul><li>Testes ofensivos executados</li><li>Controles implementados</li><li>Vulnerabilidade corrigida</li><li>Pendências</li></ul></li>
+    <li>Dados e fidelidade
+      <ul><li>Pipeline de extração</li><li>Conteúdo do seed</li><li>Conferência com as telas originais</li></ul></li>
+    <li>Qualidade e testes
+      <ul><li>Cobertura da suíte</li><li>Como executar</li></ul></li>
+    <li>Operação
+      <ul><li>Subir o ambiente</li><li>Variáveis</li><li>Migrations</li><li>Checklist</li></ul></li>
+    <li>Publicar na internet
+      <ul><li>Arquitetura de produção</li><li>Checklist obrigatório</li><li>Passo a passo</li><li>Estimativa de infraestrutura</li></ul></li>
+  </ol>
+</div>
+
+<!-- ============================================================ 1 -->
+<h1><span class="cap">Capítulo 1</span>Visão geral do produto</h1>
+
+<p class="intro">
+  A DigitaisBR é uma plataforma de <strong>associação de criadores digitais</strong>. Ela conecta
+  três partes: os <em>associados</em> (influenciadores que recomendam e vendem produtos), os
+  <em>parceiros</em> (empresas que oferecem produtos e benefícios) e a <em>administração</em>,
+  que cura o catálogo, liquida comissões e sustenta a operação.
+</p>
+
+<p>
+  O modelo de receita tem duas pernas. A primeira é a <strong>assinatura mensal</strong>: cada
+  associado paga por um plano (Básico, Intermediário ou Avançado), o que gera receita recorrente
+  previsível. A segunda é a <strong>venda por indicação</strong>: cada associado monta uma loja
+  virtual com produtos do catálogo, divulga links rastreáveis, e recebe uma comissão percentual
+  sobre o que vende.
+</p>
+
+<h2>1.1 As duas áreas</h2>
+
+<p>
+  O sistema se divide em duas experiências distintas, com autorizações separadas.
+</p>
+
+<table>
+  <thead>
+    <tr><th style="width:22%">Área</th><th style="width:16%">Quem acessa</th><th>O que faz</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Administrativa</strong></td>
+      <td><span class="selo admin">ADMIN</span></td>
+      <td>Cadastra associados e produtos, cura o catálogo, acompanha vendas, aprova e liquida
+          comissões, gerencia parceiros e benefícios, publica conteúdo, modera a comunidade,
+          atende o suporte, dispara campanhas e acompanha o financeiro (DRE, fluxo de caixa, MRR).</td>
+    </tr>
+    <tr>
+      <td><strong>Portal do associado</strong></td>
+      <td><span class="selo assoc">ASSOCIADO</span></td>
+      <td>Monta e personaliza a própria loja, escolhe produtos do marketplace, cria cupons,
+          gera links de afiliado, acompanha vendas e comissões, solicita saques, resgata
+          benefícios, consome conteúdo, participa da comunidade, abre chamados e pede
+          assessoria jurídica ou contábil.</td>
+    </tr>
+    <tr>
+      <td><strong>Pública</strong></td>
+      <td><span class="selo pub">SEM LOGIN</span></td>
+      <td>Vitrine da loja de cada associado, perfil público do criador e o redirecionador
+          dos links de afiliado.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>1.2 Os três planos</h2>
+
+<p>
+  O plano é o eixo de monetização e, ao mesmo tempo, o mecanismo de controle de acesso: ele
+  define quantos produtos cabem na loja, quais benefícios e conteúdos ficam liberados, quanto
+  de comissão extra o associado ganha e que nível de suporte recebe.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:20%">Plano</th><th style="width:14%">Mensalidade</th>
+      <th style="width:14%">Produtos</th><th style="width:14%">Comissão extra</th>
+      <th style="width:16%">Suporte</th><th>Destaques</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Básico</strong></td><td>R$ 49,90</td><td>até 20</td><td>—</td><td>Email</td>
+      <td>Benefícios essenciais, conteúdos educacionais, comunidade, loja padrão</td>
+    </tr>
+    <tr>
+      <td><strong>Intermediário</strong></td><td>R$ 99,90</td><td>até 100</td><td>+2%</td><td>Chat</td>
+      <td>Tudo do Básico, mais suporte jurídico e contábil, personalização visual da loja e
+          relatórios avançados</td>
+    </tr>
+    <tr>
+      <td><strong>Avançado</strong></td><td>R$ 199,90</td><td>ilimitado</td><td>+5%</td><td>Prioritário</td>
+      <td>Tudo do Intermediário, mais produtos exclusivos, assessoria completa e consultoria mensal</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="destaque nota">
+  <span class="rotulo">Como o plano gateia o acesso</span>
+  <p>
+    Produtos, benefícios e conteúdos carregam um campo <code>planoMinimo</code>. Quando um
+    associado do Básico lista o catálogo, os itens acima do plano dele não somem — voltam
+    marcados com <code>bloqueado: true</code>, junto com o plano exigido. Isso reproduz as
+    seções “Disponíveis” e “Bloqueados” das telas e cria o gancho natural de upgrade.
+  </p>
+</div>
+
+<h2>1.3 Como o dinheiro circula</h2>
+
+<p>
+  O fluxo abaixo é o coração do negócio, e cada seta corresponde a uma operação real da API.
+</p>
+
+<figure>
+<svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="seta" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/>
+    </marker>
+  </defs>
+
+  <rect x="8"   y="28" width="128" height="54" rx="7" fill="#e6f4ff" stroke="#1677ff" stroke-width="1.4"/>
+  <text x="72"  y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#002c8c">Cliente final</text>
+  <text x="72"  y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">compra pelo link</text>
+
+  <rect x="180" y="28" width="128" height="54" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.2"/>
+  <text x="244" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2430">Loja do associado</text>
+  <text x="244" y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">vitrine + cupom</text>
+
+  <rect x="352" y="28" width="128" height="54" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.2"/>
+  <text x="416" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2430">Venda</text>
+  <text x="416" y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">POST /vendas</text>
+
+  <rect x="524" y="28" width="128" height="54" rx="7" fill="#e8f8ef" stroke="#12a150" stroke-width="1.4"/>
+  <text x="588" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="#0b6b36">Comissão</text>
+  <text x="588" y="66" text-anchor="middle" font-size="9.5" fill="#5b6472">gerada na hora</text>
+
+  <line x1="138" y1="55" x2="176" y2="55" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <line x1="310" y1="55" x2="348" y2="55" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <line x1="482" y1="55" x2="520" y2="55" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+
+  <line x1="588" y1="86" x2="588" y2="120" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <rect x="524" y="126" width="128" height="50" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.2"/>
+  <text x="588" y="146" text-anchor="middle" font-size="11" font-weight="600" fill="#1f2430">Liquidação</text>
+  <text x="588" y="162" text-anchor="middle" font-size="9" fill="#5b6472">admin paga em lote</text>
+
+  <line x1="588" y1="180" x2="588" y2="200" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta)"/>
+  <rect x="524" y="206" width="128" height="38" rx="7" fill="#e6f4ff" stroke="#1677ff" stroke-width="1.4"/>
+  <text x="588" y="230" text-anchor="middle" font-size="11" font-weight="600" fill="#002c8c">Saque (PIX / TED)</text>
+
+  <rect x="8"   y="126" width="300" height="50" rx="7" fill="#f4edff" stroke="#722ed1" stroke-width="1.3"/>
+  <text x="158" y="146" text-anchor="middle" font-size="11" font-weight="600" fill="#3b0e8f">Assinatura mensal do plano</text>
+  <text x="158" y="162" text-anchor="middle" font-size="9" fill="#5b6472">receita recorrente — compõe o MRR</text>
+
+  <rect x="8"   y="196" width="472" height="48" rx="7" fill="#fffbf0" stroke="#d48806" stroke-width="1.3"/>
+  <text x="244" y="216" text-anchor="middle" font-size="11" font-weight="600" fill="#8c5800">Lançamentos financeiros</text>
+  <text x="244" y="232" text-anchor="middle" font-size="9" fill="#5b6472">entradas e saídas alimentam o DRE, o fluxo de caixa e o saldo</text>
+
+  <line x1="352" y1="150" x2="352" y2="150" stroke="none"/>
+  <line x1="416" y1="86" x2="416" y2="192" stroke="#c8d1e0" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#seta)"/>
+  <line x1="158" y1="180" x2="158" y2="192" stroke="#c8d1e0" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#seta)"/>
+</svg>
+<figcaption>Do clique do cliente ao saque do associado — e o que cada etapa registra no financeiro.</figcaption>
+</figure>
+
+<!-- ============================================================ 2 -->
+<h1><span class="cap">Capítulo 2</span>Arquitetura</h1>
+
+<p class="intro">
+  O backend é uma API REST em NestJS, organizada por domínio de negócio, com PostgreSQL
+  acessado via Prisma. Não há estado em memória: toda a verdade vive no banco, o que permite
+  rodar várias instâncias atrás de um balanceador sem sessão pegajosa.
+</p>
+
+<h2>2.1 Visão em camadas</h2>
+
+<figure>
+<svg viewBox="0 0 760 322" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="8" y="8" width="744" height="52" rx="7" fill="#e6f4ff" stroke="#1677ff" stroke-width="1.4"/>
+  <text x="24" y="30" font-size="11.5" font-weight="700" fill="#002c8c">Clientes</text>
+  <text x="24" y="47" font-size="9.5" fill="#5b6472">Painel administrativo · Portal do associado · Vitrines públicas · Swagger UI</text>
+
+  <line x1="380" y1="60" x2="380" y2="76" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta2)"/>
+  <defs>
+    <marker id="seta2" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/>
+    </marker>
+  </defs>
+
+  <rect x="8" y="80" width="744" height="60" rx="7" fill="#fffbf0" stroke="#d48806" stroke-width="1.4"/>
+  <text x="24" y="102" font-size="11.5" font-weight="700" fill="#8c5800">Camada transversal</text>
+  <text x="24" y="119" font-size="9.5" fill="#5b6472">Throttler (300 req/min) → JwtAuthGuard → RolesGuard → PlanoGuard</text>
+  <text x="24" y="133" font-size="9.5" fill="#5b6472">ValidationPipe (whitelist + rejeição de campos desconhecidos) · Helmet · CORS · filtros de exceção</text>
+
+  <line x1="380" y1="140" x2="380" y2="156" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta2)"/>
+
+  <rect x="8" y="160" width="744" height="84" rx="7" fill="#f6f8fb" stroke="#c8d1e0" stroke-width="1.3"/>
+  <text x="24" y="182" font-size="11.5" font-weight="700" fill="#1f2430">17 módulos de domínio</text>
+  <text x="24" y="200" font-size="9.3" fill="#5b6472">auth · planos · associados · catalogo · lojas · vendas · comissoes · financeiro · parceiros</text>
+  <text x="24" y="215" font-size="9.3" fill="#5b6472">conteudos · comunidade · suporte · servicos · notificacoes · gamificacao · dashboard · portal</text>
+  <text x="24" y="234" font-size="9" fill="#8c94a3" font-style="italic">cada módulo = controller (HTTP) + service (regra de negócio) + DTOs (contrato validado)</text>
+
+  <line x1="380" y1="244" x2="380" y2="260" stroke="#8c94a3" stroke-width="1.4" marker-end="url(#seta2)"/>
+
+  <rect x="8" y="264" width="366" height="50" rx="7" fill="#f4edff" stroke="#722ed1" stroke-width="1.3"/>
+  <text x="24" y="286" font-size="11.5" font-weight="700" fill="#3b0e8f">PrismaService</text>
+  <text x="24" y="303" font-size="9.3" fill="#5b6472">cliente tipado, transações, agregações</text>
+
+  <rect x="386" y="264" width="366" height="50" rx="7" fill="#e8f8ef" stroke="#12a150" stroke-width="1.3"/>
+  <text x="402" y="286" font-size="11.5" font-weight="700" fill="#0b6b36">PostgreSQL 16</text>
+  <text x="402" y="303" font-size="9.3" fill="#5b6472">37 tabelas · 23 enums · constraints e índices</text>
+</svg>
+<figcaption>Toda requisição atravessa a mesma cadeia antes de tocar a regra de negócio.</figcaption>
+</figure>
+
+<h2>2.2 Stack e por que cada peça</h2>
+
+<table>
+  <thead><tr><th style="width:24%">Peça</th><th style="width:14%">Versão</th><th>Motivo da escolha</th></tr></thead>
+  <tbody>
+    <tr><td><strong>NestJS</strong></td><td>11</td>
+        <td>Modularidade explícita e injeção de dependências. Com 17 domínios, a estrutura
+            imposta pelo framework evita que o projeto vire um punhado de controllers soltos.</td></tr>
+    <tr><td><strong>Prisma</strong></td><td>6</td>
+        <td>Schema declarativo como fonte única da verdade, tipos gerados a partir dele e
+            migrations versionadas. O <code>groupBy</code> e o <code>aggregate</code> tipados
+            resolvem quase toda a camada de dashboards sem SQL manual.</td></tr>
+    <tr><td><strong>PostgreSQL</strong></td><td>16</td>
+        <td>Necessário por três recursos usados de fato: <code>Decimal</code> exato para dinheiro,
+            arrays nativos (recursos do plano, especialidades, público-alvo) e enums no banco.</td></tr>
+    <tr><td><strong>JWT + Passport</strong></td><td>—</td>
+        <td>Autenticação sem estado, com refresh token rotativo guardado hasheado no banco.</td></tr>
+    <tr><td><strong>class-validator</strong></td><td>0.14</td>
+        <td>Validação declarativa nos DTOs, que o Swagger reaproveita para documentar o contrato.</td></tr>
+    <tr><td><strong>Swagger</strong></td><td>11</td>
+        <td>Documentação viva gerada dos próprios decoradores — nunca desatualiza em relação ao código.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.3 Estrutura do código</h2>
+
+<pre><code>apps/api/
+├── prisma/
+│   ├── schema.prisma          <span class="cmt">37 modelos, 23 enums — a fonte da verdade</span>
+│   ├── migrations/            <span class="cmt">histórico versionado do banco</span>
+│   ├── seed.ts                <span class="cmt">carrega o dataset real nas tabelas</span>
+│   └── seed-data/*.json       <span class="cmt">24 arquivos, 374 registros extraídos</span>
+├── src/
+│   ├── main.ts                <span class="cmt">bootstrap, Swagger, CORS, Helmet, filtros globais</span>
+│   ├── app.module.ts          <span class="cmt">composição dos módulos e cadeia de guards</span>
+│   ├── common/
+│   │   ├── prisma/            <span class="cmt">PrismaService (módulo global)</span>
+│   │   ├── decorators/        <span class="cmt">@Public @Roles @PlanoMinimo @CurrentUser</span>
+│   │   ├── guards/            <span class="cmt">JwtAuthGuard RolesGuard PlanoGuard</span>
+│   │   ├── filters/           <span class="cmt">tradução de erros do Prisma para HTTP</span>
+│   │   ├── dto/               <span class="cmt">PaginationDto e PaginatedResult</span>
+│   │   └── utils/             <span class="cmt">busca textual, ordenação segura, intervalo de datas</span>
+│   └── modules/&lt;dominio&gt;/
+│       ├── *.controller.ts    <span class="cmt">rotas, autorização, documentação</span>
+│       ├── *.service.ts       <span class="cmt">regra de negócio e acesso a dados</span>
+│       ├── *.module.ts        <span class="cmt">montagem e exportação</span>
+│       └── dto/               <span class="cmt">contratos de entrada validados</span>
+└── test/                      <span class="cmt">suíte end-to-end (77 asserções)</span></code></pre>
+
+<div class="destaque">
+  <span class="rotulo">Uma regra de organização</span>
+  <p>
+    Controllers não contêm regra de negócio — apenas roteiam, autorizam e documentam. Toda
+    decisão de domínio vive no service, onde há acesso ao estado real do banco. É por isso que
+    validações como “este produto é exclusivo do plano Avançado” ficam no service e não num
+    guard: o guard não sabe qual produto está sendo pedido.
+  </p>
+</div>
+
+<h2>2.4 De onde veio o domínio</h2>
+
+<p>
+  Este backend não foi desenhado a partir de uma especificação escrita. Ele foi
+  <strong>reconstruído por engenharia reversa</strong> de 113 telas capturadas da plataforma
+  original — uma SPA React com Firebase, cujo bundle minificado não permitia recuperar o
+  código-fonte.
+</p>
+
+<p>
+  O caminho foi: capturar o HTML renderizado de cada rota → extrair as tabelas, os cards e as
+  páginas de detalhe → inferir as entidades, os campos e os relacionamentos → modelar o schema →
+  reimplementar as regras que os dados denunciavam. O script <code>tools/extract.py</code>
+  materializa esse elo e continua reexecutável.
+</p>
+
+<figure>
+<svg viewBox="0 0 760 92" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="4"   y="20" width="132" height="52" rx="6" fill="#f6f8fb" stroke="#c8d1e0"/>
+  <text x="70"  y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#1f2430">113 telas</text>
+  <text x="70"  y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">HTML capturado</text>
+
+  <rect x="160" y="20" width="132" height="52" rx="6" fill="#f6f8fb" stroke="#c8d1e0"/>
+  <text x="226" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#1f2430">extract.py</text>
+  <text x="226" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">parsing estrutural</text>
+
+  <rect x="316" y="20" width="132" height="52" rx="6" fill="#f4edff" stroke="#722ed1"/>
+  <text x="382" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#3b0e8f">24 JSONs</text>
+  <text x="382" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">374 registros</text>
+
+  <rect x="472" y="20" width="132" height="52" rx="6" fill="#e6f4ff" stroke="#1677ff"/>
+  <text x="538" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#002c8c">seed.ts</text>
+  <text x="538" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">mapeia p/ o schema</text>
+
+  <rect x="628" y="20" width="128" height="52" rx="6" fill="#e8f8ef" stroke="#12a150"/>
+  <text x="692" y="42" text-anchor="middle" font-size="10" font-weight="600" fill="#0b6b36">PostgreSQL</text>
+  <text x="692" y="58" text-anchor="middle" font-size="8.5" fill="#5b6472">37 tabelas</text>
+
+  <line x1="138" y1="46" x2="156" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <line x1="294" y1="46" x2="312" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <line x1="450" y1="46" x2="468" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <line x1="606" y1="46" x2="624" y2="46" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#seta3)"/>
+  <defs><marker id="seta3" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+</svg>
+<figcaption>O pipeline que transformou telas capturadas em um banco de dados relacional.</figcaption>
+</figure>
+
+<!-- ============================================================ 3 -->
+<h1><span class="cap">Capítulo 3</span>Autenticação e autorização</h1>
+
+<p class="intro">
+  A segurança se apoia em quatro camadas independentes, aplicadas em cadeia a toda requisição.
+  Cada uma responde a uma pergunta diferente: quantas requisições, quem é, que papel tem, e
+  qual plano assina.
+</p>
+
+<h2>3.1 Fluxo de autenticação</h2>
+
+<p>
+  A plataforma original protegia o acesso com um código antes mesmo do login. Esse gate foi
+  preservado como <code>POST /auth/codigo-acesso</code>, e o fluxo completo é:
+</p>
+
+<figure>
+<svg viewBox="0 0 760 208" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="s4" markerWidth="9" markerHeight="7" refX="8.5" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="#8c94a3"/></marker></defs>
+
+  <rect x="6"   y="16" width="136" height="46" rx="6" fill="#f6f8fb" stroke="#c8d1e0"/>
+  <text x="74"  y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#1f2430">Código de acesso</text>
+  <text x="74"  y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">POST /auth/codigo-acesso</text>
+
+  <rect x="166" y="16" width="136" height="46" rx="6" fill="#e6f4ff" stroke="#1677ff"/>
+  <text x="234" y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#002c8c">Login</text>
+  <text x="234" y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">email + senha (bcrypt)</text>
+
+  <rect x="326" y="16" width="180" height="46" rx="6" fill="#e8f8ef" stroke="#12a150"/>
+  <text x="416" y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#0b6b36">access token · 15 min</text>
+  <text x="416" y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">JWT assinado, enviado no Bearer</text>
+
+  <rect x="530" y="16" width="224" height="46" rx="6" fill="#f4edff" stroke="#722ed1"/>
+  <text x="642" y="35" text-anchor="middle" font-size="9.6" font-weight="600" fill="#3b0e8f">refresh token · 7 dias</text>
+  <text x="642" y="50" text-anchor="middle" font-size="8.3" fill="#5b6472">aleatório, guardado como SHA-256</text>
+
+  <line x1="144" y1="39" x2="162" y2="39" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <line x1="304" y1="39" x2="322" y2="39" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <line x1="508" y1="39" x2="526" y2="39" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+
+  <line x1="416" y1="66" x2="416" y2="86" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <rect x="230" y="90" width="372" height="42" rx="6" fill="#fffbf0" stroke="#d48806"/>
+  <text x="416" y="108" text-anchor="middle" font-size="9.6" font-weight="600" fill="#8c5800">Access expirou → POST /auth/refresh</text>
+  <text x="416" y="123" text-anchor="middle" font-size="8.3" fill="#5b6472">o refresh usado é revogado e um novo par é emitido (rotação)</text>
+
+  <line x1="416" y1="136" x2="416" y2="156" stroke="#8c94a3" stroke-width="1.3" marker-end="url(#s4)"/>
+  <rect x="150" y="160" width="532" height="42" rx="6" fill="#ffefe8" stroke="#d4380d"/>
+  <text x="416" y="178" text-anchor="middle" font-size="9.6" font-weight="600" fill="#a8280b">Logout ou troca de senha</text>
+  <text x="416" y="193" text-anchor="middle" font-size="8.3" fill="#5b6472">revoga todos os refresh tokens do usuário — derruba todas as sessões abertas</text>
+</svg>
+<figcaption>Ciclo de vida das credenciais, do gate de acesso à revogação.</figcaption>
+</figure>
+
+<h3>Decisões de segurança tomadas</h3>
+
+<table>
+  <thead><tr><th style="width:34%">Decisão</th><th>Consequência prática</th></tr></thead>
+  <tbody>
+    <tr><td>Senha com <strong>bcrypt</strong> (10 rounds)</td>
+        <td>Vazamento do banco não expõe senhas em texto claro.</td></tr>
+    <tr><td>Refresh token guardado <strong>hasheado</strong></td>
+        <td>Quem lê a tabela <code>refresh_tokens</code> não consegue se passar por um usuário.</td></tr>
+    <tr><td><strong>Rotação</strong> a cada renovação</td>
+        <td>Um refresh token roubado só serve uma vez; o uso legítimo seguinte falha e denuncia o roubo.</td></tr>
+    <tr><td>Access token curto (15 min)</td>
+        <td>Reduz a janela de exploração de um token interceptado.</td></tr>
+    <tr><td>Validação do usuário <strong>a cada requisição</strong></td>
+        <td>Desativar uma conta tem efeito imediato, sem esperar o token expirar.</td></tr>
+    <tr><td>Troca de senha <strong>revoga sessões</strong></td>
+        <td>Recuperar a conta após um comprometimento realmente expulsa o invasor.</td></tr>
+    <tr><td><code>forbidNonWhitelisted</code> no ValidationPipe</td>
+        <td>Campo não declarado no DTO gera <code>400</code> — bloqueia <em>mass assignment</em>.</td></tr>
+  </tbody>
+</table>
+
+<h2>3.2 Os quatro guards</h2>
+
+<p>Registrados globalmente, executam nesta ordem para toda requisição:</p>
+
+<table>
+  <thead><tr><th style="width:22%">Guard</th><th style="width:26%">Pergunta que responde</th><th>Como se configura</th></tr></thead>
+  <tbody>
+    <tr><td><strong>ThrottlerGuard</strong></td><td>Excedeu o limite?</td>
+        <td>300 requisições por minuto, por IP. Devolve <code>429</code>.</td></tr>
+    <tr><td><strong>JwtAuthGuard</strong></td><td>Quem é você?</td>
+        <td>Exige <code>Authorization: Bearer</code>. Rotas com <code>@Public()</code> passam direto.</td></tr>
+    <tr><td><strong>RolesGuard</strong></td><td>Tem o papel certo?</td>
+        <td><code>@Roles(Role.ADMIN)</code> no controller ou no método.</td></tr>
+    <tr><td><strong>PlanoGuard</strong></td><td>O plano cobre isso?</td>
+        <td><code>@PlanoMinimo(NivelPlano.INTERMEDIARIO)</code>. Admin sempre passa.</td></tr>
+  </tbody>
+</table>
+
+<div class="destaque atencao">
+  <span class="rotulo">Onde os guards não bastam</span>
+  <p>
+    Guards decidem por metadados estáticos da rota. Regras que dependem do <em>dado sendo
+    manipulado</em> — “este produto específico é exclusivo do Avançado”, “esta loja já atingiu o
+    limite de 20 produtos do Básico”, “este chamado pertence a outro associado” — são validadas
+    no service, que tem acesso ao estado. Ignorar essa distinção é como se abrem brechas de
+    autorização horizontal.
+  </p>
+</div>
+
+<h2>3.3 Matriz de permissões</h2>
+
+<table class="compacta">
+  <thead><tr><th style="width:34%">Recurso</th><th style="width:14%">Público</th><th style="width:22%">Associado</th><th>Administrador</th></tr></thead>
+  <tbody>
+    <tr><td>Vitrine da loja · perfil público · redirecionador de link</td><td>✅ leitura</td><td>✅</td><td>✅</td></tr>
+    <tr><td>Catálogo de produtos</td><td>—</td><td>✅ com bloqueio por plano</td><td>✅ total + escrita</td></tr>
+    <tr><td>Benefícios e conteúdos</td><td>—</td><td>✅ com bloqueio por plano</td><td>✅ total + escrita</td></tr>
+    <tr><td>Própria loja, cupons, links, métricas</td><td>—</td><td>✅ escrita</td><td>✅</td></tr>
+    <tr><td>Comunidade</td><td>—</td><td>✅ publicar, curtir, comentar</td><td>✅ + fixar e moderar</td></tr>
+    <tr><td>Chamados de suporte</td><td>—</td><td>✅ só os próprios, sem notas internas</td><td>✅ todos + notas internas</td></tr>
+    <tr><td>Saques</td><td>—</td><td>✅ solicitar do próprio saldo</td><td>✅ aprovar, processar, rejeitar</td></tr>
+    <tr><td>Cadastro de associados e produtos</td><td>—</td><td>—</td><td>✅</td></tr>
+    <tr><td>Vendas, comissões, financeiro</td><td>—</td><td>— (vê os próprios via portal)</td><td>✅</td></tr>
+    <tr><td>Campanhas, parceiros, relatórios</td><td>—</td><td>—</td><td>✅</td></tr>
+  </tbody>
+</table>
