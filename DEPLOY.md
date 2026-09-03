@@ -48,7 +48,10 @@ No painel da DigitalOcean: **Create → Droplets**
 
 - **Imagem:** Ubuntu 24.04 LTS
 - **Tipo:** Basic → Regular
-- **Região:** São Paulo (`sao1`) — menor latência para usuários no Brasil
+- **Região:** **New York** — a DigitalOcean **não tem datacenter no Brasil**. Nova York é
+  a mais próxima, com cerca de 110–130 ms de latência a partir do Brasil. Perceptível, mas
+  aceitável para uma aplicação de gestão. Se a latência for crítica, veja as alternativas
+  no fim deste guia.
 - **Autenticação:** SSH Key (não "Password")
 - **Tamanho:**
 
@@ -366,6 +369,30 @@ A análise completa está no capítulo 11 da documentação técnica.
 > Valores aproximados, de referência. **Confirme na
 > [página de preços da DigitalOcean](https://www.digitalocean.com/pricing)** antes de decidir —
 > os planos mudam. O backup automático custa 20% do valor do Droplet.
+
+---
+
+## Alternativas com datacenter no Brasil
+
+A DigitalOcean não tem região brasileira. Se os ~120 ms de latência incomodarem, estes
+provedores têm presença no país e rodam exatamente os mesmos arquivos deste repositório —
+`docker-compose.prod.yml`, Dockerfiles e Caddyfile funcionam sem alteração:
+
+| Provedor | Região BR | Preço aproximado | Observação |
+|---|---|---|---|
+| **Vultr** | São Paulo | ~US$ 12 (1 vCPU / 2 GB) | Painel e experiência muito parecidos com a DO |
+| **Magalu Cloud** | Brasil | em R$ | Nacional, cobrança em real, suporte em português |
+| **AWS Lightsail** | São Paulo | ~US$ 12 | Da AWS, mas simplificado como um VPS comum |
+| **Hostinger VPS** | Brasil | ~R$ 40 | Barato; leia sobre o desempenho antes |
+
+O passo a passo é o mesmo em qualquer um: criar o servidor, apontar o DNS, instalar Docker,
+clonar o repositório, preencher os segredos e subir.
+
+**Vale a pena trocar?** Só se a diferença for sentida no uso. Para um sistema de gestão —
+onde se abre uma tela, lê, clica de novo — 120 ms a mais por requisição raramente incomoda.
+Para algo em tempo real, incomodaria.
+
+---
 
 O domínio fica à parte e você já o paga hoje — no registro.br, um `.com.br` custa por volta
 de R$ 40/ano. A DigitalOcean não cobra por DNS, e o TLS é gratuito.
