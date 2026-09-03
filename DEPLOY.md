@@ -48,11 +48,21 @@ No painel da DigitalOcean: **Create → Droplets**
 
 - **Imagem:** Ubuntu 24.04 LTS
 - **Tipo:** Basic → Regular
-- **Tamanho:** comece com **2 vCPU / 4 GB / 80 GB** (~US$ 24/mês). Cabe API + banco +
-  proxy com folga e atende alguns milhares de usuários. Subir de tamanho depois é um
-  clique e alguns minutos de indisponibilidade — não precisa acertar de primeira.
 - **Região:** São Paulo (`sao1`) — menor latência para usuários no Brasil
-- **Autenticação:** chave SSH (não use senha)
+- **Autenticação:** SSH Key (não "Password")
+- **Tamanho:**
+
+| Droplet | Preço | Serve? |
+|---|---:|---|
+| 1 vCPU / **1 GB** | ~US$ 6 | Funciona, mas **só com swap** (passo 3). O build é lento. |
+| 1 vCPU / **2 GB** | ~US$ 12 | **Recomendado.** Compila sem drama e sobra folga. |
+| 2 vCPU / 4 GB | ~US$ 24 | Só quando o tráfego justificar. |
+
+A aplicação em execução usa cerca de **235 MB** (API 122 + Postgres 92 + Caddy 20). O que
+pesa é *compilar* — e isso acontece uma vez a cada deploy, não o tempo todo.
+
+> Redimensionar depois são dois cliques e alguns minutos fora do ar. Não precisa acertar
+> de primeira.
 
 ### 2. Apontar o domínio
 
@@ -94,7 +104,7 @@ fica reagendando por alguns minutos.
 ```bash
 ssh root@<IP-DO-DROPLET>
 
-# Docker
+# Docker e git
 apt update && apt install -y docker.io docker-compose-plugin git
 systemctl enable --now docker
 
@@ -106,15 +116,39 @@ adduser --disabled-password --gecos "" digitaisbr
 usermod -aG docker digitaisbr
 ```
 
+#### Swap — obrigatório no Droplet de 1 GB, recomendado em todos
+
+Sem swap, a compilação estoura a memória e o deploy falha no meio. Com 2 GB de swap ela
+passa, apenas mais devagar.
+
+```bash
+fallocate -l 2G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile && swapon /swapfile
+
+# torna permanente, para sobreviver a reinícios
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+
+free -h        # deve mostrar 2Gi em Swap
+```
+
 ### 4. Publicar o código
 
 ```bash
 su - digitaisbr
-git clone <URL-DO-SEU-REPOSITORIO> app && cd app
+git clone git@github.com:digitaisbr/digitaisbr.git app && cd app
 ```
 
-> Se o repositório for privado, use uma *deploy key* do GitHub — é uma chave só de leitura,
-> específica desse repositório.
+O repositório é privado, então o servidor precisa de permissão de leitura. No próprio
+Droplet:
+
+```bash
+ssh-keygen -t ed25519 -C "droplet-digitaisbr" -f ~/.ssh/id_ed25519 -N ""
+cat ~/.ssh/id_ed25519.pub
+```
+
+Copie a saída e cadastre em **github.com/digitaisbr/digitaisbr → Settings → Deploy keys →
+Add deploy key** (sem marcar "Allow write access" — o servidor só precisa ler).
 
 ### 5. Configurar os segredos
 
