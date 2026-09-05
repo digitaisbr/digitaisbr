@@ -7,10 +7,20 @@ import { useAuth } from '@/auth/AuthContext';
 import { Logo } from '@/componentes/Logo';
 import { Fundo } from './Fundo';
 
-const DEMO = [
-  { rotulo: 'Administrador', email: 'administrador@digitaisbr.com', senha: 'Admin@2026', cor: 'purple' },
-  { rotulo: 'Associada', email: 'ana-silva@email.com', senha: 'Assoc@2026', cor: 'blue' },
-];
+/**
+ * Atalhos das contas do seed, para não digitar senha a cada recarga.
+ *
+ * Só existem em desenvolvimento: `import.meta.env.DEV` é substituído por
+ * `false` na compilação de produção, e o empacotador remove todo o bloco —
+ * as senhas não chegam nem ao JavaScript publicado. Em produção o banco não
+ * tem essas contas, então os botões só produziriam erro de login.
+ */
+const DEMO = import.meta.env.DEV
+  ? [
+      { rotulo: 'Administrador', email: 'administrador@digitaisbr.com', senha: 'Admin@2026', cor: 'purple' },
+      { rotulo: 'Associada', email: 'ana-silva@email.com', senha: 'Assoc@2026', cor: 'blue' },
+    ]
+  : [];
 
 export function Login() {
   const { entrar } = useAuth();
@@ -70,29 +80,33 @@ export function Login() {
           </Button>
         </Form>
 
-        <Divider plain style={{ fontSize: 12, color: '#8c8c8c' }}>
-          contas de demonstração
-        </Divider>
+        {DEMO.length > 0 && (
+          <>
+            <Divider plain style={{ fontSize: 12, color: '#8c8c8c' }}>
+              contas de demonstração
+            </Divider>
 
-        <Space direction="vertical" style={{ width: '100%' }} size={8}>
-          {DEMO.map((c) => (
-            <Button
-              key={c.email}
-              block
-              onClick={() => form.setFieldsValue({ email: c.email, senha: c.senha })}
-              style={{ textAlign: 'left', height: 'auto', padding: '8px 12px' }}
-            >
-              <Space>
-                <Tag color={c.cor} style={{ margin: 0 }}>
-                  {c.rotulo}
-                </Tag>
-                <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                  {c.email}
-                </Typography.Text>
-              </Space>
-            </Button>
-          ))}
-        </Space>
+            <Space direction="vertical" style={{ width: '100%' }} size={8}>
+              {DEMO.map((c) => (
+                <Button
+                  key={c.email}
+                  block
+                  onClick={() => form.setFieldsValue({ email: c.email, senha: c.senha })}
+                  style={{ textAlign: 'left', height: 'auto', padding: '8px 12px' }}
+                >
+                  <Space>
+                    <Tag color={c.cor} style={{ margin: 0 }}>
+                      {c.rotulo}
+                    </Tag>
+                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                      {c.email}
+                    </Typography.Text>
+                  </Space>
+                </Button>
+              ))}
+            </Space>
+          </>
+        )}
       </Card>
     </Fundo>
   );
