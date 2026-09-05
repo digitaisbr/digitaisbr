@@ -10,17 +10,21 @@ import { Fundo } from './Fundo';
 /**
  * Atalhos das contas do seed, para não digitar senha a cada recarga.
  *
- * Só existem em desenvolvimento: `import.meta.env.DEV` é substituído por
- * `false` na compilação de produção, e o empacotador remove todo o bloco —
- * as senhas não chegam nem ao JavaScript publicado. Em produção o banco não
- * tem essas contas, então os botões só produziriam erro de login.
+ * Ficam sempre ligados em desenvolvimento. Em produção, só se a compilação
+ * receber VITE_DEMO=1 — o caso do ambiente de demonstração com dados fake.
+ * Sem a variável, o empacotador substitui a condição por `false` e remove o
+ * bloco inteiro: as senhas não chegam ao JavaScript publicado.
+ *
+ * Desligar é recompilar sem VITE_DEMO. É obrigatório antes de entrar dado
+ * real: estas senhas estão na documentação, e a conta é de administrador.
  */
-const DEMO = import.meta.env.DEV
-  ? [
-      { rotulo: 'Administrador', email: 'administrador@digitaisbr.com', senha: 'Admin@2026', cor: 'purple' },
-      { rotulo: 'Associada', email: 'ana-silva@email.com', senha: 'Assoc@2026', cor: 'blue' },
-    ]
-  : [];
+const DEMO =
+  import.meta.env.DEV || import.meta.env.VITE_DEMO === '1'
+    ? [
+        { rotulo: 'Administrador', email: 'administrador@digitaisbr.com', senha: 'Admin@2026', cor: 'purple' },
+        { rotulo: 'Associada', email: 'ana-silva@email.com', senha: 'Assoc@2026', cor: 'blue' },
+      ]
+    : [];
 
 export function Login() {
   const { entrar } = useAuth();

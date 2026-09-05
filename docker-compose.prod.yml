@@ -30,6 +30,10 @@ services:
   web:
     build:
       context: ./apps/web
+      args:
+        # VITE_DEMO=1 publica os atalhos das contas do seed na tela de login.
+        # Vazio (o padrão) mantém o bundle limpo.
+        VITE_DEMO: ${VITE_DEMO:-}
     restart: unless-stopped
     expose:
       - "80"
