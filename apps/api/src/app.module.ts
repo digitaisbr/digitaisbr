@@ -20,6 +20,7 @@ import { NotificacoesModule } from './modules/notificacoes/notificacoes.module';
 import { ParceirosModule } from './modules/parceiros/parceiros.module';
 import { PlanosModule } from './modules/planos/planos.module';
 import { PortalModule } from './modules/portal/portal.module';
+import { SaudeModule } from './modules/saude/saude.module';
 import { ServicosModule } from './modules/servicos/servicos.module';
 import { SuporteModule } from './modules/suporte/suporte.module';
 import { VendasModule } from './modules/vendas/vendas.module';
@@ -62,6 +63,7 @@ import { VendasModule } from './modules/vendas/vendas.module';
     GamificacaoModule,
     DashboardModule,
     PortalModule,
+    SaudeModule,
   ],
   providers: [
     // a ordem define a cadeia: throttle -> autenticação -> papel -> plano
