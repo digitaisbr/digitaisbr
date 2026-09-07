@@ -21,6 +21,8 @@ services:
       - caddy-config:/config
     environment:
       DOMINIO: ${DOMINIO}
+      # domínio secundário, que apenas redireciona para o oficial
+      DOMINIO_ALT: ${DOMINIO_ALT}
       EMAIL_TLS: ${EMAIL_TLS}
     depends_on:
       - web

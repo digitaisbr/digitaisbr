@@ -38,3 +38,11 @@
 		}
 	}
 }
+
+# Domínios secundários: só levam ao endereço oficial, preservando o caminho.
+# Precisam estar declarados para o Caddy pedir certificado — um redirecionamento
+# em HTTPS só funciona se o certificado do domínio de origem for válido.
+{$DOMINIO_ALT}, www.{$DOMINIO_ALT} {
+	tls {$EMAIL_TLS}
+	redir https://{$DOMINIO}{uri} permanent
+}
