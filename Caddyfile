@@ -1,15 +1,18 @@
 # Proxy de borda. O Caddy obtém e renova o certificado TLS sozinho via
 # Let's Encrypt — basta o domínio apontar para este servidor.
-# O www precisa estar declarado aqui, senão o Caddy não pede certificado para
-# ele: o DNS resolveria, mas o navegador recusaria a conexão.
-{$DOMINIO}, www.{$DOMINIO} {
+#
+# O endereço canônico é o COM www. O domínio nu e os domínios secundários
+# apenas redirecionam para ele. Todos precisam estar declarados aqui: sem bloco
+# próprio o Caddy não pede certificado, e o redirecionamento em HTTPS falha
+# antes de acontecer.
+www.{$DOMINIO}, {$DOMINIO} {
 	tls {$EMAIL_TLS}
 
-	# um endereço canônico só — o www redireciona para a raiz, preservando
-	# o caminho. Dois endereços servindo o mesmo conteúdo dividem o SEO e
+	# um endereço canônico só — o domínio nu leva ao www, preservando o
+	# caminho. Dois endereços servindo o mesmo conteúdo dividem o SEO e
 	# quebram a sessão de quem troca de um para o outro.
-	@www host www.{$DOMINIO}
-	redir @www https://{$DOMINIO}{uri} permanent
+	@nu host {$DOMINIO}
+	redir @nu https://www.{$DOMINIO}{uri} permanent
 
 	encode gzip zstd
 
@@ -44,5 +47,5 @@
 # em HTTPS só funciona se o certificado do domínio de origem for válido.
 {$DOMINIO_ALT}, www.{$DOMINIO_ALT} {
 	tls {$EMAIL_TLS}
-	redir https://{$DOMINIO}{uri} permanent
+	redir https://www.{$DOMINIO}{uri} permanent
 }
