@@ -10,7 +10,8 @@ interface Props {
   /** Aparece na confirmação e na mensagem de sucesso. */
   nome: string;
   invalidar: unknown[][];
-  aoEditar: () => void;
+  /** Ausente = o recurso não tem edição na API; o botão não aparece. */
+  aoEditar?: () => void;
   /** Complementa o aviso da confirmação — dependências que serão afetadas. */
   aviso?: string;
 }
@@ -31,9 +32,11 @@ export function AcoesLinha({ base, id, nome, invalidar, aoEditar, aviso }: Props
 
   return (
     <Space size={4}>
-      <Tooltip title="Editar">
-        <Button type="text" icon={<EditOutlined />} onClick={aoEditar} />
-      </Tooltip>
+      {aoEditar && (
+        <Tooltip title="Editar">
+          <Button type="text" icon={<EditOutlined />} onClick={aoEditar} />
+        </Tooltip>
+      )}
       <Popconfirm
         title={`Remover ${nome}?`}
         description={aviso ?? 'Esta ação não pode ser desfeita.'}
