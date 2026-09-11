@@ -445,6 +445,7 @@ model Venda {
   loja      Loja?     @relation(fields: [lojaId], references: [id])
   cupom     Cupom?    @relation(fields: [cupomId], references: [id])
   comissao  Comissao?
+  eventos   EventoWebhook[]
 
   @@index([status, dataVenda])
   @@index([associadoId, dataVenda])
@@ -491,6 +492,45 @@ model Cupom {
   @@map("cupons")
 }
 
+enum StatusEventoWebhook {
+  RECEBIDO
+  PROCESSADO
+  /// Repetição de um evento já processado — não gera efeito.
+  DUPLICADO
+  /// Falha definitiva: o payload não descreve uma venda possível.
+  REJEITADO
+  /// Falha transitória: vale reprocessar.
+  ERRO
+}
+
+/// Registro de tudo que chega dos parceiros.
+///
+/// Guarda o payload cru antes de qualquer interpretação: se o processamento
+/// falhar, a venda não se perde — é reprocessável. E é o que garante
+/// idempotência, já que todo parceiro reenvia webhook.
+model EventoWebhook {
+  id           String              @id @default(uuid())
+  parceiroId   String
+  /// Identificador do pedido no sistema do parceiro.
+  externoId    String
+  evento       String
+  payload      Json
+  status       StatusEventoWebhook @default(RECEBIDO)
+  erro         String?
+  vendaId      String?
+  tentativas   Int                 @default(0)
+  criadoEm     DateTime            @default(now())
+  processadoEm DateTime?
+
+  parceiro Parceiro @relation(fields: [parceiroId], references: [id], onDelete: Cascade)
+  venda    Venda?   @relation(fields: [vendaId], references: [id], onDelete: SetNull)
+
+  /// O mesmo evento, do mesmo pedido, do mesmo parceiro, vale uma vez só.
+  @@unique([parceiroId, externoId, evento])
+  @@index([status, criadoEm])
+  @@map("eventos_webhook")
+}
+
 model LinkAfiliado {
   id          String   @id @default(uuid())
   associadoId String
@@ -531,6 +571,8 @@ model MetricaDiaria {
 model Parceiro {
   id           String   @id @default(uuid())
   nome         String   @unique
+  /// Segredo HMAC dos webhooks deste parceiro. Nulo = integração desligada.
+  webhookSecret String?
   segmento     String?
   cnpj         String?  @unique
   email        String?
@@ -544,6 +586,7 @@ model Parceiro {
   beneficios Beneficio[]
 
   @@map("parceiros")
+  eventos    EventoWebhook[]
 }
 
 model Beneficio {

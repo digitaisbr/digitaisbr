@@ -15,6 +15,7 @@ import { ConteudosModule } from './modules/conteudos/conteudos.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FinanceiroModule } from './modules/financeiro/financeiro.module';
 import { GamificacaoModule } from './modules/gamificacao/gamificacao.module';
+import { IntegracoesModule } from './modules/integracoes/integracoes.module';
 import { LojasModule } from './modules/lojas/lojas.module';
 import { NotificacoesModule } from './modules/notificacoes/notificacoes.module';
 import { ParceirosModule } from './modules/parceiros/parceiros.module';
@@ -46,6 +47,7 @@ import { VendasModule } from './modules/vendas/vendas.module';
     CatalogoModule,
     LojasModule,
     VendasModule,
+    IntegracoesModule,
     ComissoesModule,
     FinanceiroModule,
 

@@ -108,7 +108,7 @@ fica reagendando por alguns minutos.
 ssh root@<IP-DO-DROPLET>
 
 # Docker e git
-apt update && apt install -y docker.io docker-compose-plugin git
+apt update && apt install -y docker.io docker-compose-v2 docker-buildx git
 systemctl enable --now docker
 
 # firewall: só SSH e web

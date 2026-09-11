@@ -8,7 +8,9 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  // rawBody: os webhooks de parceiro são assinados sobre o corpo cru. O JSON
+  // reserializado pode diferir do original, e a assinatura não fecharia.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, rawBody: true });
   const config = app.get(ConfigService);
 
   const prefixo = config.get<string>('API_PREFIX', 'api');
