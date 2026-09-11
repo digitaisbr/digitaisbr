@@ -418,7 +418,7 @@ hr.fina { border: none; border-top: 1px solid var(--linha); margin: 6mm 0; }
     <li>Primeiros passos
       <ul><li>Entrar na plataforma</li><li>Qual é o seu perfil</li><li>Como as telas funcionam</li></ul></li>
     <li>Guia da administração
-      <ul><li>O painel</li><li>Cadastrar um associado</li><li>Montar o catálogo</li><li>Acompanhar vendas</li><li>Pagar comissões</li><li>Financeiro e saques</li><li>Parceiros e benefícios</li><li>Conteúdos e comunicação</li><li>Atender o suporte</li></ul></li>
+      <ul><li>O painel</li><li>Cadastrar um associado</li><li>Montar o catálogo</li><li>Acompanhar vendas</li><li>Como a comissão chega até a plataforma</li><li>Pagar comissões</li><li>Financeiro e saques</li><li>Parceiros e benefícios</li><li>Conteúdos e comunicação</li><li>Atender o suporte</li></ul></li>
     <li>Guia do associado
       <ul><li>Seu painel</li><li>Montar sua loja</li><li>Divulgar com links e cupons</li><li>Acompanhar vendas</li><li>Sacar suas comissões</li><li>Usar benefícios</li><li>Comunidade e suporte</li></ul></li>
     <li>Tarefas passo a passo
@@ -649,7 +649,96 @@ hr.fina { border: none; border-top: 1px solid var(--linha); margin: 6mm 0; }
       Filtre primeiro, exporte depois.</li>
 </ul>
 
-<h2>2.5 Pagar comissões</h2>
+<h2>2.5 Como a comissão chega até a plataforma</h2>
+
+<p>
+  Uma comissão só existe porque houve uma venda atribuída a um associado. A pergunta é como a
+  plataforma fica sabendo dessa venda, já que a compra acontece no site do parceiro, não aqui.
+</p>
+
+<p>
+  A ida já é automática: quando alguém clica num produto da vitrine, a plataforma registra o
+  clique e encaminha ao checkout do parceiro com o <strong>código de origem</strong> na
+  URL — algo como <code>?ref=ANASIL3</code>. Esse código identifica o par associado + produto.
+</p>
+
+<p>O retorno — a loja avisar que a venda aconteceu — admite <strong>três caminhos</strong>:</p>
+
+<h3>1. Cupom por associado</h3>
+
+<p>
+  Cada associado recebe um cupom próprio na loja do parceiro. O parceiro envia periodicamente
+  o relatório de vendas por cupom, e a administração lança as vendas em
+  <strong>Vendas → Nova venda</strong>.
+</p>
+
+<p>
+  <strong>Quando usar:</strong> parceiro pequeno, sem equipe técnica, ou para começar uma
+  parceria antes de qualquer integração. <strong>Custo:</strong> trabalho manual e defasagem —
+  o associado só vê a venda quando alguém lança.
+</p>
+
+<h3>2. Integração automática por webhook</h3>
+
+<p>
+  O parceiro avisa a plataforma no instante em que a venda é aprovada. A venda e a comissão
+  aparecem sozinhas, em segundos.
+</p>
+
+<p>Para habilitar um parceiro:</p>
+
+<ol class="lista">
+  <li>Cadastre o parceiro normalmente em <strong>Parceiros</strong>.</li>
+  <li>Gere o <strong>segredo de integração</strong> dele. A plataforma devolve o segredo e o
+      endereço para onde o parceiro deve enviar os avisos.</li>
+  <li>Repasse os dois à equipe técnica do parceiro.</li>
+</ol>
+
+<div class="destaque atencao">
+  <span class="rotulo">O segredo aparece uma única vez</span>
+  <p>
+    Copie no momento em que for exibido. Depois disso ele fica guardado cifrado e não pode ser
+    consultado. Se perder, gere outro — mas o anterior deixa de funcionar na hora, e o parceiro
+    precisa ser avisado antes, ou as vendas param de chegar.
+  </p>
+</div>
+
+<p>
+  A plataforma confere a assinatura de cada aviso: quem não tiver o segredo não consegue
+  registrar venda nenhuma. Avisos repetidos são reconhecidos e ignorados, então uma reenvio do
+  parceiro nunca duplica a comissão. E o parceiro pode avisar também de
+  <strong>reembolso</strong> ou <strong>cancelamento</strong> — nesse caso a venda é estornada
+  e a comissão correspondente é cancelada automaticamente.
+</p>
+
+<p>
+  Em <strong>Integrações → Eventos</strong> ficam os últimos avisos recebidos, com o que a
+  plataforma fez com cada um. Um evento marcado como <strong>erro</strong> pode ser
+  reprocessado; marcado como <strong>rejeitado</strong>, não — significa que o conteúdo do
+  aviso não descreve uma venda possível, e insistir daria o mesmo resultado.
+</p>
+
+<h3>3. Plataformas de infoproduto</h3>
+
+<p>
+  Se o parceiro já vende por Hotmart, Kiwify, Eduzz, Monetizze ou similar, essas plataformas
+  já possuem programa de afiliados e já avisam automaticamente quando há venda. É o caminho de
+  menor esforço: aproveita-se o aviso que elas já enviam, em vez de pedir desenvolvimento ao
+  parceiro.
+</p>
+
+<div class="destaque nota">
+  <span class="rotulo">Quem paga o associado</span>
+  <p>
+    Hoje a plataforma <strong>registra e acompanha</strong> a comissão; o pagamento ao
+    associado é feito pela associação, pelo fluxo de saques descrito adiante. Há um modelo
+    alternativo, em que o próprio parceiro paga o associado e a plataforma apenas concilia.
+    A escolha entre os dois tem implicações fiscais e regulatórias, e deve passar por
+    orientação jurídica e contábil antes de ser adotada.
+  </p>
+</div>
+
+<h2>2.6 Pagar comissões</h2>
 
 <p><strong>Comercial → Comissões</strong></p>
 
@@ -681,7 +770,7 @@ hr.fina { border: none; border-top: 1px solid var(--linha); margin: 6mm 0; }
   </p>
 </div>
 
-<h2>2.6 Financeiro e saques</h2>
+<h2>2.7 Financeiro e saques</h2>
 
 <p><strong>Financeiro</strong> — quatro abas:</p>
 
@@ -699,7 +788,7 @@ hr.fina { border: none; border-top: 1px solid var(--linha); margin: 6mm 0; }
 informar o motivo, que o associado vê. Ao concluir, o valor entra como saída no caixa
 automaticamente.</p>
 
-<h2>2.7 Parceiros e benefícios</h2>
+<h2>2.8 Parceiros e benefícios</h2>
 
 <p><strong>Cadastros → Parceiros</strong> e <strong>Benefícios</strong></p>
 
@@ -712,7 +801,29 @@ automaticamente.</p>
 <p>Tipos: <strong>desconto</strong>, <strong>acesso</strong> (algo liberado),
 <strong>cashback</strong> e <strong>serviço</strong>.</p>
 
-<h2>2.8 Conteúdos e comunicação</h2>
+<p>
+  <strong>Para cadastrar</strong>, use o botão <strong>+ Novo parceiro</strong> no canto
+  superior direito da lista. Abre uma janela com nome, segmento, CNPJ, contato, site e logo —
+  só o nome é obrigatório. O mesmo vale para <strong>+ Novo benefício</strong>, onde você
+  escolhe o parceiro, o tipo e o plano mínimo.
+</p>
+
+<p>
+  Cada linha da lista tem dois ícones à direita: <strong>lápis</strong> para editar e
+  <strong>lixeira</strong> para remover. Remover pede confirmação e avisa das dependências —
+  ao apagar um parceiro, a plataforma diz quantos benefícios estão vinculados a ele.
+</p>
+
+<div class="destaque atencao">
+  <span class="rotulo">Remover é definitivo</span>
+  <p>
+    Não há lixeira nem desfazer. Se a intenção é apenas tirar de circulação, desligue a chave
+    <strong>Ativo</strong> ao editar: o registro some para os associados mas continua no
+    histórico, preservando os benefícios já resgatados.
+  </p>
+</div>
+
+<h2>2.9 Conteúdos e comunicação</h2>
 
 <ul class="lista">
   <li><strong>Conteúdos</strong> — artigos, vídeos, podcasts, cursos e e-books. Rascunhos não
@@ -724,7 +835,17 @@ automaticamente.</p>
       público-alvo. <em>Envio não se desfaz.</em></li>
 </ul>
 
-<h2>2.9 Atender o suporte</h2>
+<div class="destaque nota">
+  <span class="rotulo">O mesmo padrão nas outras telas</span>
+  <p>
+    <strong>Conteúdos</strong> e <strong>Serviços</strong> funcionam igual: botão de cadastro
+    no topo, lápis e lixeira em cada item. Em Serviços há dois botões, um para
+    <strong>escritórios</strong> e outro para <strong>profissionais</strong> — cadastre o
+    escritório primeiro, para poder vincular o profissional a ele.
+  </p>
+</div>
+
+<h2>2.10 Atender o suporte</h2>
 
 <p><strong>Suporte</strong> — a lista traz número, assunto, quem abriu, categoria, prioridade e
 estado. Clique na linha para abrir a conversa.</p>

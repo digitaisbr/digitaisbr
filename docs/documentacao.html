@@ -1828,6 +1828,17 @@ valor      = total × percentual / 100</code></pre>
 <tr><td><span class="selo get">GET</span></td><td><code>/api/portal/saques</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Saques do associado logado</td></tr>
 <tr><td><span class="selo get">GET</span></td><td><code>/api/portal/vendas</code></td><td><span style="color:#8c94a3;font-size:8pt">autenticado</span></td><td>Vendas do associado logado</td></tr>
 </tbody></table>
+<h3>Integrações <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 4 rotas</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/integracoes/eventos</code></td><td><span class="selo admin">ADMIN</span></td><td>Últimos 100 eventos recebidos dos parceiros</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/integracoes/eventos/{id}/reprocessar</code></td><td><span class="selo admin">ADMIN</span></td><td>Reprocessa um evento que falhou por causa transitória</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/integracoes/parceiros/{parceiroId}/segredo</code></td><td><span class="selo admin">ADMIN</span></td><td>Gera o segredo de webhook do parceiro</td></tr>
+<tr><td><span class="selo post">POST</span></td><td><code>/api/integracoes/{parceiroId}/eventos</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Recebe um evento de venda de parceiro</td></tr>
+</tbody></table>
+<h3>Saúde <span style="font-weight:400;color:#8c94a3;font-size:9.4pt">· 1 rota</span></h3>
+<table class="compacta"><thead><tr><th style="width:8%">Método</th><th style="width:36%">Caminho</th><th style="width:11%">Acesso</th><th>Descrição</th></tr></thead><tbody>
+<tr><td><span class="selo get">GET</span></td><td><code>/api/health</code></td><td><span class="selo pub">PÚBLICO</span></td><td>Diz se a API e o banco estão respondendo</td></tr>
+</tbody></table>
 
 
 <!-- ============================================================ 8 — INTERFACE -->
