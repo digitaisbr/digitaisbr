@@ -37,6 +37,7 @@ const ITENS: ItemType<MenuItemType>[] = [
       { key: '/lojas', label: <Link to="/lojas">Lojas</Link> },
       { key: '/vendas', label: <Link to="/vendas">Vendas</Link> },
       { key: '/comissoes', label: <Link to="/comissoes">Comissões</Link> },
+      { key: '/integracoes', label: <Link to="/integracoes">Integrações</Link> },
     ],
   },
   { key: '/financeiro', icon: <DollarOutlined />, label: <Link to="/financeiro">Financeiro</Link> },

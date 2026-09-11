@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button, Form, Input, Switch, Tag, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Space, Switch, Tag, Tooltip, Typography } from 'antd';
+import { ApiOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useApi } from '@/api/hooks';
 import { AcoesLinha } from '@/componentes/AcoesLinha';
@@ -8,6 +8,7 @@ import { Cartoes } from '@/componentes/Cartoes';
 import { ModalRecurso } from '@/componentes/ModalRecurso';
 import { Pagina } from '@/componentes/Pagina';
 import { TabelaRecurso } from '@/componentes/TabelaRecurso';
+import { SegredoParceiro } from './SegredoParceiro';
 import type { Parceiro } from '@/api/tipos';
 
 interface Estatisticas {
@@ -25,6 +26,7 @@ export function Parceiros() {
   const stats = useApi<Estatisticas>(['parceiros', 'estatisticas'], '/parceiros/estatisticas');
   const [aberto, setAberto] = useState(false);
   const [emEdicao, setEmEdicao] = useState<Parceiro | null>(null);
+  const [segredoDe, setSegredoDe] = useState<Parceiro | null>(null);
 
   function abrir(p: Parceiro | null) {
     setEmEdicao(p);
@@ -60,20 +62,25 @@ export function Parceiros() {
       title: '',
       key: 'acoes',
       align: 'right',
-      width: 90,
+      width: 130,
       render: (_, p) => (
-        <AcoesLinha
-          base="/parceiros"
-          id={p.id}
-          nome={p.nome}
-          invalidar={CHAVES}
-          aoEditar={() => abrir(p)}
-          aviso={
-            p.totalBeneficios
-              ? `Este parceiro tem ${p.totalBeneficios} benefício(s) vinculado(s).`
-              : undefined
-          }
-        />
+        <Space size={0}>
+          <Tooltip title="Integração de vendas">
+            <Button type="text" icon={<ApiOutlined />} onClick={() => setSegredoDe(p)} />
+          </Tooltip>
+          <AcoesLinha
+            base="/parceiros"
+            id={p.id}
+            nome={p.nome}
+            invalidar={CHAVES}
+            aoEditar={() => abrir(p)}
+            aviso={
+              p.totalBeneficios
+                ? `Este parceiro tem ${p.totalBeneficios} benefício(s) vinculado(s).`
+                : undefined
+            }
+          />
+        </Space>
       ),
     },
   ];
@@ -154,6 +161,12 @@ export function Parceiros() {
           <Switch />
         </Form.Item>
       </ModalRecurso>
+
+      <SegredoParceiro
+        aberto={Boolean(segredoDe)}
+        parceiro={segredoDe}
+        aoFechar={() => setSegredoDe(null)}
+      />
     </Pagina>
   );
 }

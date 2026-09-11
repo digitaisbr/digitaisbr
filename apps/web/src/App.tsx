@@ -16,6 +16,7 @@ import { AssociadoNovo } from '@/paginas/admin/AssociadoNovo';
 import { Planos } from '@/paginas/admin/Planos';
 import { Catalogo } from '@/paginas/admin/Catalogo';
 import { ProdutoDetalhe } from '@/paginas/admin/ProdutoDetalhe';
+import { Integracoes } from '@/paginas/admin/Integracoes';
 import { ProdutoNovo } from '@/paginas/admin/ProdutoNovo';
 import { Lojas } from '@/paginas/admin/Lojas';
 import { LojaDetalhe } from '@/paginas/admin/LojaDetalhe';
@@ -75,6 +76,7 @@ export function App() {
           <Route path="associados/novo" element={<AssociadoNovo />} />
           <Route path="associados/:id" element={<AssociadoDetalhe />} />
           <Route path="planos" element={<Planos />} />
+          <Route path="integracoes" element={<Integracoes />} />
           <Route path="catalogo" element={<Catalogo />} />
           <Route path="catalogo/novo" element={<ProdutoNovo />} />
           <Route path="catalogo/:id" element={<ProdutoDetalhe />} />
