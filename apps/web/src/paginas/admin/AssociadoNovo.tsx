@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { App, Button, Card, Col, Form, Input, InputNumber, Row, Select, Space, Typography } from 'antd';
 import { mensagemDeErro } from '@/api/cliente';
-import { useAcao } from '@/api/hooks';
+import { moeda } from '@/api/formato';
+import { useAcao, useApi } from '@/api/hooks';
 import { Pagina } from '@/componentes/Pagina';
-import type { NivelPlano, StatusAssociado } from '@/api/tipos';
+import type { NivelPlano, Plano, StatusAssociado } from '@/api/tipos';
 
 interface Formulario {
   nome: string;
@@ -62,6 +63,10 @@ export function AssociadoNovo() {
   // o handle vira endereço público: mostrar o resultado evita a surpresa de
   // ver o texto digitado mudar sozinho sem saber para quê
   const handleAtual = Form.useWatch('handle', form);
+
+  // preços vêm da API: escritos aqui, ficariam desatualizados a cada reajuste
+  // e a tela mostraria um valor diferente do que o sistema cobra
+  const planos = useApi<Plano[]>(['planos'], '/planos');
 
   /**
    * Converte um texto qualquer no formato que a API aceita: minúsculas, sem
@@ -206,11 +211,11 @@ export function AssociadoNovo() {
             <Card title="Plano e alcance" style={{ marginBottom: 16 }}>
               <Form.Item name="plano" label="Plano" rules={[{ required: true }]}>
                 <Select
-                  options={[
-                    { value: 'BASICO', label: 'Básico — R$ 49,90/mês' },
-                    { value: 'INTERMEDIARIO', label: 'Intermediário — R$ 99,90/mês' },
-                    { value: 'AVANCADO', label: 'Avançado — R$ 199,90/mês' },
-                  ]}
+                  loading={planos.isLoading}
+                  options={(planos.data ?? [])
+                    .slice()
+                    .sort((a, b) => a.ordem - b.ordem)
+                    .map((p) => ({ value: p.nivel, label: `${p.nome} — ${moeda(p.preco)}/mês` }))}
                 />
               </Form.Item>
               <Form.Item name="status" label="Status">

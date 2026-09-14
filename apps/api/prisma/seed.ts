@@ -365,7 +365,7 @@ async function main(): Promise<void> {
         assinaturas: {
           create: {
             planoId: planoId(a.plano),
-            valor: planosData.find((p) => p.nome === a.plano)?.preco ?? 49.9,
+            valor: planosData.find((p) => p.nome === a.plano)?.preco ?? 99,
             inicioEm: membroDesde,
             // só associado ativo mantém assinatura vigente — é o que sustenta o MRR
             ativa: (STATUS_ASSOCIADO[a.status] ?? StatusAssociado.ATIVO) === StatusAssociado.ATIVO,
