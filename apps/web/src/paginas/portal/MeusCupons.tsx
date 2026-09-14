@@ -93,8 +93,12 @@ export function MeusCupons() {
     {
       title: 'Situação',
       dataIndex: 'ativo',
+      // a validade tem de entrar aqui: um cupom vencido não pode ser usado, e
+      // mostrá-lo como "Ativo" faz o associado continuar divulgando à toa
       render: (v: boolean, c) =>
-        c.esgotado ? (
+        c.expirado ? (
+          <Tag color="red">Expirado</Tag>
+        ) : c.esgotado ? (
           <Tag color="orange">Esgotado</Tag>
         ) : (
           <Tag color={v ? 'green' : 'default'}>{v ? 'Ativo' : 'Inativo'}</Tag>
@@ -106,7 +110,10 @@ export function MeusCupons() {
       render: (_, c) => (
         <Switch
           size="small"
-          checked={c.ativo}
+          checked={c.ativo && !c.expirado && !c.esgotado}
+          // ligar um cupom vencido ou esgotado não tem efeito: a venda o
+          // recusa de qualquer forma
+          disabled={c.expirado || c.esgotado}
           onChange={async (marcado) => {
             try {
               await atualizar.mutateAsync({ id: c.id, ativo: marcado });

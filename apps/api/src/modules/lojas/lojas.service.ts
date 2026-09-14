@@ -78,13 +78,20 @@ export class LojasService {
 
     return {
       ...loja,
-      produtos: loja.produtos.map((lp) => ({
-        ...lp.produto,
-        preco: num(lp.produto.preco),
-        comissaoPct: num(lp.produto.comissaoPct),
-        destaque: lp.destaque,
-        ordem: lp.ordem,
-      })),
+      produtos: loja.produtos.map((lp) => {
+        const preco = num(lp.produto.preco);
+        const comissaoPct = num(lp.produto.comissaoPct);
+        return {
+          ...lp.produto,
+          preco,
+          comissaoPct,
+          // o associado decide o que divulgar por este número; sem ele a tela
+          // imprimia R$ 0,00 em todo produto, como se nada rendesse nada
+          ganhoEstimado: Number(((preco * comissaoPct) / 100).toFixed(2)),
+          destaque: lp.destaque,
+          ordem: lp.ordem,
+        };
+      }),
       desempenho: {
         vendasAprovadas: vendas._count,
         receita: num(vendas._sum.total),

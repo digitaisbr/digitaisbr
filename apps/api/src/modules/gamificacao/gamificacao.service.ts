@@ -40,6 +40,9 @@ export class GamificacaoService {
     return {
       top,
       minhaPosicao: posicao || null,
+      // a pontuação precisa vir à parte: quem está fora do top não aparece na
+      // lista, e a tela acabava mostrando zero para quem tinha pontos
+      minhaPontuacao: associadoId ? (todos.find((a) => a.id === associadoId)?.pontuacao ?? 0) : null,
       totalParticipantes: todos.length,
       percentilTopo:
         posicao && todos.length

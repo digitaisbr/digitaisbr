@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Col, DatePicker, Row, Table, Typography } from 'antd';
+import { Card, Col, DatePicker, Empty, Row, Table, Typography } from 'antd';
 import {
   Bar, BarChart, CartesianGrid, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis, ComposedChart,
 } from 'recharts';
@@ -94,6 +94,18 @@ export function Performance() {
         <Col xs={24} lg={8}>
           <Card title="Top produtos">
             <Estado carregando={consulta.isLoading} erro={consulta.error} esqueleto>
+              {/* gráfico sem barra nenhuma parece tela quebrada; melhor dizer
+                  que ainda não houve venda e apontar o caminho */}
+              {(r?.topProdutos ?? []).length === 0 ? (
+                <Empty
+                  style={{ padding: '48px 0' }}
+                  description={
+                    <Typography.Text type="secondary" style={{ fontSize: 13 }}>
+                      Nenhuma venda no período. Divulgue seus links para começar a aparecer aqui.
+                    </Typography.Text>
+                  }
+                />
+              ) : (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={r?.topProdutos ?? []} layout="vertical" margin={{ left: 8 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#eef1f6" horizontal={false} />
@@ -103,6 +115,7 @@ export function Performance() {
                   <Bar dataKey="receita" name="Receita" fill={marca.violet} radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+              )}
             </Estado>
           </Card>
         </Col>

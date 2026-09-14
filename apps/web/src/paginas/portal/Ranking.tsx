@@ -10,6 +10,7 @@ import { marca } from '@/marca';
 interface RankingResp {
   top: { posicao: number; id: string; nome: string; handle: string; plano: string; vendas: number; pontos: number; voce: boolean }[];
   minhaPosicao: number | null;
+  minhaPontuacao: number | null;
   totalParticipantes: number;
   percentilTopo: number | null;
 }
@@ -39,7 +40,7 @@ export function Ranking() {
         carregando={ranking.isLoading}
         metricas={[
           { titulo: 'Sua posição', valor: r?.minhaPosicao ? `${r.minhaPosicao}º` : '—', icone: <TrophyOutlined /> },
-          { titulo: 'Pontuação', valor: numero(r?.top.find((x) => x.voce)?.pontos) },
+          { titulo: 'Pontuação', valor: numero(r?.minhaPontuacao ?? 0) },
           { titulo: 'Top', valor: r?.percentilTopo ? `${r.percentilTopo}%` : '—' },
           { titulo: 'Conquistas', valor: c ? `${c.desbloqueadas} / ${c.total}` : '—' },
         ]}
