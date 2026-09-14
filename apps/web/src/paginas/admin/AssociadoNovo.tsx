@@ -59,6 +59,10 @@ export function AssociadoNovo() {
     }
   }
 
+  // o handle vira endereço público: mostrar o resultado evita a surpresa de
+  // ver o texto digitado mudar sozinho sem saber para quê
+  const handleAtual = Form.useWatch('handle', form);
+
   /**
    * Converte um texto qualquer no formato que a API aceita: minúsculas, sem
    * acento, e qualquer outro caractere vira hífen.
@@ -111,7 +115,16 @@ export function AssociadoNovo() {
                     name="handle"
                     label="Handle"
                     tooltip="Usado na URL da loja e do perfil público"
-                    extra="Letras minúsculas, números e hífens. De 3 a 40 caracteres."
+                    extra={
+                      handleAtual && handleAtual.length >= 3 ? (
+                        <span style={{ fontSize: 12 }}>
+                          Perfil: <code>/perfil/{handleAtual}</code> · Loja:{' '}
+                          <code>/loja/{handleAtual}</code>
+                        </span>
+                      ) : (
+                        'Vira o endereço do perfil e da loja. Minúsculas, números e hífens.'
+                      )
+                    }
                     // só valida ao sair do campo: validando a cada tecla, quem
                     // digita "kenia" leva erro no "k" e no "ke" antes de acertar
                     validateTrigger="onBlur"
