@@ -16,6 +16,15 @@ async function bootstrap(): Promise<void> {
   const prefixo = config.get<string>('API_PREFIX', 'api');
   app.setGlobalPrefix(prefixo);
 
+  // Atrás do Caddy, req.ip é o IP do contêiner do proxy — todas as visitas
+  // ficavam registradas como se viessem da mesma origem, e a trilha de
+  // auditoria não distinguia ninguém. Confiar em 1 salto faz o Express ler o
+  // último X-Forwarded-For.
+  //
+  // Confiar é seguro aqui porque a API não publica porta: só o proxy alcança
+  // ela. Se um dia for exposta direto, isto vira brecha de falsificação de IP.
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   app.use(helmet({ contentSecurityPolicy: false }));
   app.enableCors({
     origin: config.get<string>('CORS_ORIGINS', '*').split(',').map((o) => o.trim()),
