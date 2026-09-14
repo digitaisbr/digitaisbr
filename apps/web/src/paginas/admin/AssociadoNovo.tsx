@@ -119,7 +119,12 @@ export function AssociadoNovo() {
                   <Form.Item
                     name="handle"
                     label="Handle"
-                    tooltip="Usado na URL da loja e do perfil público"
+                    tooltip={
+                      'É o endereço do associado aqui na plataforma — não é o @ do Instagram ' +
+                      'nem de outra rede social. Vira o link da loja que ele vai divulgar, ' +
+                      'por isso só aceita minúsculas, números e hífen. Depois de criado, ' +
+                      'mudar quebra os links já divulgados.'
+                    }
                     extra={
                       handleAtual && handleAtual.length >= 3 ? (
                         <span style={{ fontSize: 12 }}>
@@ -127,7 +132,7 @@ export function AssociadoNovo() {
                           <code>/loja/{handleAtual}</code>
                         </span>
                       ) : (
-                        'Vira o endereço do perfil e da loja. Minúsculas, números e hífens.'
+                        'Nome dele aqui na plataforma — não é o @ de rede social.'
                       )
                     }
                     // só valida ao sair do campo: validando a cada tecla, quem
