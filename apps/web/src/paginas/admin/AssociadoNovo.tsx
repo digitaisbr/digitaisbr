@@ -59,16 +59,25 @@ export function AssociadoNovo() {
     }
   }
 
+  /**
+   * Converte um texto qualquer no formato que a API aceita: minúsculas, sem
+   * acento, e qualquer outro caractere vira hífen.
+   *
+   * Não corta hífen das pontas aqui — durante a digitação isso apagaria o
+   * traço que a pessoa acabou de escrever. A limpeza fica para o `onBlur`.
+   */
+  function normalizarHandle(texto: string): string {
+    return texto
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, '-');
+  }
+
   /** sugere o handle a partir do nome, sem sobrescrever edição manual */
   function sugerirHandle(nome: string) {
     if (form.isFieldTouched('handle')) return;
-    const handle = nome
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
-      .replace(/[^a-zA-Z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .toLowerCase();
-    form.setFieldValue('handle', handle);
+    form.setFieldValue('handle', normalizarHandle(nome).replace(/^-+|-+$/g, ''));
   }
 
   return (
@@ -102,12 +111,31 @@ export function AssociadoNovo() {
                     name="handle"
                     label="Handle"
                     tooltip="Usado na URL da loja e do perfil público"
+                    extra="Letras minúsculas, números e hífens. De 3 a 40 caracteres."
+                    // só valida ao sair do campo: validando a cada tecla, quem
+                    // digita "kenia" leva erro no "k" e no "ke" antes de acertar
+                    validateTrigger="onBlur"
                     rules={[
                       { required: true, message: 'Informe o handle.' },
-                      { pattern: /^[a-z0-9-]{3,40}$/, message: 'Use minúsculas, números e hífens.' },
+                      // mensagens separadas: dizer "use minúsculas" para um
+                      // handle curto porém já minúsculo só confunde
+                      { min: 3, max: 40, message: 'O handle precisa ter de 3 a 40 caracteres.' },
+                      {
+                        pattern: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+                        message: 'Use apenas letras minúsculas, números e hífens entre as palavras.',
+                      },
                     ]}
                   >
-                    <Input prefix="@" placeholder="nome-sobrenome" />
+                    <Input
+                      prefix="@"
+                      placeholder="nome-sobrenome"
+                      // corrige em vez de reclamar: acento, maiúscula, ponto e
+                      // espaço viram o formato válido enquanto se digita
+                      onChange={(e) => form.setFieldValue('handle', normalizarHandle(e.target.value))}
+                      onBlur={(e) =>
+                        form.setFieldValue('handle', e.target.value.replace(/^-+|-+$/g, ''))
+                      }
+                    />
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={12}>
