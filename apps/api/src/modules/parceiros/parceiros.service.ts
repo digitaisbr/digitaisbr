@@ -88,6 +88,19 @@ export class ParceirosService {
       where.planoMinimo = { nivel: { in: this.niveisAteh(nivelAssociado) } };
     }
 
+    // Para o associado, desligado quer dizer invisível — tanto o benefício
+    // quanto o parceiro que o oferece. Sem isto, o interruptor "Ativo" da
+    // administração não produzia efeito nenhum: o benefício continuava na
+    // lista de quem o veria.
+    //
+    // A administração precisa enxergar os desligados para poder religá-los,
+    // por isso o recorte vale só quando quem pergunta é um associado.
+    if (nivelAssociado) {
+      where.ativo = true;
+      // benefício sem parceiro é da própria associação e continua valendo
+      where.OR = [{ parceiroId: null }, { parceiro: { ativo: true } }];
+    }
+
     const [total, beneficios] = await this.prisma.$transaction([
       this.prisma.beneficio.count({ where }),
       this.prisma.beneficio.findMany({

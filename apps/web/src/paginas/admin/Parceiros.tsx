@@ -153,7 +153,12 @@ export function Parceiros() {
           <Input placeholder="https://empresa.com" />
         </Form.Item>
 
-        <Form.Item name="logoUrl" label="Logo" rules={[{ type: 'url', message: 'Endereço inválido.' }]}>
+        <Form.Item
+          name="logoUrl"
+          label="URL do logo"
+          extra="Endereço de uma imagem já publicada na internet. Ainda não é possível enviar arquivo."
+          rules={[{ type: 'url', message: 'Informe um endereço completo, começando com https://' }]}
+        >
           <Input placeholder="https://empresa.com/logo.png" />
         </Form.Item>
 
