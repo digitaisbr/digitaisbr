@@ -1,4 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
+import {
+  Body, Controller, ForbiddenException, Get, HttpCode, HttpStatus, Post, Req,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -13,7 +16,10 @@ import { RegistrarDto } from './dto/registrar.dto';
 @ApiTags('Autenticação')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly config: ConfigService,
+  ) {}
 
   @Public()
   @Post('codigo-acesso')
@@ -33,10 +39,28 @@ export class AuthController {
     return this.auth.login(dto, req.ip);
   }
 
+  /**
+   * Auto-cadastro. **Desligado por padrão.**
+   *
+   * Como está, cria o associado já ATIVO, com assinatura ativa e loja, e
+   * devolve a sessão pronta — tudo sem cobrar nada. Enquanto o fluxo de adesão
+   * (escolha do plano → termos → pagamento → confirmação) não existir, deixar
+   * a rota aberta é dar associação de graça a quem souber o endereço.
+   *
+   * Religar exige PERMITIR_AUTO_CADASTRO=true e, antes disso, que o pagamento
+   * passe a condicionar a ativação.
+   */
   @Public()
   @Post('registrar')
-  @ApiOperation({ summary: 'Cria uma conta de associado (com loja e assinatura)' })
+  @ApiOperation({
+    summary: 'Cria uma conta de associado (desativado até existir o fluxo de adesão)',
+  })
   registrar(@Body() dto: RegistrarDto) {
+    if (this.config.get<string>('PERMITIR_AUTO_CADASTRO') !== 'true') {
+      throw new ForbiddenException(
+        'O cadastro pelo site ainda não está disponível. Fale com a associação.',
+      );
+    }
     return this.auth.registrar(dto);
   }
 
