@@ -5,10 +5,10 @@ import {
 } from 'antd';
 import type { ItemType, MenuItemType } from 'antd/es/menu/interface';
 import {
-  BarChartOutlined, BellOutlined, BookOutlined, CustomerServiceOutlined, DashboardOutlined,
-  DollarOutlined, FileImageOutlined, GiftOutlined, LinkOutlined, LogoutOutlined,
-  PictureOutlined, SafetyCertificateOutlined, ShopOutlined, ShoppingOutlined,
-  TagsOutlined, TeamOutlined, TrophyOutlined, UserOutlined,
+  BellOutlined, CustomerServiceOutlined, DashboardOutlined,
+  GiftOutlined, LogoutOutlined,
+  ShopOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useApi } from '@/api/hooks';
 import { Logo } from '@/componentes/Logo';
@@ -18,22 +18,50 @@ const { Header, Sider, Content } = Layout;
 
 const ITENS: ItemType<MenuItemType>[] = [
   { key: '/portal', icon: <DashboardOutlined />, label: <Link to="/portal">Início</Link> },
-  { key: '/portal/loja', icon: <ShopOutlined />, label: <Link to="/portal/loja">Minha Loja</Link> },
-  { key: '/portal/vendas', icon: <ShoppingOutlined />, label: <Link to="/portal/vendas">Minhas Vendas</Link> },
-  { key: '/portal/financeiro', icon: <DollarOutlined />, label: <Link to="/portal/financeiro">Financeiro</Link> },
-  { key: '/portal/cupons', icon: <TagsOutlined />, label: <Link to="/portal/cupons">Cupons</Link> },
-  { key: '/portal/links', icon: <LinkOutlined />, label: <Link to="/portal/links">Links de Afiliado</Link> },
-  { key: '/portal/performance', icon: <BarChartOutlined />, label: <Link to="/portal/performance">Performance</Link> },
-  { key: '/portal/beneficios', icon: <GiftOutlined />, label: <Link to="/portal/beneficios">Benefícios</Link> },
-  { key: '/portal/conteudos', icon: <BookOutlined />, label: <Link to="/portal/conteudos">Conteúdos</Link> },
-  { key: '/portal/materiais', icon: <FileImageOutlined />, label: <Link to="/portal/materiais">Materiais</Link> },
-  { key: '/portal/comunidade', icon: <TeamOutlined />, label: <Link to="/portal/comunidade">Comunidade</Link> },
-  { key: '/portal/ranking', icon: <TrophyOutlined />, label: <Link to="/portal/ranking">Ranking</Link> },
-  { key: '/portal/servicos', icon: <SafetyCertificateOutlined />, label: <Link to="/portal/servicos">Assessoria</Link> },
-  { key: '/portal/suporte', icon: <CustomerServiceOutlined />, label: <Link to="/portal/suporte">Suporte</Link> },
-  { key: '/portal/redes-sociais', icon: <PictureOutlined />, label: <Link to="/portal/redes-sociais">Redes Sociais</Link> },
-  { key: '/portal/plano', icon: <TrophyOutlined />, label: <Link to="/portal/plano">Meu Plano</Link> },
-  { key: '/portal/perfil', icon: <UserOutlined />, label: <Link to="/portal/perfil">Meu Perfil</Link> },
+  {
+    key: 'vender',
+    icon: <ShopOutlined />,
+    label: 'Vender',
+    children: [
+      { key: '/portal/loja', label: <Link to="/portal/loja">Minha Loja</Link> },
+      { key: '/portal/vendas', label: <Link to="/portal/vendas">Minhas Vendas</Link> },
+      { key: '/portal/links', label: <Link to="/portal/links">Links de Afiliado</Link> },
+      { key: '/portal/cupons', label: <Link to="/portal/cupons">Cupons</Link> },
+      { key: '/portal/performance', label: <Link to="/portal/performance">Performance</Link> },
+    ],
+  },
+  {
+    key: 'crescer',
+    icon: <GiftOutlined />,
+    label: 'Crescer',
+    children: [
+      { key: '/portal/beneficios', label: <Link to="/portal/beneficios">Benefícios</Link> },
+      { key: '/portal/conteudos', label: <Link to="/portal/conteudos">Conteúdos</Link> },
+      { key: '/portal/materiais', label: <Link to="/portal/materiais">Materiais</Link> },
+      { key: '/portal/redes-sociais', label: <Link to="/portal/redes-sociais">Redes Sociais</Link> },
+      { key: '/portal/ranking', label: <Link to="/portal/ranking">Ranking</Link> },
+    ],
+  },
+  {
+    key: 'apoio',
+    icon: <CustomerServiceOutlined />,
+    label: 'Apoio',
+    children: [
+      { key: '/portal/comunidade', label: <Link to="/portal/comunidade">Comunidade</Link> },
+      { key: '/portal/servicos', label: <Link to="/portal/servicos">Assessoria</Link> },
+      { key: '/portal/suporte', label: <Link to="/portal/suporte">Suporte</Link> },
+    ],
+  },
+  {
+    key: 'conta',
+    icon: <UserOutlined />,
+    label: 'Minha conta',
+    children: [
+      { key: '/portal/financeiro', label: <Link to="/portal/financeiro">Financeiro</Link> },
+      { key: '/portal/plano', label: <Link to="/portal/plano">Meu Plano</Link> },
+      { key: '/portal/perfil', label: <Link to="/portal/perfil">Meu Perfil</Link> },
+    ],
+  },
 ];
 
 export function LayoutPortal() {
@@ -42,6 +70,15 @@ export function LayoutPortal() {
   const navegar = useNavigate();
   const { usuario, sair, ehAdmin } = useAuth();
   const { token } = theme.useToken();
+
+  const GRUPOS: Record<string, string> = {
+    loja: 'vender', vendas: 'vender', links: 'vender', cupons: 'vender', performance: 'vender',
+    beneficios: 'crescer', conteudos: 'crescer', materiais: 'crescer',
+    'redes-sociais': 'crescer', ranking: 'crescer',
+    comunidade: 'apoio', servicos: 'apoio', suporte: 'apoio',
+    financeiro: 'conta', plano: 'conta', perfil: 'conta',
+  };
+  const grupoAberto = GRUPOS[local.pathname.split('/')[2] ?? ''] ?? 'vender';
 
   const { data: naoLidas } = useApi<{ naoLidas: number }>(
     ['notificacoes', 'resumo'],
@@ -92,7 +129,15 @@ export function LayoutPortal() {
         >
           <Logo variante={recolhido ? 'simbolo' : 'horizontal'} altura={recolhido ? 30 : 30} />
         </div>
-        <Menu mode="inline" items={ITENS} selectedKeys={[selecionado]} style={{ borderInlineEnd: 'none' }} />
+        <Menu
+          mode="inline"
+          items={ITENS}
+          selectedKeys={[selecionado]}
+          // abre o grupo da tela atual: sem isto, quem chega por link direto vê
+          // o menu todo fechado e não encontra onde está
+          defaultOpenKeys={[grupoAberto]}
+          style={{ borderInlineEnd: 'none' }}
+        />
       </Sider>
 
       <Layout>
