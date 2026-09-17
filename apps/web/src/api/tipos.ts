@@ -113,6 +113,7 @@ export interface Produto {
   checkoutUrl: string | null;
   categoria: { id: string; nome: string; slug: string; cor: string | null };
   planoMinimo: { nivel: NivelPlano; nome: string } | null;
+  parceiro?: { id: string; nome: string } | null;
 }
 
 export interface Categoria {

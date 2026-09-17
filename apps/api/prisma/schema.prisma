@@ -365,6 +365,9 @@ model Produto {
   comissaoPct   Decimal       @db.Decimal(5, 2)
   estoque       Int           @default(-1) // -1 = ilimitado
   planoMinimoId String?
+  /// Empresa que fornece a oferta. Sem ela não há como conciliar venda,
+  /// comissão nem integração por parceiro.
+  parceiroId    String?
   status        StatusProduto @default(ATIVO)
   checkoutUrl   String?
   imagemUrl     String?
@@ -374,6 +377,7 @@ model Produto {
 
   categoria   CategoriaProduto @relation(fields: [categoriaId], references: [id])
   planoMinimo Plano?           @relation(fields: [planoMinimoId], references: [id])
+  parceiro    Parceiro?        @relation(fields: [parceiroId], references: [id], onDelete: SetNull)
 
   lojas         LojaProduto[]
   vendas        Venda[]
@@ -587,6 +591,7 @@ model Parceiro {
 
   @@map("parceiros")
   eventos    EventoWebhook[]
+  produtos   Produto[]
 }
 
 model Beneficio {

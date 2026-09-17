@@ -43,6 +43,11 @@ export function Catalogo() {
       dataIndex: ['categoria', 'nome'],
       render: (v: string, p) => <Tag color={p.categoria.cor ?? 'default'}>{v}</Tag>,
     },
+    {
+      title: 'Parceiro',
+      dataIndex: ['parceiro', 'nome'],
+      render: (v: string | undefined) => v ?? <Typography.Text type="secondary">—</Typography.Text>,
+    },
     { title: 'Preço', dataIndex: 'preco', sorter: true, align: 'right', render: (v: number) => moeda(v) },
     {
       title: 'Comissão',
@@ -67,7 +72,7 @@ export function Catalogo() {
       render: (v: number, p) => (p.estoqueIlimitado ? <Tag>Ilimitado</Tag> : v),
     },
     {
-      title: 'Exclusividade',
+      title: 'A partir do plano',
       dataIndex: 'planoMinimo',
       render: (pm: Produto['planoMinimo']) =>
         pm ? <Tag color={corDeStatus(pm.nivel)}>{pm.nome}+</Tag> : <Tag>Todos</Tag>,

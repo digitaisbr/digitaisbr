@@ -104,6 +104,7 @@ export class CatalogoService {
         include: {
           categoria: { select: { id: true, nome: true, slug: true, cor: true } },
           planoMinimo: { select: { nivel: true, nome: true } },
+          parceiro: { select: { id: true, nome: true } },
           _count: { select: { lojas: true } },
         },
       }),
@@ -119,6 +120,7 @@ export class CatalogoService {
       include: {
         categoria: { select: { id: true, nome: true, slug: true, cor: true } },
         planoMinimo: { select: { nivel: true, nome: true } },
+        parceiro: { select: { id: true, nome: true } },
         lojas: {
           include: {
             loja: {

@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { App, Button, Card, Col, Form, Input, InputNumber, Row, Select, Space, Typography } from 'antd';
+import {
+  App, Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select, Space, Typography,
+} from 'antd';
 import { mensagemDeErro } from '@/api/cliente';
 import { useAcao, useApi } from '@/api/hooks';
 import { moeda } from '@/api/formato';
 import { Pagina } from '@/componentes/Pagina';
-import type { Categoria, NivelPlano, StatusProduto } from '@/api/tipos';
+import type { Categoria, NivelPlano, Paginado, Parceiro, StatusProduto } from '@/api/tipos';
 
 interface Formulario {
   nome: string;
@@ -17,6 +19,9 @@ interface Formulario {
   planoMinimo?: NivelPlano;
   status?: StatusProduto;
   checkoutUrl?: string;
+  imagemUrl?: string;
+  parceiroId?: string;
+  estoqueIlimitado?: boolean;
 }
 
 export function ProdutoNovo() {
@@ -24,6 +29,13 @@ export function ProdutoNovo() {
   const { message } = App.useApp();
   const [form] = Form.useForm<Formulario>();
   const categorias = useApi<Categoria[]>(['catalogo', 'categorias'], '/catalogo/categorias');
+  const parceiros = useApi<Paginado<Parceiro>>(['parceiros', 'seletor'], '/parceiros', {
+    limit: 200,
+    ativa: true,
+  });
+
+  // o campo de estoque guardava -1 para ilimitado, o que não se lê numa tela
+  const ilimitado = Form.useWatch('estoqueIlimitado', form);
 
   const criar = useAcao<Formulario, { id: string }>('post', '/catalogo/produtos', [
     ['catalogo'],
@@ -37,7 +49,13 @@ export function ProdutoNovo() {
 
   async function salvar(valores: Formulario) {
     try {
-      const r = await criar.mutateAsync(valores);
+      const { estoqueIlimitado, ...resto } = valores;
+      // a API continua usando -1 para ilimitado; a conversão fica aqui, para a
+      // tela não precisar expor esse detalhe a quem preenche
+      const r = await criar.mutateAsync({
+        ...resto,
+        estoque: estoqueIlimitado ? -1 : (resto.estoque ?? 0),
+      });
       message.success('Produto cadastrado.');
       navegar(`/catalogo/${r.id}`);
     } catch (e) {
@@ -54,7 +72,7 @@ export function ProdutoNovo() {
         form={form}
         layout="vertical"
         onFinish={salvar}
-        initialValues={{ status: 'ATIVO', estoque: -1, preco: 0, comissaoPct: 0 }}
+        initialValues={{ status: 'ATIVO', estoqueIlimitado: true, preco: 0, comissaoPct: 0 }}
         requiredMark="optional"
       >
         <Row gutter={16}>
@@ -100,8 +118,20 @@ export function ProdutoNovo() {
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={8}>
-                  <Form.Item name="estoque" label="Estoque" tooltip="-1 significa estoque ilimitado">
-                    <InputNumber min={-1} style={{ width: '100%' }} />
+                  <Form.Item label="Estoque">
+                    <Space.Compact style={{ width: '100%' }}>
+                      <Form.Item name="estoque" noStyle>
+                        <InputNumber
+                          min={0}
+                          disabled={ilimitado}
+                          placeholder={ilimitado ? 'Ilimitado' : '0'}
+                          style={{ width: '100%' }}
+                        />
+                      </Form.Item>
+                    </Space.Compact>
+                  </Form.Item>
+                  <Form.Item name="estoqueIlimitado" valuePropName="checked" style={{ marginTop: -18 }}>
+                    <Checkbox>Estoque ilimitado</Checkbox>
                   </Form.Item>
                 </Col>
               </Row>
@@ -135,17 +165,41 @@ export function ProdutoNovo() {
               </Form.Item>
               <Form.Item
                 name="planoMinimo"
-                label="Exclusividade por plano"
-                tooltip="Deixe vazio para liberar a todos os planos"
+                label="Disponível a partir do plano"
+                extra="Quem estiver em um plano abaixo deste não consegue adicionar o produto."
               >
                 <Select
                   allowClear
                   placeholder="Todos os planos"
+                  // a regra é nível mínimo, não exclusividade: rotular um deles
+                  // como "somente" descreveria errado a mesma regra
                   options={[
-                    { value: 'INTERMEDIARIO', label: 'Intermediário ou superior' },
-                    { value: 'AVANCADO', label: 'Somente Avançado' },
+                    { value: 'INTERMEDIARIO', label: 'Intermediário' },
+                    { value: 'AVANCADO', label: 'Avançado' },
                   ]}
                 />
+              </Form.Item>
+              <Form.Item
+                name="parceiroId"
+                label="Parceiro fornecedor"
+                extra="Empresa responsável pela oferta. Usado na conciliação de vendas e comissões."
+              >
+                <Select
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  loading={parceiros.isLoading}
+                  placeholder="Selecione o parceiro"
+                  options={(parceiros.data?.data ?? []).map((p) => ({ value: p.id, label: p.nome }))}
+                />
+              </Form.Item>
+              <Form.Item
+                name="imagemUrl"
+                label="URL da imagem"
+                extra="Aparece na vitrine do associado. Ainda não é possível enviar arquivo."
+                rules={[{ type: 'url', message: 'Informe um endereço completo, começando com https://' }]}
+              >
+                <Input placeholder="https://…/produto.png" />
               </Form.Item>
               <Form.Item
                 name="checkoutUrl"
