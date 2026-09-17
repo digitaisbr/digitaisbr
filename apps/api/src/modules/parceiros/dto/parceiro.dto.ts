@@ -5,6 +5,7 @@ import {
   IsBoolean, IsEmail, IsEnum, IsOptional, IsString, IsUrl, Matches, MinLength,
 } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
+import { EhCnpj } from '../../../common/validators/cnpj.validator';
 
 export class CriarParceiroDto {
   @ApiProperty({ example: 'Canva Pro' })
@@ -22,6 +23,8 @@ export class CriarParceiroDto {
   @Matches(/^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/, {
     message: 'CNPJ deve estar no formato 00.000.000/0000-00.',
   })
+  // só o formato passaria em 11.111.111/1111-11, que não é de ninguém
+  @EhCnpj()
   cnpj?: string;
 
   @ApiPropertyOptional({ example: 'partners@canva.com' })

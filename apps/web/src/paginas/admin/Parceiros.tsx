@@ -4,6 +4,7 @@ import { ApiOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useApi } from '@/api/hooks';
 import { AcoesLinha } from '@/componentes/AcoesLinha';
+import { CampoMascarado } from '@/componentes/CampoMascarado';
 import { Cartoes } from '@/componentes/Cartoes';
 import { ModalRecurso } from '@/componentes/ModalRecurso';
 import { Pagina } from '@/componentes/Pagina';
@@ -136,9 +137,9 @@ export function Parceiros() {
         <Form.Item
           name="cnpj"
           label="CNPJ"
-          rules={[{ pattern: MASCARA_CNPJ, message: 'Use o formato 00.000.000/0000-00.' }]}
+          rules={[{ pattern: MASCARA_CNPJ, message: 'Informe os 14 dígitos do CNPJ.' }]}
         >
-          <Input placeholder="12.345.678/0001-01" />
+          <CampoMascarado formato="cnpj" placeholder="00.000.000/0000-00" />
         </Form.Item>
 
         <Form.Item name="email" label="Email" rules={[{ type: 'email', message: 'Email inválido.' }]}>
@@ -146,7 +147,7 @@ export function Parceiros() {
         </Form.Item>
 
         <Form.Item name="telefone" label="Telefone">
-          <Input placeholder="(11) 90000-0000" />
+          <CampoMascarado formato="telefone" placeholder="(11) 90000-0000" />
         </Form.Item>
 
         <Form.Item name="site" label="Site" rules={[{ type: 'url', message: 'Endereço inválido.' }]}>

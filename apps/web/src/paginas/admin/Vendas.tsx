@@ -30,6 +30,27 @@ export function Vendas() {
     [['vendas'], ['comissoes'], ['dashboard']],
   );
 
+  /**
+   * Marcar como paga gera a comissão do associado e não tem desfazer — só o
+   * reembolso, que é outro caminho. Merece a mesma confirmação do reembolso.
+   */
+  function confirmarPagamento(v: Venda) {
+    modal.confirm({
+      title: `Confirmar o pagamento da venda ${v.ref}?`,
+      content: `A comissão de ${v.associado.nome} passa a contar a partir daqui. Para desfazer, só reembolsando.`,
+      okText: 'Confirmar pagamento',
+      cancelText: 'Cancelar',
+      onOk: async () => {
+        try {
+          await alterar.mutateAsync({ id: v.id, status: 'PAGA' });
+          message.success(`Venda ${v.ref} marcada como paga.`);
+        } catch (e) {
+          message.error(mensagemDeErro(e));
+        }
+      },
+    });
+  }
+
   function reembolsar(v: Venda) {
     modal.confirm({
       title: `Reembolsar a venda ${v.ref}?`,
@@ -119,14 +140,7 @@ export function Vendas() {
             <Button
               size="small"
               type="link"
-              onClick={async () => {
-                try {
-                  await alterar.mutateAsync({ id: v.id, status: 'PAGA' });
-                  message.success(`Venda ${v.ref} marcada como paga.`);
-                } catch (e) {
-                  message.error(mensagemDeErro(e));
-                }
-              }}
+              onClick={() => confirmarPagamento(v)}
             >
               Marcar paga
             </Button>

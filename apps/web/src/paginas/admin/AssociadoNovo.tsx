@@ -3,6 +3,7 @@ import { App, Button, Card, Col, Form, Input, InputNumber, Row, Select, Space, T
 import { mensagemDeErro } from '@/api/cliente';
 import { moeda } from '@/api/formato';
 import { useAcao, useApi } from '@/api/hooks';
+import { CampoMascarado } from '@/componentes/CampoMascarado';
 import { Pagina } from '@/componentes/Pagina';
 import type { NivelPlano, Plano, StatusAssociado } from '@/api/tipos';
 
@@ -175,12 +176,12 @@ export function AssociadoNovo() {
                 </Col>
                 <Col xs={24} md={12}>
                   <Form.Item name="telefone" label="Telefone">
-                    <Input placeholder="(00) 90000-0000" />
+                    <CampoMascarado formato="telefone" placeholder="(11) 90000-0000" />
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={12}>
                   <Form.Item name="cpfCnpj" label="CPF/CNPJ">
-                    <Input placeholder="000.000.000-00" />
+                    <CampoMascarado formato="cpfCnpj" placeholder="000.000.000-00" />
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={12}>
