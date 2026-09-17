@@ -4,6 +4,7 @@ import { NivelPlano, Prisma, Role, StatusAssociado, StatusComissao, StatusVenda 
 import { hash as hashSenha, verify as conferirSenha } from '@node-rs/bcrypt';
 import { randomBytes } from 'node:crypto';
 import { PaginatedResult, paginate } from '../../common/dto/paginated-result';
+import { AuditoriaService, type Autor } from '../../common/auditoria/auditoria.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { buscaTextual, num, ordenar } from '../../common/utils/query.util';
 import {
@@ -34,7 +35,10 @@ const RESUMO = {
 
 @Injectable()
 export class AssociadosService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditoria: AuditoriaService,
+  ) {}
 
   async listar(f: FiltrarAssociadosDto): Promise<PaginatedResult<unknown>> {
     const where: Prisma.AssociadoWhereInput = {
@@ -137,7 +141,7 @@ export class AssociadosService {
     };
   }
 
-  async criar(dto: CriarAssociadoDto) {
+  async criar(dto: CriarAssociadoDto, autor: Autor = {}) {
     const email = dto.email.toLowerCase();
 
     const [emailEmUso, handleEmUso, plano] = await Promise.all([
@@ -192,6 +196,13 @@ export class AssociadosService {
       include: { associado: { select: { id: true } } },
     });
 
+    await this.auditoria.registrar('CRIAR', 'Associado', usuario.associado!.id, autor, {
+      nome: dto.nome,
+      email,
+      handle: dto.handle,
+      plano: dto.plano,
+    });
+
     return {
       id: usuario.associado!.id,
       usuarioId: usuario.id,
@@ -200,7 +211,7 @@ export class AssociadosService {
     };
   }
 
-  async atualizar(id: string, dto: AtualizarAssociadoDto) {
+  async atualizar(id: string, dto: AtualizarAssociadoDto, autor: Autor = {}) {
     const { plano, senha, criarLoja, email, uf, ...resto } = dto;
     void senha;
     void criarLoja;
@@ -217,11 +228,24 @@ export class AssociadosService {
       data.plano = { connect: { id: p.id } };
     }
 
-    return this.prisma.associado.update({ where: { id }, data });
+    // o estado anterior precisa ser lido antes da escrita, senão não há com
+    // o que comparar e a trilha guardaria só o valor novo
+    const antes = await this.prisma.associado.findUniqueOrThrow({ where: { id } });
+    const depois = await this.prisma.associado.update({ where: { id }, data });
+
+    const mudou = AuditoriaService.diferencas(
+      antes as unknown as Record<string, unknown>,
+      depois as unknown as Record<string, unknown>,
+    );
+    if (Object.keys(mudou).length) {
+      await this.auditoria.registrar('ATUALIZAR', 'Associado', id, autor, mudou);
+    }
+
+    return depois;
   }
 
   /** Troca de plano: encerra a assinatura vigente e abre uma nova. */
-  async alterarPlano(id: string, dto: AlterarPlanoDto) {
+  async alterarPlano(id: string, dto: AlterarPlanoDto, autor: Autor = {}) {
     const [associado, plano] = await Promise.all([
       this.prisma.associado.findUniqueOrThrow({ where: { id }, include: { plano: true } }),
       this.prisma.plano.findUnique({ where: { nivel: dto.plano } }),
@@ -250,10 +274,15 @@ export class AssociadosService {
       }),
     ]);
 
+
+    await this.auditoria.registrar('ALTERAR_PLANO', 'Associado', id, autor, {
+      plano: { de: associado.plano.nome, para: plano.nome },
+    });
+
     return { id, planoAnterior: associado.plano.nome, planoAtual: plano.nome };
   }
 
-  async alterarStatus(id: string, status: StatusAssociado) {
+  async alterarStatus(id: string, status: StatusAssociado, autor: Autor = {}) {
     const associado = await this.prisma.associado.update({
       where: { id },
       data: { status },
@@ -267,10 +296,14 @@ export class AssociadosService {
       await this.prisma.loja.update({ where: { id: associado.loja.id }, data: { ativa: habilitado } });
     }
 
+    await this.auditoria.registrar('ALTERAR_STATUS', 'Associado', id, autor, {
+      status: { de: null, para: status },
+    });
+
     return associado;
   }
 
-  async remover(id: string) {
+  async remover(id: string, autor: Autor = {}) {
     const associado = await this.prisma.associado.findUniqueOrThrow({
       where: { id },
       select: { usuarioId: true, _count: { select: { vendas: true } } },
@@ -284,6 +317,9 @@ export class AssociadosService {
 
     // o associado é removido em cascata junto com o usuário
     await this.prisma.usuario.delete({ where: { id: associado.usuarioId } });
+
+    await this.auditoria.registrar('REMOVER', 'Associado', id, autor);
+
     return { id, removido: true };
   }
 

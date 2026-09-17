@@ -4,17 +4,22 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NivelPlano, Role } from '@prisma/client';
 import { CurrentUser, UsuarioAutenticado } from '../../common/decorators/current-user.decorator';
+import { QuemFez } from '../../common/decorators/autor.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import {
   AtualizarBeneficioDto, AtualizarParceiroDto, CriarBeneficioDto, CriarParceiroDto, FiltrarBeneficiosDto,
 } from './dto/parceiro.dto';
+import { AuditoriaService, type Autor } from '../../common/auditoria/auditoria.service';
 import { ParceirosService } from './parceiros.service';
 
 @ApiTags('Parceiros e Benefícios')
 @ApiBearerAuth()
 @Controller()
 export class ParceirosController {
-  constructor(private readonly service: ParceirosService) {}
+  constructor(
+    private readonly service: ParceirosService,
+    private readonly auditoria: AuditoriaService,
+  ) {}
 
   // ---- parceiros ----
 
@@ -42,22 +47,33 @@ export class ParceirosController {
   @Post('parceiros')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Cadastra um parceiro' })
-  criarParceiro(@Body() dto: CriarParceiroDto) {
-    return this.service.criarParceiro(dto);
+  criarParceiro(@Body() dto: CriarParceiroDto, @QuemFez() autor: Autor) {
+    return this.service.criarParceiro(dto, autor);
   }
 
   @Patch('parceiros/:id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Atualiza um parceiro' })
-  atualizarParceiro(@Param('id', ParseUUIDPipe) id: string, @Body() dto: AtualizarParceiroDto) {
-    return this.service.atualizarParceiro(id, dto);
+  atualizarParceiro(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: AtualizarParceiroDto,
+    @QuemFez() autor: Autor,
+  ) {
+    return this.service.atualizarParceiro(id, dto, autor);
+  }
+
+  @Get('parceiros/:id/historico')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Histórico de alterações do parceiro' })
+  historicoParceiro(@Param('id', ParseUUIDPipe) id: string) {
+    return this.auditoria.historico('Parceiro', id);
   }
 
   @Delete('parceiros/:id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Remove um parceiro sem benefícios vinculados' })
-  removerParceiro(@Param('id', ParseUUIDPipe) id: string) {
-    return this.service.removerParceiro(id);
+  removerParceiro(@Param('id', ParseUUIDPipe) id: string, @QuemFez() autor: Autor) {
+    return this.service.removerParceiro(id, autor);
   }
 
   // ---- benefícios ----

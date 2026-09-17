@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
 import { NivelPlano, Prisma, TipoNotificacao } from '@prisma/client';
 import { PaginatedResult, paginate } from '../../common/dto/paginated-result';
+import { AuditoriaService, type Autor } from '../../common/auditoria/auditoria.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { ORDEM_PLANO } from '../../common/guards/plano.guard';
 import { buscaTextual, ordenar } from '../../common/utils/query.util';
@@ -14,7 +15,10 @@ import {
 
 @Injectable()
 export class ParceirosService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditoria: AuditoriaService,
+  ) {}
 
   // ---------------------------------------------------------------- parceiros
 
@@ -48,15 +52,34 @@ export class ParceirosService {
     });
   }
 
-  criarParceiro(dto: CriarParceiroDto) {
-    return this.prisma.parceiro.create({ data: dto });
+  async criarParceiro(dto: CriarParceiroDto, autor: Autor = {}) {
+    const parceiro = await this.prisma.parceiro.create({ data: dto });
+    await this.auditoria.registrar('CRIAR', 'Parceiro', parceiro.id, autor, {
+      nome: dto.nome,
+      cnpj: dto.cnpj,
+      segmento: dto.segmento,
+    });
+    return parceiro;
   }
 
-  atualizarParceiro(id: string, dto: AtualizarParceiroDto) {
-    return this.prisma.parceiro.update({ where: { id }, data: dto });
+  async atualizarParceiro(id: string, dto: AtualizarParceiroDto, autor: Autor = {}) {
+    const antes = await this.prisma.parceiro.findUniqueOrThrow({ where: { id } });
+    const depois = await this.prisma.parceiro.update({ where: { id }, data: dto });
+
+    const mudou = AuditoriaService.diferencas(
+      antes as unknown as Record<string, unknown>,
+      depois as unknown as Record<string, unknown>,
+    );
+    if (Object.keys(mudou).length) {
+      // desligar um parceiro esconde os benefícios dele: essa alteração
+      // merece ficar separada das demais na trilha
+      const acao = 'ativo' in mudou ? 'ALTERAR_STATUS' : 'ATUALIZAR';
+      await this.auditoria.registrar(acao, 'Parceiro', id, autor, mudou);
+    }
+    return depois;
   }
 
-  async removerParceiro(id: string) {
+  async removerParceiro(id: string, autor: Autor = {}) {
     const beneficios = await this.prisma.beneficio.count({ where: { parceiroId: id } });
     if (beneficios > 0) {
       throw new ConflictException(
@@ -64,6 +87,9 @@ export class ParceirosService {
       );
     }
     await this.prisma.parceiro.delete({ where: { id } });
+
+    await this.auditoria.registrar('REMOVER', 'Parceiro', id, autor);
+
     return { id, removido: true };
   }
 

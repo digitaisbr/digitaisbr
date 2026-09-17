@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PlanoGuard } from './common/guards/plano.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { AuditoriaModule } from './common/auditoria/auditoria.module';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { AssociadosModule } from './modules/associados/associados.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -37,6 +38,7 @@ import { VendasModule } from './modules/vendas/vendas.module';
       },
     ]),
     PrismaModule,
+    AuditoriaModule,
 
     // autenticação e cadastro
     AuthModule,

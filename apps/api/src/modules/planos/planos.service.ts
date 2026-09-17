@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { StatusAssociado } from '@prisma/client';
+import { AuditoriaService, type Autor } from '../../common/auditoria/auditoria.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { num } from '../../common/utils/query.util';
 import { AtualizarPlanoDto, CriarPlanoDto } from './dto/plano.dto';
 
 @Injectable()
 export class PlanosService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditoria: AuditoriaService,
+  ) {}
 
   /** Lista os planos com a contagem de associados ativos em cada um. */
   async listar() {
@@ -35,12 +39,30 @@ export class PlanosService {
     return { ...plano, preco: num(plano.preco), comissaoExtraPct: num(plano.comissaoExtraPct) };
   }
 
-  criar(dto: CriarPlanoDto) {
-    return this.prisma.plano.create({ data: { ...dto, ordem: dto.ordem ?? 1 } });
+  async criar(dto: CriarPlanoDto, autor: Autor = {}) {
+    const plano = await this.prisma.plano.create({ data: { ...dto, ordem: dto.ordem ?? 1 } });
+    await this.auditoria.registrar('CRIAR', 'Plano', plano.id, autor, {
+      nome: dto.nome,
+      preco: dto.preco,
+      nivel: dto.nivel,
+    });
+    return plano;
   }
 
-  atualizar(id: string, dto: AtualizarPlanoDto) {
-    return this.prisma.plano.update({ where: { id }, data: dto });
+  async atualizar(id: string, dto: AtualizarPlanoDto, autor: Autor = {}) {
+    // preço de plano é informação comercial sensível: guardar o valor anterior
+    // é o que permite explicar depois quando e por quem um reajuste aconteceu
+    const antes = await this.prisma.plano.findUniqueOrThrow({ where: { id } });
+    const depois = await this.prisma.plano.update({ where: { id }, data: dto });
+
+    const mudou = AuditoriaService.diferencas(
+      antes as unknown as Record<string, unknown>,
+      depois as unknown as Record<string, unknown>,
+    );
+    if (Object.keys(mudou).length) {
+      await this.auditoria.registrar('ATUALIZAR', 'Plano', id, autor, mudou);
+    }
+    return depois;
   }
 
   /** Receita recorrente mensal e distribuição de associados por plano. */

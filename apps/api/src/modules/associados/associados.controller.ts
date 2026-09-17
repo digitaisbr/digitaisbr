@@ -5,7 +5,9 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { RedeSocial, Role, StatusAssociado } from '@prisma/client';
 import { Public } from '../../common/decorators/public.decorator';
+import { QuemFez } from '../../common/decorators/autor.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { AuditoriaService, type Autor } from '../../common/auditoria/auditoria.service';
 import { AssociadosService } from './associados.service';
 import {
   AlterarPlanoDto, AtualizarAssociadoDto, CriarAssociadoDto, FiltrarAssociadosDto,
@@ -16,7 +18,10 @@ import {
 @ApiBearerAuth()
 @Controller('associados')
 export class AssociadosController {
-  constructor(private readonly service: AssociadosService) {}
+  constructor(
+    private readonly service: AssociadosService,
+    private readonly auditoria: AuditoriaService,
+  ) {}
 
   @Get()
   @Roles(Role.ADMIN)
@@ -56,22 +61,30 @@ export class AssociadosController {
   @Post()
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Cadastra um associado (cria usuário, assinatura e loja)' })
-  criar(@Body() dto: CriarAssociadoDto) {
-    return this.service.criar(dto);
+  criar(@Body() dto: CriarAssociadoDto, @QuemFez() autor: Autor) {
+    return this.service.criar(dto, autor);
   }
 
   @Patch(':id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Atualiza os dados cadastrais' })
-  atualizar(@Param('id', ParseUUIDPipe) id: string, @Body() dto: AtualizarAssociadoDto) {
-    return this.service.atualizar(id, dto);
+  atualizar(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: AtualizarAssociadoDto,
+    @QuemFez() autor: Autor,
+  ) {
+    return this.service.atualizar(id, dto, autor);
   }
 
   @Patch(':id/plano')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Troca o plano e reabre a assinatura' })
-  alterarPlano(@Param('id', ParseUUIDPipe) id: string, @Body() dto: AlterarPlanoDto) {
-    return this.service.alterarPlano(id, dto);
+  alterarPlano(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: AlterarPlanoDto,
+    @QuemFez() autor: Autor,
+  ) {
+    return this.service.alterarPlano(id, dto, autor);
   }
 
   @Patch(':id/status/:status')
@@ -80,8 +93,9 @@ export class AssociadosController {
   alterarStatus(
     @Param('id', ParseUUIDPipe) id: string,
     @Param('status', new ParseEnumPipe(StatusAssociado)) status: StatusAssociado,
+    @QuemFez() autor: Autor,
   ) {
-    return this.service.alterarStatus(id, status);
+    return this.service.alterarStatus(id, status, autor);
   }
 
   @Post(':id/redes-sociais')
@@ -101,10 +115,20 @@ export class AssociadosController {
     return this.service.desvincularRedeSocial(id, rede);
   }
 
+  @Get(':id/historico')
+  @Roles(Role.ADMIN)
+  @ApiOperation({
+    summary: 'Histórico de alterações do cadastro',
+    description: 'Quem criou, quem alterou, quando e o que mudou em cada campo.',
+  })
+  historico(@Param('id', ParseUUIDPipe) id: string) {
+    return this.auditoria.historico('Associado', id);
+  }
+
   @Delete(':id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Remove um associado sem vendas registradas' })
-  remover(@Param('id', ParseUUIDPipe) id: string) {
-    return this.service.remover(id);
+  remover(@Param('id', ParseUUIDPipe) id: string, @QuemFez() autor: Autor) {
+    return this.service.remover(id, autor);
   }
 }
