@@ -103,8 +103,19 @@ export class LojasService {
     };
   }
 
+  /**
+   * Robôs que varrem a internet inteira. Não são visita, e contá-los inflava o
+   * número de visualizações e afundava a taxa de conversão, que é calculada
+   * sobre ele.
+   */
+  private static ehRobo(userAgent?: string): boolean {
+    if (!userAgent) return true; // navegador sempre se identifica
+    return /bot|crawl|spider|slurp|curl|wget|python|scrapy|headless|monitor|zgrab|http-client/i
+      .test(userAgent);
+  }
+
   /** Vitrine pública por slug — registra a visita e devolve só o que é publicável. */
-  async vitrinePublica(slug: string) {
+  async vitrinePublica(slug: string, userAgent?: string) {
     const loja = await this.prisma.loja.findUniqueOrThrow({
       where: { slug },
       include: {
@@ -121,10 +132,12 @@ export class LojasService {
       throw new ForbiddenException('Esta loja está temporariamente indisponível.');
     }
 
-    await this.prisma.loja.update({
-      where: { id: loja.id },
-      data: { visualizacoes: { increment: 1 } },
-    });
+    if (!LojasService.ehRobo(userAgent)) {
+      await this.prisma.loja.update({
+        where: { id: loja.id },
+        data: { visualizacoes: { increment: 1 } },
+      });
+    }
 
     // o código de origem de cada produto: é o que liga a compra ao associado
     const links = await this.prisma.linkAfiliado.findMany({

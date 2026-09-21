@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Alert, Card, Input, Select, Space, Table, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
@@ -30,6 +30,14 @@ interface Props<T> {
   cabecalho?: ReactNode;
   aoClicarLinha?: (registro: T) => void;
   tamanhoPadrao?: number;
+  /**
+   * Recebe os filtros correntes sempre que mudam.
+   *
+   * Existe para ações fora da tabela — exportação, por exemplo — operarem
+   * sobre o mesmo recorte que está na tela. Sem isto, exportar depois de
+   * filtrar devolvia a base inteira sem avisar.
+   */
+  aoFiltrar?: (filtros: FiltrosBase) => void;
   /** habilita seleção múltipla, para ações em lote */
   selecao?: {
     selecionadas: string[];
@@ -56,6 +64,7 @@ export function TabelaRecurso<T extends { id?: string }>({
   cabecalho,
   aoClicarLinha,
   tamanhoPadrao = 10,
+  aoFiltrar,
   selecao,
 }: Props<T>) {
   const [pagina, setPagina] = useState(1);
@@ -64,14 +73,24 @@ export function TabelaRecurso<T extends { id?: string }>({
   const [selecoes, setSelecoes] = useState<Record<string, string | undefined>>({});
   const [ordem, setOrdem] = useState<{ sort?: string; order?: 'asc' | 'desc' }>({});
 
-  const consulta = useLista<T>(chave, url, {
+  const parametros = {
     page: pagina,
     limit: limite,
     search: busca || undefined,
     ...ordem,
     ...selecoes,
     ...fixos,
-  });
+  };
+
+  const consulta = useLista<T>(chave, url, parametros);
+
+  // sem página nem tamanho: quem exporta quer o recorte, não a fatia visível
+  const { page: _p, limit: _l, ...recorte } = parametros;
+  const assinatura = JSON.stringify(recorte);
+  useEffect(() => {
+    aoFiltrar?.(recorte);
+    // a comparação é pelo conteúdo: o objeto é recriado a cada render
+  }, [assinatura]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const alterarFiltro = (campo: string, valor?: string) => {
     setSelecoes((atual) => ({ ...atual, [campo]: valor }));

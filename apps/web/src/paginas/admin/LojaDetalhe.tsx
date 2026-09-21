@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { Button, Card, Col, Descriptions, Row, Statistic, Table, Tag, Typography } from 'antd';
+import { Button, Card, Col, Descriptions, Row, Statistic, Table, Tag, Typography, Tooltip } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { useApi } from '@/api/hooks';
 import { moeda, numero, percentual } from '@/api/formato';
@@ -42,14 +42,36 @@ export function LojaDetalhe() {
           <>
             <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
               {[
-                { t: 'Visualizações', v: numero(l.desempenho.visualizacoes) },
-                { t: 'Vendas aprovadas', v: l.desempenho.vendasAprovadas },
-                { t: 'Receita', v: moeda(l.desempenho.receita), c: marca.mintLeaf },
-                { t: 'Conversão', v: percentual(l.desempenho.conversao, 2) },
+                {
+                  t: 'Visualizações',
+                  v: numero(l.desempenho.visualizacoes),
+                  d: 'Acessos à vitrine. Varredura automática não é contada.',
+                },
+                { t: 'Vendas aprovadas', v: l.desempenho.vendasAprovadas, d: 'Vendas com status Paga.' },
+                {
+                  // "Receita" sozinho não dizia de quem nem do quê
+                  t: 'Vendido pela loja',
+                  v: moeda(l.desempenho.receita),
+                  c: marca.mintLeaf,
+                  d: 'Soma do valor das vendas pagas. Não é a comissão do associado.',
+                },
+                {
+                  t: 'Conversão',
+                  v: percentual(l.desempenho.conversao, 2),
+                  d: 'Vendas aprovadas ÷ visualizações × 100.',
+                },
               ].map((m) => (
                 <Col key={m.t} xs={12} lg={6}>
                   <Card size="small">
-                    <Statistic title={m.t} value={m.v as string} valueStyle={{ fontSize: 21, color: m.c }} />
+                    <Statistic
+                      title={
+                        <Tooltip title={m.d}>
+                          <span style={{ borderBottom: '1px dotted #bfbfbf', cursor: 'help' }}>{m.t}</span>
+                        </Tooltip>
+                      }
+                      value={m.v as string}
+                      valueStyle={{ fontSize: 21, color: m.c }}
+                    />
                   </Card>
                 </Col>
               ))}

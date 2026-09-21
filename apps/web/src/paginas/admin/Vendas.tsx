@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { App, Button, Space, Tag, Typography } from 'antd';
 import { DownloadOutlined, UndoOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
@@ -7,7 +8,7 @@ import { corDeStatus, data, moeda, percentual, rotulo } from '@/api/formato';
 import { Cartoes } from '@/componentes/Cartoes';
 import { Pagina } from '@/componentes/Pagina';
 import { TabelaRecurso } from '@/componentes/TabelaRecurso';
-import type { StatusVenda, Venda } from '@/api/tipos';
+import type { FiltrosBase, StatusVenda, Venda } from '@/api/tipos';
 import { marca } from '@/marca';
 
 interface Estatisticas {
@@ -21,6 +22,7 @@ interface Estatisticas {
 }
 
 export function Vendas() {
+  const [recorte, setRecorte] = useState<FiltrosBase>({});
   const { message, modal } = App.useApp();
   const stats = useApi<Estatisticas>(['vendas', 'estatisticas'], '/vendas/estatisticas');
 
@@ -53,10 +55,12 @@ export function Vendas() {
 
   function reembolsar(v: Venda) {
     modal.confirm({
-      title: `Reembolsar a venda ${v.ref}?`,
+      title: `Registrar o reembolso da venda ${v.ref}?`,
       content:
-        'A comissão vinculada será cancelada e o estoque devolvido. A operação não pode ser desfeita.',
-      okText: 'Reembolsar',
+        'O dinheiro é devolvido ao cliente pelo parceiro, fora da plataforma. Aqui apenas fica ' +
+        'registrado: a venda passa a Reembolsada e a comissão do associado é cancelada. ' +
+        'Não pode ser desfeito.',
+      okText: 'Registrar reembolso',
       okButtonProps: { danger: true },
       cancelText: 'Cancelar',
       onOk: async () => {
@@ -72,7 +76,11 @@ export function Vendas() {
 
   async function exportar() {
     try {
-      const { data: csv } = await api.get<string>('/vendas/exportar', { responseType: 'text' });
+      // sem os filtros, exportar depois de filtrar devolvia a base inteira
+      const { data: csv } = await api.get<string>('/vendas/exportar', {
+        responseType: 'text',
+        params: recorte,
+      });
       const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
       const a = document.createElement('a');
       a.href = url;
@@ -147,7 +155,7 @@ export function Vendas() {
           )}
           {v.status === 'PAGA' && (
             <Button size="small" type="link" danger icon={<UndoOutlined />} onClick={() => reembolsar(v)}>
-              Reembolsar
+              Registrar reembolso
             </Button>
           )}
         </Space>
@@ -181,6 +189,7 @@ export function Vendas() {
       />
 
       <TabelaRecurso<Venda>
+        aoFiltrar={setRecorte}
         titulo="Todas as vendas"
         chave={['vendas']}
         url="/vendas"

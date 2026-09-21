@@ -1,5 +1,6 @@
 import {
-  Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseUUIDPipe, Patch, Post, Query,
+  Body, Controller, Delete, Get, Headers, Param, ParseBoolPipe, ParseUUIDPipe, Patch, Post,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
@@ -32,10 +33,12 @@ export class LojasController {
   @Get('publica/:slug')
   @ApiOperation({
     summary: 'Vitrine pública da loja',
-    description: 'Não exige autenticação e contabiliza uma visualização a cada acesso.',
+    description:
+      'Não exige autenticação. Cada acesso de navegador conta uma visualização; ' +
+      'varredura automática não é contabilizada.',
   })
-  vitrine(@Param('slug') slug: string) {
-    return this.service.vitrinePublica(slug);
+  vitrine(@Param('slug') slug: string, @Headers('user-agent') userAgent?: string) {
+    return this.service.vitrinePublica(slug, userAgent);
   }
 
   @Get(':id')
