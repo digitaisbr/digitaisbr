@@ -204,9 +204,14 @@ export class IntegracoesService {
     );
   }
 
-  listar(status?: StatusEventoWebhook) {
+  listar(status?: StatusEventoWebhook, parceiroId?: string) {
+    // a tela reúne avisos de todos os parceiros; sem recorte por empresa não
+    // dá para conciliar pendências de uma delas
     return this.prisma.eventoWebhook.findMany({
-      where: status ? { status } : undefined,
+      where: {
+        ...(status ? { status } : {}),
+        ...(parceiroId ? { parceiroId } : {}),
+      },
       orderBy: { criadoEm: 'desc' },
       take: 100,
       include: { parceiro: { select: { nome: true } } },

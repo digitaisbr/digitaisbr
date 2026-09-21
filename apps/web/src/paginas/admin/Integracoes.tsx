@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import {
-  App, Button, Card, Empty, Segmented, Space, Table, Tag, Tooltip, Typography,
+  App, Button, Card, Empty, Segmented, Select, Space, Table, Tag, Tooltip, Typography,
 } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { mensagemDeErro } from '@/api/cliente';
 import { useAcao, useApi } from '@/api/hooks';
 import { dataHora } from '@/api/formato';
+import type { Paginado, Parceiro } from '@/api/tipos';
 import { Cartoes } from '@/componentes/Cartoes';
 import { Estado } from '@/componentes/Estado';
 import { Pagina } from '@/componentes/Pagina';
@@ -49,11 +50,17 @@ const FILTROS = ['Todos', 'PROCESSADO', 'ERRO', 'REJEITADO', 'DUPLICADO'] as con
 export function Integracoes() {
   const { message } = App.useApp();
   const [filtro, setFiltro] = useState<(typeof FILTROS)[number]>('Todos');
+  const [parceiroId, setParceiroId] = useState<string | undefined>();
+
+  const parceiros = useApi<Paginado<Parceiro>>(['parceiros', 'seletor'], '/parceiros', { limit: 200 });
 
   const eventos = useApi<Evento[]>(
-    ['integracoes', 'eventos', filtro],
+    ['integracoes', 'eventos', filtro, parceiroId ?? 'todos'],
     '/integracoes/eventos',
-    filtro === 'Todos' ? undefined : { status: filtro },
+    {
+      ...(filtro === 'Todos' ? {} : { status: filtro }),
+      ...(parceiroId ? { parceiroId } : {}),
+    },
   );
 
   const reprocessar = useAcao<{ id: string }>(
@@ -148,12 +155,26 @@ export function Integracoes() {
       <Card
         title="Eventos"
         extra={
-          <Segmented
-            size="small"
-            value={filtro}
-            onChange={(v) => setFiltro(v as (typeof FILTROS)[number])}
-            options={FILTROS.map((f) => ({ label: f === 'Todos' ? 'Todos' : f.toLowerCase(), value: f }))}
-          />
+          <Space wrap size={8}>
+            <Select
+              size="small"
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              style={{ minWidth: 190 }}
+              placeholder="Todos os parceiros"
+              value={parceiroId}
+              onChange={setParceiroId}
+              loading={parceiros.isLoading}
+              options={(parceiros.data?.data ?? []).map((p) => ({ value: p.id, label: p.nome }))}
+            />
+            <Segmented
+              size="small"
+              value={filtro}
+              onChange={(v) => setFiltro(v as (typeof FILTROS)[number])}
+              options={FILTROS.map((f) => ({ label: f === 'Todos' ? 'Todos' : f.toLowerCase(), value: f }))}
+            />
+          </Space>
         }
       >
         <Estado carregando={eventos.isLoading} erro={eventos.error} esqueleto>

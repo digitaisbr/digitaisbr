@@ -38,9 +38,15 @@ export class IntegracoesController {
   @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @Get('eventos')
-  @ApiOperation({ summary: 'Últimos 100 eventos recebidos dos parceiros' })
-  listar(@Query('status') status?: StatusEventoWebhook) {
-    return this.service.listar(status);
+  @ApiOperation({
+    summary: 'Últimos 100 eventos recebidos dos parceiros',
+    description: 'Filtra por situação e por empresa parceira.',
+  })
+  listar(
+    @Query('status') status?: StatusEventoWebhook,
+    @Query('parceiroId') parceiroId?: string,
+  ) {
+    return this.service.listar(status, parceiroId);
   }
 
   @Roles(Role.ADMIN)
