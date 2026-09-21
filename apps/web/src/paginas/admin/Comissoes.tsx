@@ -32,18 +32,24 @@ export function Comissoes() {
     [['comissoes'], ['dashboard'], ['financeiro']],
   );
 
-  function liquidar(ids: string[]) {
+  /**
+   * Registra a confirmação de pagamento. A plataforma nunca moveu dinheiro
+   * aqui — sempre mudou status e avisou o associado. O nome anterior,
+   * "liquidar", sugeria uma operação financeira que não acontece.
+   */
+  function registrarPagamento(ids: string[]) {
     modal.confirm({
-      title: `Liquidar ${ids.length} comissão(ões)?`,
+      title: `Registrar o pagamento de ${ids.length} comissão(ões)?`,
       content:
-        'As comissões passam a PAGA e cada associado recebe uma notificação com o total. ' +
-        'Comissões já pagas fazem o lote inteiro ser recusado.',
-      okText: 'Liquidar',
+        'O pagamento ao associado é feito pelo parceiro, fora da plataforma. Aqui fica ' +
+        'registrada a confirmação: as comissões passam a PAGA e cada associado é avisado ' +
+        'com o total. Comissões já pagas fazem o lote inteiro ser recusado.',
+      okText: 'Registrar pagamento',
       cancelText: 'Cancelar',
       onOk: async () => {
         try {
           const r = await pagar.mutateAsync({ ids });
-          message.success(`${r.quantidade} comissão(ões) liquidadas — ${moeda(r.totalPago)}.`);
+          message.success(`${r.quantidade} comissão(ões) confirmadas — ${moeda(r.totalPago)}.`);
           setSelecionadas([]);
         } catch (e) {
           message.error(mensagemDeErro(e));
@@ -77,6 +83,12 @@ export function Comissoes() {
         </div>
       ),
     },
+    {
+      title: 'Parceiro',
+      dataIndex: ['parceiro', 'nome'],
+      render: (v: string | undefined) =>
+        v ?? <Typography.Text type="secondary">—</Typography.Text>,
+    },
     { title: 'Venda', dataIndex: ['venda', 'total'], align: 'right', render: (v: number) => moeda(v) },
     { title: '%', dataIndex: 'percentual', align: 'right', sorter: true, render: (v: number) => percentual(v, 0) },
     {
@@ -103,8 +115,8 @@ export function Comissoes() {
             —
           </Typography.Text>
         ) : (
-          <Button size="small" type="link" onClick={() => liquidar([c.id])}>
-            Pagar
+          <Button size="small" type="link" onClick={() => registrarPagamento([c.id])}>
+            Confirmar pagamento
           </Button>
         ),
     },
@@ -134,15 +146,15 @@ export function Comissoes() {
         acoes={
           <Space>
             {selecionadas.length > 0 && (
-              <Button type="primary" icon={<DollarOutlined />} onClick={() => liquidar(selecionadas)}>
-                Liquidar {selecionadas.length} selecionada(s)
+              <Button type="primary" icon={<DollarOutlined />} onClick={() => registrarPagamento(selecionadas)}>
+                Registrar pagamento de {selecionadas.length}
               </Button>
             )}
           </Space>
         }
         cabecalho={
           <Typography.Paragraph type="secondary" style={{ fontSize: 12, marginBottom: 0 }}>
-            Selecione linhas aguardando pagamento para liquidar em lote.
+            Selecione linhas aguardando pagamento para registrar a confirmação em lote.
           </Typography.Paragraph>
         }
         filtros={[

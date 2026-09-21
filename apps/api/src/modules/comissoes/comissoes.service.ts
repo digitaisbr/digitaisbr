@@ -43,7 +43,14 @@ export class ComissoesService {
           venda: {
             select: {
               id: true, ref: true, total: true, dataVenda: true, status: true,
-              produto: { select: { nome: true, categoria: { select: { nome: true } } } },
+              produto: {
+                select: {
+                  nome: true,
+                  categoria: { select: { nome: true } },
+                  // quem responde pelo pagamento da comissão ao associado
+                  parceiro: { select: { id: true, nome: true } },
+                },
+              },
             },
           },
           saque: { select: { id: true, status: true, solicitadoEm: true } },
@@ -56,6 +63,7 @@ export class ComissoesService {
       valor: num(c.valor),
       percentual: num(c.percentual),
       venda: { ...c.venda, total: num(c.venda.total) },
+      parceiro: c.venda.produto.parceiro,
     }));
 
     return paginate(data, total, f.page, f.limit);
@@ -127,7 +135,8 @@ export class ComissoesService {
         data: [...porAssociado].map(([associadoId, { total }]) => ({
           associadoId,
           titulo: 'Comissões pagas',
-          mensagem: `R$ ${total.toFixed(2)} em comissões foram liquidados.`,
+          // quem paga é o parceiro; a plataforma apenas registra a confirmação
+          mensagem: `R$ ${total.toFixed(2)} em comissões foram confirmados como pagos.`,
           tipo: TipoNotificacao.COMISSAO,
         })),
       });
