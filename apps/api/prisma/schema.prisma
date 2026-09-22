@@ -269,7 +269,13 @@ model Associado {
   bio             String?
   seguidores      Int             @default(0)
   engajamento     Decimal         @default(0) @db.Decimal(5, 2)
-  endereco        String?
+  /// Endereço completo: a associação emite nota fiscal para o associado, e
+  /// nota exige logradouro, número, bairro, cidade, UF e CEP.
+  cep             String?         @db.VarChar(9)
+  logradouro      String?
+  numero          String?         @db.VarChar(20)
+  complemento     String?
+  bairro          String?
   cidade          String?
   uf              String?         @db.VarChar(2)
   status          StatusAssociado @default(ATIVO)

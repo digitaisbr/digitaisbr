@@ -3,7 +3,7 @@ import { NivelPlano, RedeSocial, StatusAssociado } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean, IsEmail, IsEnum, IsInt, IsNumber, IsOptional, IsString, Length, Matches,
-  Max, Min, MinLength,
+  Max, MaxLength, Min, MinLength,
 } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 
@@ -61,10 +61,31 @@ export class CriarAssociadoDto {
   @Max(100)
   engajamento?: number;
 
-  @ApiPropertyOptional({ example: 'Rua das Flores, 100' })
+  @ApiPropertyOptional({ example: '70000-000' })
+  @IsOptional()
+  @Matches(/^\d{5}-\d{3}$/, { message: 'CEP deve estar no formato 00000-000.' })
+  cep?: string;
+
+  @ApiPropertyOptional({ example: 'SQN 110, Bloco A' })
   @IsOptional()
   @IsString()
-  endereco?: string;
+  logradouro?: string;
+
+  @ApiPropertyOptional({ example: '113' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  numero?: string;
+
+  @ApiPropertyOptional({ example: 'Apto 302' })
+  @IsOptional()
+  @IsString()
+  complemento?: string;
+
+  @ApiPropertyOptional({ example: 'Asa Norte' })
+  @IsOptional()
+  @IsString()
+  bairro?: string;
 
   @ApiPropertyOptional({ example: 'São Paulo' })
   @IsOptional()

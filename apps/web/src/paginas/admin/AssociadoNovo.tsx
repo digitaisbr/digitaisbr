@@ -4,6 +4,7 @@ import { mensagemDeErro } from '@/api/cliente';
 import { moeda } from '@/api/formato';
 import { useAcao, useApi } from '@/api/hooks';
 import { CampoMascarado } from '@/componentes/CampoMascarado';
+import { CamposEndereco } from '@/componentes/CamposEndereco';
 import { Pagina } from '@/componentes/Pagina';
 import type { NivelPlano, Plano, StatusAssociado } from '@/api/tipos';
 
@@ -17,7 +18,11 @@ interface Formulario {
   nicho?: string;
   seguidores?: number;
   engajamento?: number;
-  endereco?: string;
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
   cidade?: string;
   uf?: string;
   status?: StatusAssociado;
@@ -192,24 +197,15 @@ export function AssociadoNovo() {
               </Row>
             </Card>
 
-            <Card title="Endereço">
-              <Row gutter={12}>
-                <Col xs={24}>
-                  <Form.Item name="endereco" label="Endereço">
-                    <Input placeholder="Rua, número, complemento" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} md={16}>
-                  <Form.Item name="cidade" label="Cidade">
-                    <Input placeholder="Cidade" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} md={8}>
-                  <Form.Item name="uf" label="UF" rules={[{ len: 2, message: 'Use 2 letras.' }]}>
-                    <Input placeholder="SP" maxLength={2} />
-                  </Form.Item>
-                </Col>
-              </Row>
+            <Card
+              title="Endereço"
+              extra={
+                <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                  usado na nota fiscal
+                </Typography.Text>
+              }
+            >
+              <CamposEndereco form={form} />
             </Card>
           </Col>
 

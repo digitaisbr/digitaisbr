@@ -177,6 +177,7 @@ type SeedAssociado = {
   email: string | null; cpfCnpj: string | null; telefone: string | null; endereco: string | null;
   cidade: string | null; uf: string | null; slugLoja: string | null; membroDesde: string | null;
   nomeLoja: string | null;
+  cep?: string; logradouro?: string; numero?: string; bairro?: string;
 };
 type SeedProduto = {
   id: string; nome: string; sku: string; categoria: string; preco: number; comissaoPct: number;
@@ -357,7 +358,10 @@ async function main(): Promise<void> {
         nicho: a.nicho,
         seguidores: a.seguidores ?? 0,
         engajamento: dec(a.engajamento),
-        endereco: a.endereco,
+        cep: a.cep,
+        logradouro: a.logradouro,
+        numero: a.numero,
+        bairro: a.bairro,
         cidade: a.cidade,
         uf: a.uf,
         status: STATUS_ASSOCIADO[a.status] ?? StatusAssociado.ATIVO,

@@ -17,13 +17,16 @@
     "email": "ana-silva@email.com",
     "cpfCnpj": "079.297.885-17",
     "telefone": "(11) 932631666",
-    "endereco": "Rua das Flores, 100",
     "cidade": "São Paulo",
     "uf": "SP",
     "slugLoja": "ana-silva",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-05-06",
-    "nomeLoja": "Loja Ana"
+    "nomeLoja": "Loja Ana",
+    "logradouro": "Rua das Flores",
+    "numero": "100",
+    "bairro": "Centro",
+    "cep": "95301-688"
   },
   {
     "id": "assoc-2",
@@ -42,13 +45,16 @@
     "email": "bruno-costa@email.com",
     "cpfCnpj": "792.978.851-70",
     "telefone": "(12) 936258259",
-    "endereco": "Rua Brasil, 113",
     "cidade": "Niterói",
     "uf": "RJ",
     "slugLoja": "bruno-costa",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-04-05",
-    "nomeLoja": "Loja Bruno"
+    "nomeLoja": "Loja Bruno",
+    "logradouro": "Rua Brasil",
+    "numero": "113",
+    "bairro": "Jardim América",
+    "cep": "96305-369"
   },
   {
     "id": "assoc-3",
@@ -67,13 +73,16 @@
     "email": "carla-oliveira@email.com",
     "cpfCnpj": "929.788.517-02",
     "telefone": "(13) 934832836",
-    "endereco": "Rua da Paz, 126",
     "cidade": "Juiz de Fora",
     "uf": "MG",
     "slugLoja": "carla-oliveira",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-04-08",
-    "nomeLoja": "Loja Carla"
+    "nomeLoja": "Loja Carla",
+    "logradouro": "Rua da Paz",
+    "numero": "126",
+    "bairro": "Vila Nova",
+    "cep": "14411-936"
   },
   {
     "id": "assoc-4",
@@ -93,13 +102,16 @@
     "email": "diego-santos@email.com",
     "cpfCnpj": "297.885.170-26",
     "telefone": "(14) 932635163",
-    "endereco": "Rua São Paulo, 139",
     "cidade": "Feira de Santana",
     "uf": "BA",
     "slugLoja": "diego-santos",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-11-20",
-    "nomeLoja": "Loja Diego"
+    "nomeLoja": "Loja Diego",
+    "logradouro": "Rua São Paulo",
+    "numero": "139",
+    "bairro": "Boa Vista",
+    "cep": "67339-007"
   },
   {
     "id": "assoc-5",
@@ -118,13 +130,16 @@
     "email": "elena-ferreira@email.com",
     "cpfCnpj": "978.851.702-60",
     "telefone": "(15) 919856033",
-    "endereco": "Rua Boa Vista, 152",
     "cidade": "Porto Alegre",
     "uf": "RS",
     "slugLoja": "elena-ferreira",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-10-11",
-    "nomeLoja": "Loja Elena"
+    "nomeLoja": "Loja Elena",
+    "logradouro": "Rua Boa Vista",
+    "numero": "152",
+    "bairro": "Santa Cecília",
+    "cep": "68053-077"
   },
   {
     "id": "assoc-6",
@@ -143,13 +158,16 @@
     "email": "felipe-almeida@email.com",
     "cpfCnpj": "788.517.026-08",
     "telefone": "(16) 950343977",
-    "endereco": "Rua Principal, 165",
     "cidade": "Maringá",
     "uf": "PR",
     "slugLoja": "felipe-almeida",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-08-25",
-    "nomeLoja": "Loja Felipe"
+    "nomeLoja": "Loja Felipe",
+    "logradouro": "Rua Principal",
+    "numero": "165",
+    "bairro": "Bela Vista",
+    "cep": "73396-660"
   },
   {
     "id": "assoc-7",
@@ -169,13 +187,16 @@
     "email": "gabriela-lima@email.com",
     "cpfCnpj": "885.170.260-89",
     "telefone": "(17) 954098121",
-    "endereco": "Rua das Flores, 178",
     "cidade": "Recife",
     "uf": "PE",
     "slugLoja": "gabriela-lima",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-07-29",
-    "nomeLoja": "Loja Gabriela"
+    "nomeLoja": "Loja Gabriela",
+    "logradouro": "Rua das Flores",
+    "numero": "178",
+    "bairro": "Alto da Lapa",
+    "cep": "96306-531"
   },
   {
     "id": "assoc-8",
@@ -194,13 +215,16 @@
     "email": "hugo-pereira@email.com",
     "cpfCnpj": "851.702.608-90",
     "telefone": "(18) 968279723",
-    "endereco": "Rua Brasil, 191",
     "cidade": "Juazeiro do Norte",
     "uf": "CE",
     "slugLoja": "hugo-pereira",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-10-26",
-    "nomeLoja": "Loja Hugo"
+    "nomeLoja": "Loja Hugo",
+    "logradouro": "Rua Brasil",
+    "numero": "191",
+    "bairro": "Setor Sul",
+    "cep": "06089-066"
   },
   {
     "id": "assoc-9",
@@ -219,13 +243,16 @@
     "email": "isabela-souza@email.com",
     "cpfCnpj": "517.026.089-01",
     "telefone": "(19) 975383276",
-    "endereco": "Rua da Paz, 204",
     "cidade": "Belém",
     "uf": "PA",
     "slugLoja": "isabela-souza",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-03-09",
-    "nomeLoja": "Loja Isabela"
+    "nomeLoja": "Loja Isabela",
+    "logradouro": "Rua da Paz",
+    "numero": "204",
+    "bairro": "Praia do Canto",
+    "cep": "96903-703"
   },
   {
     "id": "assoc-10",
@@ -245,13 +272,16 @@
     "email": "joao-rodrigues@email.com",
     "cpfCnpj": "170.260.890-17",
     "telefone": "(20) 944206425",
-    "endereco": "Rua São Paulo, 217",
     "cidade": "Florianópolis",
     "uf": "SC",
     "slugLoja": "joao-rodrigues",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-06-05",
-    "nomeLoja": "Loja João"
+    "nomeLoja": "Loja João",
+    "logradouro": "Rua São Paulo",
+    "numero": "217",
+    "bairro": "Meireles",
+    "cep": "80341-469"
   },
   {
     "id": "assoc-11",
@@ -270,13 +300,16 @@
     "email": "karen-nascimento@email.com",
     "cpfCnpj": "702.608.901-74",
     "telefone": "(21) 990441008",
-    "endereco": "Rua Boa Vista, 230",
     "cidade": "Santos",
     "uf": "SP",
     "slugLoja": "karen-nascimento",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-07-29",
-    "nomeLoja": "Loja Karen"
+    "nomeLoja": "Loja Karen",
+    "logradouro": "Rua Boa Vista",
+    "numero": "230",
+    "bairro": "Centro",
+    "cep": "88838-424"
   },
   {
     "id": "assoc-12",
@@ -295,13 +328,16 @@
     "email": "lucas-carvalho@email.com",
     "cpfCnpj": "026.089.017-45",
     "telefone": "(22) 984006992",
-    "endereco": "Rua Principal, 243",
     "cidade": "Petrópolis",
     "uf": "RJ",
     "slugLoja": "lucas-carvalho",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-06-27",
-    "nomeLoja": "Loja Lucas"
+    "nomeLoja": "Loja Lucas",
+    "logradouro": "Rua Principal",
+    "numero": "243",
+    "bairro": "Jardim América",
+    "cep": "91135-061"
   },
   {
     "id": "assoc-13",
@@ -321,13 +357,16 @@
     "email": "mariana-ribeiro@email.com",
     "cpfCnpj": "260.890.174-54",
     "telefone": "(23) 927373015",
-    "endereco": "Rua das Flores, 256",
     "cidade": "Belo Horizonte",
     "uf": "MG",
     "slugLoja": "mariana-ribeiro",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-01-17",
-    "nomeLoja": "Loja Mariana"
+    "nomeLoja": "Loja Mariana",
+    "logradouro": "Rua das Flores",
+    "numero": "256",
+    "bairro": "Vila Nova",
+    "cep": "68523-612"
   },
   {
     "id": "assoc-14",
@@ -346,13 +385,16 @@
     "email": "nicolas-gomes@email.com",
     "cpfCnpj": "608.901.745-47",
     "telefone": "(24) 960130272",
-    "endereco": "Rua Brasil, 269",
     "cidade": "Feira de Santana",
     "uf": "BA",
     "slugLoja": "nicolas-gomes",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-03-08",
-    "nomeLoja": "Loja Nicolas"
+    "nomeLoja": "Loja Nicolas",
+    "logradouro": "Rua Brasil",
+    "numero": "269",
+    "bairro": "Boa Vista",
+    "cep": "29321-155"
   },
   {
     "id": "assoc-15",
@@ -371,13 +413,16 @@
     "email": "olivia-martins@email.com",
     "cpfCnpj": "089.017.454-72",
     "telefone": "(25) 933434377",
-    "endereco": "Rua da Paz, 282",
     "cidade": "Porto Alegre",
     "uf": "RS",
     "slugLoja": "olivia-martins",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-10-21",
-    "nomeLoja": "Loja Olívia"
+    "nomeLoja": "Loja Olívia",
+    "logradouro": "Rua da Paz",
+    "numero": "282",
+    "bairro": "Santa Cecília",
+    "cep": "70975-534"
   },
   {
     "id": "assoc-16",
@@ -397,13 +442,16 @@
     "email": "paulo-araujo@email.com",
     "cpfCnpj": "890.174.547-24",
     "telefone": "(26) 935811541",
-    "endereco": "Rua São Paulo, 295",
     "cidade": "Curitiba",
     "uf": "PR",
     "slugLoja": "paulo-araujo",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-05-09",
-    "nomeLoja": "Loja Paulo"
+    "nomeLoja": "Loja Paulo",
+    "logradouro": "Rua São Paulo",
+    "numero": "295",
+    "bairro": "Bela Vista",
+    "cep": "15158-553"
   },
   {
     "id": "assoc-17",
@@ -422,13 +470,16 @@
     "email": "rafaela-barbosa@email.com",
     "cpfCnpj": "901.745.472-45",
     "telefone": "(27) 953961378",
-    "endereco": "Rua Boa Vista, 308",
     "cidade": "Recife",
     "uf": "PE",
     "slugLoja": "rafaela-barbosa",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-08-13",
-    "nomeLoja": "Loja Rafaela"
+    "nomeLoja": "Loja Rafaela",
+    "logradouro": "Rua Boa Vista",
+    "numero": "308",
+    "bairro": "Alto da Lapa",
+    "cep": "88662-870"
   },
   {
     "id": "assoc-18",
@@ -447,13 +498,16 @@
     "email": "samuel-rocha@email.com",
     "cpfCnpj": "017.454.724-57",
     "telefone": "(28) 982018922",
-    "endereco": "Rua Principal, 321",
     "cidade": "Juazeiro do Norte",
     "uf": "CE",
     "slugLoja": "samuel-rocha",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-01-08",
-    "nomeLoja": "Loja Samuel"
+    "nomeLoja": "Loja Samuel",
+    "logradouro": "Rua Principal",
+    "numero": "321",
+    "bairro": "Setor Sul",
+    "cep": "27844-396"
   },
   {
     "id": "assoc-19",
@@ -473,13 +527,16 @@
     "email": "tatiane-lopes@email.com",
     "cpfCnpj": "174.547.245-70",
     "telefone": "(29) 975087379",
-    "endereco": "Rua das Flores, 334",
     "cidade": "Belém",
     "uf": "PA",
     "slugLoja": "tatiane-lopes",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-06-24",
-    "nomeLoja": "Loja Tatiane"
+    "nomeLoja": "Loja Tatiane",
+    "logradouro": "Rua das Flores",
+    "numero": "334",
+    "bairro": "Praia do Canto",
+    "cep": "23521-296"
   },
   {
     "id": "assoc-20",
@@ -498,13 +555,16 @@
     "email": "vinicius-mendes@email.com",
     "cpfCnpj": "745.472.457-06",
     "telefone": "(30) 923667595",
-    "endereco": "Rua Brasil, 347",
     "cidade": "Joinville",
     "uf": "SC",
     "slugLoja": "vinicius-mendes",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-12-17",
-    "nomeLoja": "Loja Vinícius"
+    "nomeLoja": "Loja Vinícius",
+    "logradouro": "Rua Brasil",
+    "numero": "347",
+    "bairro": "Meireles",
+    "cep": "34627-974"
   },
   {
     "id": "assoc-21",
@@ -523,13 +583,16 @@
     "email": "wanda-correia@email.com",
     "cpfCnpj": "454.724.570-66",
     "telefone": "(31) 991613402",
-    "endereco": "Rua da Paz, 360",
     "cidade": "São Paulo",
     "uf": "SP",
     "slugLoja": "wanda-correia",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-02-10",
-    "nomeLoja": "Loja Wanda"
+    "nomeLoja": "Loja Wanda",
+    "logradouro": "Rua da Paz",
+    "numero": "360",
+    "bairro": "Centro",
+    "cep": "41745-103"
   },
   {
     "id": "assoc-22",
@@ -549,13 +612,16 @@
     "email": "xavier-teixeira@email.com",
     "cpfCnpj": "547.245.706-66",
     "telefone": "(32) 959187928",
-    "endereco": "Rua São Paulo, 373",
     "cidade": "Rio de Janeiro",
     "uf": "RJ",
     "slugLoja": "xavier-teixeira",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-02-25",
-    "nomeLoja": "Loja Xavier"
+    "nomeLoja": "Loja Xavier",
+    "logradouro": "Rua São Paulo",
+    "numero": "373",
+    "bairro": "Jardim América",
+    "cep": "52242-648"
   },
   {
     "id": "assoc-23",
@@ -574,13 +640,16 @@
     "email": "yasmin-moreira@email.com",
     "cpfCnpj": "472.457.066-62",
     "telefone": "(33) 931026485",
-    "endereco": "Rua Boa Vista, 386",
     "cidade": "Uberlândia",
     "uf": "MG",
     "slugLoja": "yasmin-moreira",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-02-18",
-    "nomeLoja": "Loja Yasmin"
+    "nomeLoja": "Loja Yasmin",
+    "logradouro": "Rua Boa Vista",
+    "numero": "386",
+    "bairro": "Vila Nova",
+    "cep": "49184-943"
   },
   {
     "id": "assoc-24",
@@ -599,13 +668,16 @@
     "email": "zelia-cardoso@email.com",
     "cpfCnpj": "724.570.666-21",
     "telefone": "(34) 935238801",
-    "endereco": "Rua Principal, 399",
     "cidade": "Feira de Santana",
     "uf": "BA",
     "slugLoja": "zelia-cardoso",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-12-19",
-    "nomeLoja": "Loja Zélia"
+    "nomeLoja": "Loja Zélia",
+    "logradouro": "Rua Principal",
+    "numero": "399",
+    "bairro": "Boa Vista",
+    "cep": "09372-117"
   },
   {
     "id": "assoc-25",
@@ -625,13 +697,16 @@
     "email": "andre-machado@email.com",
     "cpfCnpj": "245.706.662-18",
     "telefone": "(35) 958365578",
-    "endereco": "Rua das Flores, 412",
     "cidade": "Porto Alegre",
     "uf": "RS",
     "slugLoja": "andre-machado",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-02-17",
-    "nomeLoja": "Loja André"
+    "nomeLoja": "Loja André",
+    "logradouro": "Rua das Flores",
+    "numero": "412",
+    "bairro": "Santa Cecília",
+    "cep": "16590-421"
   },
   {
     "id": "assoc-26",
@@ -650,13 +725,16 @@
     "email": "bianca-pinto@email.com",
     "cpfCnpj": "457.066.621-81",
     "telefone": "(36) 926528131",
-    "endereco": "Rua Brasil, 425",
     "cidade": "Londrina",
     "uf": "PR",
     "slugLoja": "bianca-pinto",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-08-06",
-    "nomeLoja": "Loja Bianca"
+    "nomeLoja": "Loja Bianca",
+    "logradouro": "Rua Brasil",
+    "numero": "425",
+    "bairro": "Bela Vista",
+    "cep": "41867-509"
   },
   {
     "id": "assoc-27",
@@ -675,13 +753,16 @@
     "email": "cesar-moura@email.com",
     "cpfCnpj": "570.666.218-12",
     "telefone": "(37) 916873208",
-    "endereco": "Rua da Paz, 438",
     "cidade": "Recife",
     "uf": "PE",
     "slugLoja": "cesar-moura",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-11-28",
-    "nomeLoja": "Loja César"
+    "nomeLoja": "Loja César",
+    "logradouro": "Rua da Paz",
+    "numero": "438",
+    "bairro": "Alto da Lapa",
+    "cep": "27954-249"
   },
   {
     "id": "assoc-28",
@@ -701,13 +782,16 @@
     "email": "daniela-nunes@email.com",
     "cpfCnpj": "706.662.181-26",
     "telefone": "(38) 928142722",
-    "endereco": "Rua São Paulo, 451",
     "cidade": "Juazeiro do Norte",
     "uf": "CE",
     "slugLoja": "daniela-nunes",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-04-20",
-    "nomeLoja": "Loja Daniela"
+    "nomeLoja": "Loja Daniela",
+    "logradouro": "Rua São Paulo",
+    "numero": "451",
+    "bairro": "Setor Sul",
+    "cep": "10114-769"
   },
   {
     "id": "assoc-29",
@@ -726,13 +810,16 @@
     "email": "eduardo-vieira@email.com",
     "cpfCnpj": "066.621.812-66",
     "telefone": "(39) 980610388",
-    "endereco": "Rua Boa Vista, 464",
     "cidade": "Belém",
     "uf": "PA",
     "slugLoja": "eduardo-vieira",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-05-18",
-    "nomeLoja": "Loja Eduardo"
+    "nomeLoja": "Loja Eduardo",
+    "logradouro": "Rua Boa Vista",
+    "numero": "464",
+    "bairro": "Praia do Canto",
+    "cep": "42022-286"
   },
   {
     "id": "assoc-30",
@@ -751,12 +838,15 @@
     "email": "fernanda-dias@email.com",
     "cpfCnpj": "666.218.126-69",
     "telefone": "(40) 988598163",
-    "endereco": "Rua Principal, 477",
     "cidade": "Blumenau",
     "uf": "SC",
     "slugLoja": "fernanda-dias",
     "atualizadoEm": "2026-07-20",
     "membroDesde": "2025-04-08",
-    "nomeLoja": "Loja Fernanda"
+    "nomeLoja": "Loja Fernanda",
+    "logradouro": "Rua Principal",
+    "numero": "477",
+    "bairro": "Meireles",
+    "cep": "84499-787"
   }
 ]

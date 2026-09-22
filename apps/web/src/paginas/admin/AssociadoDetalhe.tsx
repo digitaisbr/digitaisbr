@@ -19,7 +19,11 @@ interface Detalhe {
   bio: string | null;
   seguidores: number;
   engajamento: number;
-  endereco: string | null;
+  cep: string | null;
+  logradouro: string | null;
+  numero: string | null;
+  complemento: string | null;
+  bairro: string | null;
   cidade: string | null;
   uf: string | null;
   status: StatusAssociado;
@@ -172,10 +176,16 @@ export function AssociadoDetalhe() {
                     <Descriptions.Item label="CPF/CNPJ">{a.cpfCnpj ?? '—'}</Descriptions.Item>
                     <Descriptions.Item label="Telefone">{a.telefone ?? '—'}</Descriptions.Item>
                     <Descriptions.Item label="Endereço" span={2}>
-                      {a.endereco ?? '—'}
+                      {[
+                        [a.logradouro, a.numero].filter(Boolean).join(', '),
+                        a.complemento,
+                        a.bairro,
+                        [a.cidade, a.uf].filter(Boolean).join('/'),
+                        a.cep,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ') || '—'}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Cidade">{a.cidade ?? '—'}</Descriptions.Item>
-                    <Descriptions.Item label="UF">{a.uf ?? '—'}</Descriptions.Item>
                     <Descriptions.Item label="Loja">{a.loja?.nome ?? '—'}</Descriptions.Item>
                     <Descriptions.Item label="Slug">{a.loja ? `/${a.loja.slug}` : '—'}</Descriptions.Item>
                     <Descriptions.Item label="Último login" span={2}>

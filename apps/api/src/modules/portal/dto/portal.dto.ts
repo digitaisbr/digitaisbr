@@ -3,7 +3,7 @@ import { RedeSocial, TipoDesconto } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean, IsDateString, IsEnum, IsInt, IsNumber, IsOptional, IsString, IsUrl,
-  Matches, Min, MinLength,
+  Length, Matches, Min, MinLength,
 } from 'class-validator';
 
 export class AtualizarPerfilDto {
@@ -27,11 +27,41 @@ export class AtualizarPerfilDto {
   @IsOptional()
   @IsString()
   telefone?: string;
+  @ApiPropertyOptional({ example: '70000-000' })
+  @IsOptional()
+  @Matches(/^\d{5}-\d{3}$/, { message: 'CEP deve estar no formato 00000-000.' })
+  cep?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  logradouro?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  numero?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  complemento?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  bairro?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   cidade?: string;
+
+  @ApiPropertyOptional({ example: 'SP' })
+  @IsOptional()
+  @IsString()
+  @Length(2, 2)
+  uf?: string;
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()

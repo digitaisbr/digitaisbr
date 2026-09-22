@@ -5,6 +5,7 @@ import { mensagemDeErro } from '@/api/cliente';
 import { useAcao, useApi } from '@/api/hooks';
 import { compacto, corDeStatus, percentual, rotulo } from '@/api/formato';
 import { Estado } from '@/componentes/Estado';
+import { CamposEndereco } from '@/componentes/CamposEndereco';
 import { Pagina } from '@/componentes/Pagina';
 import type { NivelPlano } from '@/api/tipos';
 
@@ -16,7 +17,13 @@ interface Perfil {
   telefone: string | null;
   nicho: string | null;
   bio: string | null;
+  cep: string | null;
+  logradouro: string | null;
+  numero: string | null;
+  complemento: string | null;
+  bairro: string | null;
   cidade: string | null;
+  uf: string | null;
   seguidores: number;
   engajamento: number;
   mostrarEmail: boolean;
@@ -31,7 +38,13 @@ interface Formulario {
   bio?: string;
   nicho?: string;
   telefone?: string;
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
   cidade?: string;
+  uf?: string;
   mostrarEmail: boolean;
   mostrarTelefone: boolean;
 }
@@ -56,7 +69,13 @@ export function MeuPerfil() {
       bio: p.bio ?? undefined,
       nicho: p.nicho ?? undefined,
       telefone: p.telefone ?? undefined,
+      cep: p.cep ?? undefined,
+      logradouro: p.logradouro ?? undefined,
+      numero: p.numero ?? undefined,
+      complemento: p.complemento ?? undefined,
+      bairro: p.bairro ?? undefined,
       cidade: p.cidade ?? undefined,
+      uf: p.uf ?? undefined,
       mostrarEmail: p.mostrarEmail,
       mostrarTelefone: p.mostrarTelefone,
     });
@@ -100,12 +119,19 @@ export function MeuPerfil() {
                         <Input placeholder="(00) 90000-0000" />
                       </Form.Item>
                     </Col>
-                    <Col xs={24} md={12}>
-                      <Form.Item name="cidade" label="Cidade">
-                        <Input />
-                      </Form.Item>
-                    </Col>
                   </Row>
+                </Card>
+
+                <Card
+                  title="Endereço"
+                  extra={
+                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                      usado na nota fiscal da associação
+                    </Typography.Text>
+                  }
+                  style={{ marginBottom: 16 }}
+                >
+                  <CamposEndereco form={form} />
                 </Card>
 
                 <Card title="Privacidade" style={{ marginBottom: 16 }}>
