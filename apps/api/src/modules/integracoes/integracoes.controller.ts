@@ -6,7 +6,7 @@ import { Role, StatusEventoWebhook } from '@prisma/client';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { AssinaturaWebhookGuard } from '../../common/guards/assinatura-webhook.guard';
-import { EventoWebhookDto } from './dto/evento-webhook.dto';
+import { ConsultarElegibilidadeDto, EventoWebhookDto } from './dto/evento-webhook.dto';
 import { IntegracoesService } from './integracoes.service';
 
 @ApiTags('Integrações')
@@ -33,6 +33,31 @@ export class IntegracoesController {
     @Body() dto: EventoWebhookDto,
   ) {
     return this.service.receber(parceiroId, dto);
+  }
+
+  /**
+   * Consulta de elegibilidade, para o parceiro saber se presta o serviço.
+   *
+   * Pública no mesmo sentido do recebimento de eventos: a autenticação é a
+   * assinatura, não o login. Vai por POST porque o guard confere a assinatura
+   * sobre o corpo da requisição.
+   */
+  @Public()
+  @UseGuards(AssinaturaWebhookGuard)
+  @Post(':parceiroId/elegibilidade')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Diz se um associado está apto a usufruir do benefício',
+    description:
+      'Aceita o handle do associado ou o código de origem de um link. ' +
+      'Exige o mesmo cabeçalho de assinatura do recebimento de eventos.',
+  })
+  elegibilidade(
+    @Param('parceiroId', ParseUUIDPipe) parceiroId: string,
+    @Body() dto: ConsultarElegibilidadeDto,
+  ) {
+    void parceiroId; // usado pelo guard, para localizar o segredo
+    return this.service.elegibilidade(dto.associado);
   }
 
   @Roles(Role.ADMIN)

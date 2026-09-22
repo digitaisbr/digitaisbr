@@ -1,6 +1,9 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Prisma, StatusEventoWebhook, StatusVenda } from '@prisma/client';
+import {
+  Prisma, StatusAssociado, StatusComissao, StatusEventoWebhook, StatusVenda, TipoNotificacao,
+} from '@prisma/client';
 import { randomBytes } from 'node:crypto';
+import { num } from '../../common/utils/query.util';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { VendasService } from '../vendas/vendas.service';
 import { EventoWebhookDto, TipoEventoWebhook } from './dto/evento-webhook.dto';
@@ -81,10 +84,14 @@ export class IntegracoesService {
     dto: EventoWebhookDto,
   ): Promise<ResultadoEvento> {
     try {
-      const vendaId =
-        dto.evento === TipoEventoWebhook.VENDA_APROVADA
-          ? await this.registrarVenda(dto)
-          : await this.encerrarVenda(parceiroId, dto);
+      let vendaId: string;
+      if (dto.evento === TipoEventoWebhook.VENDA_APROVADA) {
+        vendaId = await this.registrarVenda(dto);
+      } else if (dto.evento === TipoEventoWebhook.COMISSAO_PAGA) {
+        vendaId = await this.confirmarComissao(parceiroId, dto);
+      } else {
+        vendaId = await this.encerrarVenda(parceiroId, dto);
+      }
 
       await this.prisma.eventoWebhook.update({
         where: { id: eventoId },
@@ -125,15 +132,18 @@ export class IntegracoesService {
     if (!link) throw new EventoRejeitado(`Código de origem "${dto.ref}" não existe.`);
     if (!link.ativo) throw new EventoRejeitado(`Código de origem "${dto.ref}" está inativo.`);
 
-    const venda = await this.vendas.criar({
-      produtoId: link.produtoId,
-      ref: dto.ref,
-      clienteNome: dto.cliente?.nome ?? 'Cliente do parceiro',
-      clienteEmail: dto.cliente?.email,
-      quantidade: dto.quantidade ?? 1,
-      cupom: dto.cupom,
-      dataVenda: dto.ocorridoEm,
-    });
+    const venda = await this.vendas.criar(
+      {
+        produtoId: link.produtoId,
+        ref: dto.ref,
+        clienteNome: dto.cliente?.nome ?? 'Cliente do parceiro',
+        clienteEmail: dto.cliente?.email,
+        quantidade: dto.quantidade ?? 1,
+        cupom: dto.cupom,
+        dataVenda: dto.ocorridoEm,
+      },
+      { percentual: dto.comissaoPct, valor: dto.comissaoValor },
+    );
 
     // a venda nasce aguardando pagamento; o evento diz que já foi aprovada
     await this.vendas.alterarStatus(venda.id, { status: StatusVenda.PAGA });
@@ -178,6 +188,64 @@ export class IntegracoesService {
   }
 
   /**
+   * O parceiro confirma que pagou a comissão ao associado.
+   *
+   * A plataforma não move dinheiro: apenas registra a confirmação e avisa o
+   * associado. Quem paga é o parceiro, e é ele quem sabe quando pagou.
+   */
+  private async confirmarComissao(parceiroId: string, dto: EventoWebhookDto): Promise<string> {
+    const aprovacao = await this.prisma.eventoWebhook.findUnique({
+      where: {
+        parceiroId_externoId_evento: {
+          parceiroId,
+          externoId: dto.pedidoId,
+          evento: TipoEventoWebhook.VENDA_APROVADA,
+        },
+      },
+      select: { vendaId: true },
+    });
+
+    if (!aprovacao?.vendaId) {
+      throw new EventoRejeitado(
+        `Não há venda registrada para o pedido "${dto.pedidoId}" — nada a confirmar.`,
+      );
+    }
+
+    const comissao = await this.prisma.comissao.findUnique({
+      where: { vendaId: aprovacao.vendaId },
+      include: { associado: { select: { id: true, nome: true } } },
+    });
+
+    if (!comissao) {
+      throw new EventoRejeitado('A venda existe, mas não gerou comissão.');
+    }
+    if (comissao.status === StatusComissao.PAGA) {
+      // idempotente: reconfirmar não é erro, só não tem efeito
+      return aprovacao.vendaId;
+    }
+
+    const quando = dto.ocorridoEm ? new Date(dto.ocorridoEm) : new Date();
+    await this.prisma.$transaction([
+      this.prisma.comissao.update({
+        where: { id: comissao.id },
+        data: { status: StatusComissao.PAGA, pagoEm: quando },
+      }),
+      this.prisma.notificacao.create({
+        data: {
+          associadoId: comissao.associadoId,
+          titulo: 'Comissão paga',
+          mensagem:
+            `O parceiro confirmou o pagamento de R$ ${num(comissao.valor).toFixed(2)} ` +
+            `referente ao pedido ${dto.pedidoId}.`,
+          tipo: TipoNotificacao.COMISSAO,
+        },
+      }),
+    ]);
+
+    return aprovacao.vendaId;
+  }
+
+  /**
    * Reprocessa um evento que falhou por causa transitória.
    *
    * Só ERRO é reprocessável: REJEITADO falhou pelo conteúdo, e tentar de novo
@@ -202,6 +270,49 @@ export class IntegracoesService {
       evento.parceiroId,
       evento.payload as unknown as EventoWebhookDto,
     );
+  }
+
+  /**
+   * Diz ao parceiro se o associado está apto a usufruir do benefício.
+   *
+   * Existe porque alguns serviços — telemedicina, odontologia — só valem
+   * enquanto a associação estiver em dia, e quem presta o serviço é o parceiro:
+   * sem consultar, ele não teria como saber.
+   *
+   * Devolve o mínimo necessário. Nome e plano bastam para o atendimento; dado
+   * pessoal além disso não é do parceiro.
+   */
+  async elegibilidade(codigo: string) {
+    // aceita tanto o handle quanto o código de origem de um link
+    const porLink = await this.prisma.linkAfiliado.findUnique({
+      where: { codigo },
+      select: { associadoId: true },
+    });
+
+    const associado = await this.prisma.associado.findFirst({
+      where: porLink ? { id: porLink.associadoId } : { handle: codigo },
+      select: {
+        nome: true,
+        handle: true,
+        status: true,
+        plano: { select: { nome: true, nivel: true } },
+      },
+    });
+
+    if (!associado) {
+      throw new NotFoundException('Associado não encontrado.');
+    }
+
+    return {
+      handle: associado.handle,
+      nome: associado.nome,
+      plano: associado.plano.nome,
+      nivel: associado.plano.nivel,
+      /** Só ATIVO usufrui: suspenso e inativo perdem o acesso aos benefícios. */
+      apto: associado.status === StatusAssociado.ATIVO,
+      situacao: associado.status,
+      consultadoEm: new Date(),
+    };
   }
 
   listar(status?: StatusEventoWebhook, parceiroId?: string) {

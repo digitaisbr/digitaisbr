@@ -96,7 +96,12 @@ export class VendasService {
    * (percentual do produto + bônus do plano) e baixa o estoque — tudo em
    * uma transação, para que nada fique pela metade.
    */
-  async criar(dto: CriarVendaDto) {
+  /**
+   * @param apurado  Comissão informada por quem paga. Quando vem, prevalece
+   *                 sobre o cálculo: quem paga é quem sabe o valor devido, e
+   *                 divergir do parceiro geraria conciliação impossível.
+   */
+  async criar(dto: CriarVendaDto, apurado?: { percentual?: number; valor?: number }) {
     const quantidade = dto.quantidade ?? 1;
 
     return this.prisma.$transaction(async (tx) => {
@@ -164,9 +169,12 @@ export class VendasService {
 
       const total = Number((bruto - desconto).toFixed(2));
 
-      // comissão = percentual do produto + bônus do plano do associado
-      const percentual = num(produto.comissaoPct) + num(associado.plano.comissaoExtraPct);
-      const valorComissao = Number(((total * percentual) / 100).toFixed(2));
+      // comissão = percentual do produto + bônus do plano do associado,
+      // exceto quando o parceiro informa o que efetivamente vai pagar
+      const percentualCalculado = num(produto.comissaoPct) + num(associado.plano.comissaoExtraPct);
+      const percentual = apurado?.percentual ?? percentualCalculado;
+      const valorComissao =
+        apurado?.valor ?? Number(((total * percentual) / 100).toFixed(2));
 
       // estoque: -1 é ilimitado e não é decrementado
       if (produto.estoque !== -1) {
