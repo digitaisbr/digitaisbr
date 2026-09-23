@@ -45,7 +45,6 @@ export function Beneficios() {
     ['parceiros', 'seletor'],
     '/parceiros',
     { limit: 200, ativa: true },
-    { enabled: aberto },
   );
 
   function abrir(b: Beneficio | null) {
@@ -103,7 +102,12 @@ export function Beneficios() {
           nome={b.nome}
           invalidar={CHAVES}
           aoEditar={() => abrir(b)}
-          aviso={b.utilizacoes ? `Já foi resgatado ${b.utilizacoes} vez(es).` : undefined}
+          aviso={
+            b.utilizacoes
+              ? `Já foi resgatado ${b.utilizacoes} vez(es) — a exclusão será recusada. ` +
+                'Use o interruptor Ativo para tirar de circulação.'
+              : undefined
+          }
         />
       ),
     },
@@ -145,6 +149,13 @@ export function Beneficios() {
             rotulo: 'Plano mínimo',
             largura: 170,
             opcoes: PLANOS.map((p) => ({ valor: p.value, rotulo: p.label })),
+          },
+          {
+            campo: 'parceiroId',
+            rotulo: 'Parceiro',
+            largura: 200,
+            // a API já aceitava o recorte; faltava oferecê-lo na tela
+            opcoes: (parceiros.data?.data ?? []).map((p) => ({ valor: p.id, rotulo: p.nome })),
           },
         ]}
       />

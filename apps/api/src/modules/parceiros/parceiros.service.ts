@@ -184,6 +184,16 @@ export class ParceirosService {
   }
 
   async removerBeneficio(id: string) {
+    // apagar um benefício já usado levaria junto o registro de quem o usou;
+    // desligar tira da vista do associado e mantém o histórico
+    const usos = await this.prisma.beneficioUso.count({ where: { beneficioId: id } });
+    if (usos > 0) {
+      throw new ConflictException(
+        `Este benefício já foi resgatado ${usos} vez(es) — desligue-o em vez de excluir, ` +
+          'para não perder o histórico.',
+      );
+    }
+
     await this.prisma.beneficio.delete({ where: { id } });
     return { id, removido: true };
   }
