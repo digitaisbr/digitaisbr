@@ -77,6 +77,17 @@ export class ServicosService {
   }
 
   async removerProfissional(id: string) {
+    // a solicitação guarda quem atendeu; sem o profissional o atendimento
+    // fica órfão e o associado perde a referência do que contratou.
+    const solicitacoes = await this.prisma.solicitacaoServico.count({
+      where: { profissionalId: id },
+    });
+    if (solicitacoes > 0) {
+      throw new ConflictException(
+        `Profissional possui ${solicitacoes} solicitação(ões) registrada(s) — a exclusão apagaria o histórico. `
+        + 'Marque-o como indisponível em vez de excluir.',
+      );
+    }
     await this.prisma.profissional.delete({ where: { id } });
     return { id, removido: true };
   }

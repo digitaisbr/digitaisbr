@@ -182,7 +182,7 @@ export function Dashboard() {
         </Col>
 
         <Col xs={24} lg={12}>
-          <Card title="Top produtos por receita">
+          <Card title="Top produtos por valor comercializado">
             <Estado carregando={relatorio.isLoading} erro={relatorio.error} esqueleto>
               <List
                 size="small"

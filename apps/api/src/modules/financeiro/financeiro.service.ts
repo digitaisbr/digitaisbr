@@ -287,19 +287,9 @@ export class FinanceiroService {
       },
     });
 
-    if (dto.status === StatusSaque.CONCLUIDO) {
-      // o saque efetivado vira uma saída no caixa
-      await this.prisma.lancamentoFinanceiro.create({
-        data: {
-          tipo: TipoLancamento.SAIDA,
-          categoria: CategoriaLancamento.COMISSAO,
-          descricao: `Saque de comissões — ${saque.metodo}`,
-          valor: saque.valor,
-          competencia: new Date(),
-          referencia: saque.id,
-        },
-      });
-    }
+    // Não há lançamento no caixa da associação: quem paga a comissão ao
+    // associado é a empresa parceira. Se a diretoria definir algum saldo que a
+    // DigitaisBR efetivamente mantenha e desembolse, é aqui que a saída volta.
 
     await this.prisma.notificacao.create({
       data: {

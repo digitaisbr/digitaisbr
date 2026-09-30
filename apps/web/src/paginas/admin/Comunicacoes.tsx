@@ -94,7 +94,12 @@ export function Comunicacoes() {
             onClick={() =>
               modal.confirm({
                 title: `Disparar "${c.titulo}"?`,
-                content: 'Uma notificação será criada para cada associado do público-alvo.',
+                // o canal registrado não é honrado: não há provedor de e-mail
+                // nem push ligado. Dizer isso aqui evita que alguém marque a
+                // campanha como enviada achando que saiu e-mail.
+                content:
+                  'Cada associado do público-alvo receberá uma notificação dentro da plataforma '
+                  + '(o sininho). Não há envio de e-mail nem push — o canal fica apenas registrado.',
                 okText: 'Disparar',
                 cancelText: 'Cancelar',
                 onOk: async () => {

@@ -934,33 +934,46 @@ async function main(): Promise<void> {
   console.log(`   conquistas             ${conquistasData.length}`);
 
   // ---------------------------------------------------------------- financeiro (DRE)
-  // Reproduz o modelo da tela original: entradas = receita das vendas aprovadas;
-  // saídas = comissões pagas + custos operacionais.
+  // A receita da DigitaisBR é a mensalidade dos associados. A venda do parceiro
+  // é processada por ele e a comissão é paga por ele ao associado — nenhuma das
+  // duas passa pelo caixa da associação, então nenhuma das duas é lançada aqui.
   const vendasPagas = await prisma.venda.findMany({
     where: { status: StatusVenda.PAGA },
-    select: { total: true, dataVenda: true },
+    select: { dataVenda: true },
   });
 
-  const receitaPorMes = new Map<string, number>();
-  for (const v of vendasPagas) {
-    const mes = v.dataVenda.toISOString().slice(0, 7);
-    receitaPorMes.set(mes, (receitaPorMes.get(mes) ?? 0) + Number(v.total));
-  }
+  // o calendário vem das vendas só para que os gráficos cubram o mesmo período
+  const mesesComReceita = [
+    ...new Set(vendasPagas.map((v) => v.dataVenda.toISOString().slice(0, 7))),
+  ].sort();
+  const ultimoMes = mesesComReceita.at(-1) ?? '2025-07';
 
-  for (const [mes, valor] of receitaPorMes) {
+  const assinaturasVigentes = await prisma.assinatura.findMany({
+    where: { ativa: true },
+    select: { valor: true, inicioEm: true },
+  });
+
+  for (const mes of mesesComReceita) {
+    // fim do mês: a mensalidade só entra a partir do mês em que o associado aderiu
+    const fimDoMes = new Date(`${mes}-01T00:00:00Z`);
+    fimDoMes.setUTCMonth(fimDoMes.getUTCMonth() + 1);
+
+    const mensalidades = assinaturasVigentes
+      .filter((a) => a.inicioEm < fimDoMes)
+      .reduce((soma, a) => soma + Number(a.valor), 0);
+
+    if (mensalidades === 0) continue;
+
     await prisma.lancamentoFinanceiro.create({
       data: {
         tipo: TipoLancamento.ENTRADA,
-        categoria: CategoriaLancamento.VENDA,
-        descricao: `Receita de vendas aprovadas — ${mes}`,
-        valor: Number(valor.toFixed(2)),
+        categoria: CategoriaLancamento.ASSINATURA,
+        descricao: `Mensalidades dos planos — ${mes}`,
+        valor: Number(mensalidades.toFixed(2)),
         competencia: new Date(`${mes}-01T00:00:00Z`),
       },
     });
   }
-
-  const mesesComReceita = [...receitaPorMes.keys()].sort();
-  const ultimoMes = mesesComReceita.at(-1) ?? '2025-07';
 
   // custos operacionais, nas mesmas proporções da composição de saídas original
   const custos: Array<[CategoriaLancamento, number]> = [
@@ -984,20 +997,6 @@ async function main(): Promise<void> {
       });
     }
   }
-
-  const comissoesPagas = await prisma.comissao.aggregate({
-    where: { status: StatusComissao.PAGA },
-    _sum: { valor: true },
-  });
-  await prisma.lancamentoFinanceiro.create({
-    data: {
-      tipo: TipoLancamento.SAIDA,
-      categoria: CategoriaLancamento.COMISSAO,
-      descricao: 'Comissões pagas a associados',
-      valor: Number(comissoesPagas._sum.valor ?? 0),
-      competencia: new Date(`${ultimoMes}-01T00:00:00Z`),
-    },
-  });
 
   console.log(`   lançamentos financ.    ${await prisma.lancamentoFinanceiro.count()}`);
 

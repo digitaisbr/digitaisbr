@@ -1,4 +1,5 @@
-import { Card, Col, Row, Table, Tabs, Tag, Typography } from 'antd';
+import { useState } from 'react';
+import { Card, Col, DatePicker, Row, Space, Table, Tabs, Tag, Typography } from 'antd';
 import {
   Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart,
   ResponsiveContainer, Tooltip, XAxis, YAxis,
@@ -24,9 +25,13 @@ interface Projecao { mes: string; assinantesProjetados: number; mrrProjetado: nu
 const CORES = [marca.digitalBlue, marca.violet, marca.mintLeaf, '#FAAD14', '#EB2F96', '#13C2C2'];
 
 export function Financeiro() {
+  // a API de fluxo e DRE sempre aceitou recorte por competência; faltava
+  // oferecer o intervalo na tela
+  const [periodo, setPeriodo] = useState<{ de?: string; ate?: string }>({});
+
   const visao = useApi<VisaoFinanceira>(['financeiro', 'visao'], '/financeiro/visao-geral');
-  const fluxo = useApi<Fluxo[]>(['financeiro', 'fluxo'], '/financeiro/fluxo-caixa');
-  const dre = useApi<Dre>(['financeiro', 'dre'], '/financeiro/dre');
+  const fluxo = useApi<Fluxo[]>(['financeiro', 'fluxo', periodo], '/financeiro/fluxo-caixa', periodo);
+  const dre = useApi<Dre>(['financeiro', 'dre', periodo], '/financeiro/dre', periodo);
   const projecao = useApi<Projecao[]>(['financeiro', 'projecao'], '/financeiro/projecao-mrr', { meses: 6 });
   const saques = useApi<{ data: Saque[] }>(['financeiro', 'saques'], '/financeiro/saques', { limit: 20 });
 
@@ -47,7 +52,22 @@ export function Financeiro() {
   ];
 
   return (
-    <Pagina titulo="Financeiro" descricao="Caixa, DRE e receita recorrente">
+    <Pagina
+      titulo="Financeiro"
+      descricao="Caixa, DRE e receita recorrente da DigitaisBR"
+      acoes={
+        <Space>
+          <Typography.Text type="secondary">Competência</Typography.Text>
+          <DatePicker.RangePicker
+            picker="month"
+            allowEmpty={[true, true]}
+            onChange={(_, [de, ate]) =>
+              setPeriodo({ de: de || undefined, ate: ate || undefined })
+            }
+          />
+        </Space>
+      }
+    >
       <Cartoes
         carregando={visao.isLoading}
         colunas={3}
@@ -61,8 +81,19 @@ export function Financeiro() {
         carregando={visao.isLoading}
         colunas={3}
         metricas={[
-          { titulo: 'Comissões a pagar', valor: moeda(v?.comissoesAPagar), cor: '#d48806' },
-          { titulo: 'Receita de vendas', valor: moeda(v?.receitaVendas) },
+          // quem paga a comissão é o parceiro, não a associação: os dois
+          // primeiros cartões são acompanhamento comercial, não caixa nosso.
+          {
+            titulo: 'Comissões pendentes nos parceiros',
+            valor: moeda(v?.comissoesAPagar),
+            cor: '#d48806',
+            detalhe: 'Indicador comercial — pago pelo parceiro ao associado',
+          },
+          {
+            titulo: 'Valor comercializado',
+            valor: moeda(v?.receitaVendas),
+            detalhe: 'Vendas processadas pelos parceiros',
+          },
           { titulo: 'Total de saídas', valor: moeda(v?.totalSaidas), cor: '#d4380d' },
         ]}
       />

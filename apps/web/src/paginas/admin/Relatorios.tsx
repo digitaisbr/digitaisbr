@@ -105,7 +105,7 @@ export function Relatorios() {
           </Col>
 
           <Col xs={24} lg={12}>
-            <Card title="Top produtos por receita">
+            <Card title="Top produtos por valor comercializado">
               <Table
                 rowKey="nome"
                 size="small"
@@ -126,7 +126,7 @@ export function Relatorios() {
           </Col>
 
           <Col xs={24} lg={12}>
-            <Card title="Top associados por receita">
+            <Card title="Top associados por valor comercializado">
               <Table
                 rowKey="handle"
                 size="small"

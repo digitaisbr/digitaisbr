@@ -1,4 +1,6 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException, ConflictException, ForbiddenException, Injectable,
+} from '@nestjs/common';
 import { NivelPlano, Prisma, StatusConteudo, TipoMaterial } from '@prisma/client';
 import { PaginatedResult, paginate } from '../../common/dto/paginated-result';
 import { PrismaService } from '../../common/prisma/prisma.service';
@@ -146,6 +148,15 @@ export class ConteudosService {
   }
 
   async remover(id: string) {
+    // visualizações e curtidas são histórico de quem consumiu o material;
+    // apagar o conteúdo levaria esse rastro junto. Despublicar preserva.
+    const interacoes = await this.prisma.conteudoInteracao.count({ where: { conteudoId: id } });
+    if (interacoes > 0) {
+      throw new ConflictException(
+        `Este conteúdo já teve ${interacoes} interação(ões) de associados — a exclusão apagaria o histórico. `
+        + 'Mude o status para Arquivado em vez de excluir.',
+      );
+    }
     await this.prisma.conteudo.delete({ where: { id } });
     return { id, removido: true };
   }

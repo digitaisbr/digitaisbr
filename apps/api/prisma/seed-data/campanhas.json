@@ -45,8 +45,8 @@
   },
   {
     "id": "CAMP-005",
-    "titulo": "Lembrete: Comissões pendentes de saque",
-    "previa": "Você tem comissões aprovadas disponíveis para saque. Acesse ...",
+    "titulo": "Lembrete: acompanhe suas comissões",
+    "previa": "Você tem comissões aprovadas. Acompanhe o pagamento pelo parceiro em ...",
     "canal": "Push",
     "publico": "Todos os planos",
     "enviados": null,

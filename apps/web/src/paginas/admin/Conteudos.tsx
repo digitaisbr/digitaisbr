@@ -116,6 +116,12 @@ export function Conteudos() {
           nome={c.titulo}
           invalidar={CHAVES}
           aoEditar={() => abrir(c)}
+          aviso={
+            c.visualizacoes || c.curtidas
+              ? 'Já tem histórico de leitura — a exclusão será recusada. '
+                + 'Mude o status para Arquivado para tirar de circulação.'
+              : undefined
+          }
         />
       ),
     },
@@ -156,6 +162,13 @@ export function Conteudos() {
             campo: 'status',
             rotulo: 'Status',
             opcoes: SITUACOES.map((o) => ({ valor: o.value, rotulo: o.label })),
+          },
+          {
+            campo: 'planoMinimo',
+            rotulo: 'Plano mínimo',
+            largura: 170,
+            // a API já aceitava o recorte; faltava oferecê-lo na tela
+            opcoes: PLANOS.map((p) => ({ valor: p.value, rotulo: p.label })),
           },
         ]}
       />
