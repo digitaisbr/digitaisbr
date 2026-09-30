@@ -148,15 +148,30 @@ export class ConteudosService {
   }
 
   async remover(id: string) {
-    // visualizações e curtidas são histórico de quem consumiu o material;
-    // apagar o conteúdo levaria esse rastro junto. Despublicar preserva.
-    const interacoes = await this.prisma.conteudoInteracao.count({ where: { conteudoId: id } });
-    if (interacoes > 0) {
+    // Visualizações e curtidas são histórico de quem consumiu o material;
+    // apagar o conteúdo levaria esse rastro junto.
+    //
+    // Conta os dois: a tabela de interações registra quem interagiu, mas os
+    // contadores do próprio conteúdo podem ter valor sem linha correspondente
+    // (carga inicial, importação). Olhar só a tabela deixava passar justamente
+    // o conteúdo mais consultado da base.
+    const [conteudo, interacoes] = await Promise.all([
+      this.prisma.conteudo.findUniqueOrThrow({
+        where: { id },
+        select: { visualizacoes: true, curtidas: true },
+      }),
+      this.prisma.conteudoInteracao.count({ where: { conteudoId: id } }),
+    ]);
+
+    const historico = Math.max(conteudo.visualizacoes + conteudo.curtidas, interacoes);
+    if (historico > 0) {
       throw new ConflictException(
-        `Este conteúdo já teve ${interacoes} interação(ões) de associados — a exclusão apagaria o histórico. `
+        `Este conteúdo já tem histórico de consumo (${conteudo.visualizacoes} visualização(ões), `
+        + `${conteudo.curtidas} curtida(s)) — a exclusão apagaria esse rastro. `
         + 'Mude o status para Arquivado em vez de excluir.',
       );
     }
+
     await this.prisma.conteudo.delete({ where: { id } });
     return { id, removido: true };
   }

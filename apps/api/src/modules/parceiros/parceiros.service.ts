@@ -184,12 +184,25 @@ export class ParceirosService {
   }
 
   async removerBeneficio(id: string) {
-    // apagar um benefício já usado levaria junto o registro de quem o usou;
-    // desligar tira da vista do associado e mantém o histórico
-    const usos = await this.prisma.beneficioUso.count({ where: { beneficioId: id } });
-    if (usos > 0) {
+    // Apagar um benefício já usado levaria junto o registro de quem o usou;
+    // desligar tira da vista do associado e mantém o histórico.
+    //
+    // Conta as duas fontes: a tabela de usos diz quem resgatou, mas o contador
+    // do próprio benefício pode ter valor sem linha correspondente (carga
+    // inicial, importação). Olhar só a tabela deixava passar justamente o
+    // benefício mais resgatado da base.
+    const [beneficio, usos] = await Promise.all([
+      this.prisma.beneficio.findUniqueOrThrow({
+        where: { id },
+        select: { utilizacoes: true },
+      }),
+      this.prisma.beneficioUso.count({ where: { beneficioId: id } }),
+    ]);
+
+    const resgates = Math.max(beneficio.utilizacoes, usos);
+    if (resgates > 0) {
       throw new ConflictException(
-        `Este benefício já foi resgatado ${usos} vez(es) — desligue-o em vez de excluir, ` +
+        `Este benefício já foi resgatado ${resgates} vez(es) — desligue-o em vez de excluir, ` +
           'para não perder o histórico.',
       );
     }
