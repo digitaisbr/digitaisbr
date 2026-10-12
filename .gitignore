@@ -5,3 +5,9 @@ dist/
 .DS_Store
 __pycache__/
 .env.production
+
+# Contexto de trabalho: fica local, nunca versionado.
+# Traz credenciais e detalhes de operação — a cópia viva mora um nível acima,
+# em ~/context_digitaisbr.md, com permissão 600.
+context_digitaisbr.md
+context.md
