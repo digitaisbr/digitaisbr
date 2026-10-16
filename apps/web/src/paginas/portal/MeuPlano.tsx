@@ -92,12 +92,12 @@ export function MeuPlano() {
                 </div>
 
                 <Row gutter={12} style={{ marginTop: 18 }}>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Tag style={{ width: '100%', textAlign: 'center', padding: 4 }}>
                       Suporte {d.plano.suporte}
                     </Tag>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Tag
                       color={d.plano.comissaoExtraPct > 0 ? 'green' : 'default'}
                       style={{ width: '100%', textAlign: 'center', padding: 4 }}
@@ -112,20 +112,20 @@ export function MeuPlano() {
 
               <Card title="Resumo da assinatura">
                 <Row gutter={12}>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Statistic title="Mensalidade" value={moeda(d.resumo.mensalidade)} valueStyle={{ fontSize: 18 }} />
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Statistic
                       title="Receita gerada"
                       value={moeda(d.resumo.receitaGerada)}
                       valueStyle={{ fontSize: 18, color: marca.mintLeaf }}
                     />
                   </Col>
-                  <Col span={12} style={{ marginTop: 12 }}>
+                  <Col xs={24} sm={12} style={{ marginTop: 12 }}>
                     <Statistic title="ROI" value={`${d.resumo.roi}x`} valueStyle={{ fontSize: 18 }} />
                   </Col>
-                  <Col span={12} style={{ marginTop: 12 }}>
+                  <Col xs={24} sm={12} style={{ marginTop: 12 }}>
                     <Statistic title="Dias ativo" value={d.resumo.diasAtivo} valueStyle={{ fontSize: 18 }} />
                   </Col>
                 </Row>

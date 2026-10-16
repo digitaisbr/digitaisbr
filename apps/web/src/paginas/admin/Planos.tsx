@@ -80,14 +80,14 @@ export function Planos() {
                   </Typography.Paragraph>
 
                   <Row gutter={8} style={{ textAlign: 'center', marginBottom: 16 }}>
-                    <Col span={12}>
+                    <Col xs={24} sm={12}>
                       <Statistic
                         title="Associados"
                         value={p.associadosAtivos ?? 0}
                         valueStyle={{ fontSize: 20 }}
                       />
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={12}>
                       <Statistic
                         title="Receita"
                         value={dist ? moeda(dist.receita) : '—'}

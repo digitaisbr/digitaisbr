@@ -158,10 +158,10 @@ export function Inicio() {
                         </Tag>
                       </Space>
                       <Row gutter={12} style={{ textAlign: 'center' }}>
-                        <Col span={12}>
+                        <Col xs={24} sm={12}>
                           <Statistic title="Produtos" value={d.loja.produtos} valueStyle={{ fontSize: 20 }} />
                         </Col>
-                        <Col span={12}>
+                        <Col xs={24} sm={12}>
                           <Statistic
                             title="Visitas"
                             value={numero(d.loja.visitas)}

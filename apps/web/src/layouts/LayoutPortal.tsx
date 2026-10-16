@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Avatar, Badge, Dropdown, Layout, Menu, Tag, Typography, theme, type MenuProps,
+  Avatar, Badge, Button, Dropdown, Layout, Menu, Tag, Typography, theme, type MenuProps,
 } from 'antd';
 import type { ItemType, MenuItemType } from 'antd/es/menu/interface';
 import {
   BellOutlined, CustomerServiceOutlined, DashboardOutlined,
-  GiftOutlined, LogoutOutlined,
+  GiftOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
   ShopOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -66,6 +66,8 @@ const ITENS: ItemType<MenuItemType>[] = [
 
 export function LayoutPortal() {
   const [recolhido, setRecolhido] = useState(false);
+  // abaixo de lg o menu é sobreposto, não encolhido
+  const [estreito, setEstreito] = useState(false);
   const local = useLocation();
   const navegar = useNavigate();
   const { usuario, sair, ehAdmin } = useAuth();
@@ -110,10 +112,17 @@ export function LayoutPortal() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      {/* No celular o menu some por inteiro em vez de virar faixa de ícones:
+          com 228px fixos sobravam 162px de conteúdo numa tela de 390. O botão
+          do cabeçalho é o único jeito de reabrir, daí trigger={null}. */}
       <Sider
         collapsible
         collapsed={recolhido}
         onCollapse={setRecolhido}
+        breakpoint="lg"
+        collapsedWidth={estreito ? 0 : 80}
+        onBreakpoint={setEstreito}
+        trigger={null}
         theme="light"
         width={228}
         style={{ borderRight: `1px solid ${token.colorBorderSecondary}` }}
@@ -152,9 +161,17 @@ export function LayoutPortal() {
             height: 60,
           }}
         >
-          <Typography.Text type="secondary" style={{ fontSize: 13 }}>
-            Portal do associado
-          </Typography.Text>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Button
+              type="text"
+              aria-label={recolhido ? 'Abrir menu' : 'Fechar menu'}
+              icon={recolhido ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setRecolhido((v) => !v)}
+            />
+            <Typography.Text type="secondary" style={{ fontSize: 13 }}>
+              Portal do associado
+            </Typography.Text>
+          </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
             {usuario?.plano && (

@@ -230,12 +230,12 @@ export function AssociadoNovo() {
                 />
               </Form.Item>
               <Row gutter={12}>
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item name="seguidores" label="Seguidores">
                     <InputNumber min={0} style={{ width: '100%' }} placeholder="0" />
                   </Form.Item>
                 </Col>
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item name="engajamento" label="Engajamento (%)">
                     <InputNumber min={0} max={100} step={0.1} style={{ width: '100%' }} placeholder="0.0" />
                   </Form.Item>

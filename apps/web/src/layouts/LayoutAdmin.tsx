@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Avatar, Badge, Dropdown, Layout, Menu, Tag, Typography, theme, type MenuProps,
+  Avatar, Badge, Button, Dropdown, Layout, Menu, Tag, Typography, theme, type MenuProps,
 } from 'antd';
 import type { ItemType, MenuItemType } from 'antd/es/menu/interface';
 import {
   AppstoreOutlined, BankOutlined, BellOutlined, BookOutlined, CustomerServiceOutlined,
   DashboardOutlined, DollarOutlined, FileTextOutlined, GiftOutlined, LineChartOutlined,
-  LogoutOutlined, NotificationOutlined, SafetyCertificateOutlined,
+  LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, NotificationOutlined, SafetyCertificateOutlined,
   ShoppingCartOutlined, TeamOutlined, UserOutlined,
 } from '@ant-design/icons';
 import { useApi } from '@/api/hooks';
@@ -52,6 +52,8 @@ const ITENS: ItemType<MenuItemType>[] = [
 
 export function LayoutAdmin() {
   const [recolhido, setRecolhido] = useState(false);
+  // abaixo de lg o menu é sobreposto, não encolhido
+  const [estreito, setEstreito] = useState(false);
   const local = useLocation();
   const navegar = useNavigate();
   const { usuario, sair } = useAuth();
@@ -83,10 +85,17 @@ export function LayoutAdmin() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      {/* No celular o menu some por inteiro em vez de virar faixa de ícones:
+          com 228px fixos sobravam 162px de conteúdo numa tela de 390. O botão
+          do cabeçalho é o único jeito de reabrir, daí trigger={null}. */}
       <Sider
         collapsible
         collapsed={recolhido}
         onCollapse={setRecolhido}
+        breakpoint="lg"
+        collapsedWidth={estreito ? 0 : 80}
+        onBreakpoint={setEstreito}
+        trigger={null}
         theme="light"
         width={228}
         style={{ borderRight: `1px solid ${token.colorBorderSecondary}` }}
@@ -123,9 +132,17 @@ export function LayoutAdmin() {
             height: 60,
           }}
         >
-          <Typography.Text type="secondary" style={{ fontSize: 13 }}>
-            Área administrativa
-          </Typography.Text>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Button
+            type="text"
+            aria-label={recolhido ? 'Abrir menu' : 'Fechar menu'}
+            icon={recolhido ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setRecolhido((v) => !v)}
+          />
+            <Typography.Text type="secondary" style={{ fontSize: 13 }}>
+              Área administrativa
+            </Typography.Text>
+          </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
             <Link to="/suporte">
