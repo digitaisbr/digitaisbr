@@ -590,6 +590,11 @@ model Parceiro {
   site         String?
   logoUrl      String?
   ativo        Boolean  @default(true)
+  /// Até quando os produtos deste parceiro continuam nas vitrines que já os
+  /// tinham, depois do desligamento. Passada a data, somem sozinhos — a
+  /// consulta compara com o momento atual, sem tarefa agendada. Nulo = o
+  /// parceiro está ativo, ou saiu sem prazo de transição.
+  encerraEm    DateTime?
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
 

@@ -62,9 +62,26 @@ export class ParceirosService {
     return parceiro;
   }
 
+  /** Dias de prateleira após o desligamento, quando a administração não informa a data. */
+  private static readonly DIAS_DE_TRANSICAO = 60;
+
   async atualizarParceiro(id: string, dto: AtualizarParceiroDto, autor: Autor = {}) {
     const antes = await this.prisma.parceiro.findUniqueOrThrow({ where: { id } });
-    const depois = await this.prisma.parceiro.update({ where: { id }, data: dto });
+
+    // Desligar um parceiro não tira o produto da vitrine de quem já o divulgava:
+    // ele fica até a data de encerramento, com aviso, e some sozinho depois.
+    // Sem data informada, vale o prazo padrão. Religar limpa a data.
+    const dados: Prisma.ParceiroUpdateInput = { ...dto };
+    if (dto.ativo === false && antes.ativo && dto.encerraEm === undefined) {
+      const prazo = new Date();
+      prazo.setDate(prazo.getDate() + ParceirosService.DIAS_DE_TRANSICAO);
+      dados.encerraEm = prazo;
+    }
+    if (dto.ativo === true && !antes.ativo) {
+      dados.encerraEm = null;
+    }
+
+    const depois = await this.prisma.parceiro.update({ where: { id }, data: dados });
 
     const mudou = AuditoriaService.diferencas(
       antes as unknown as Record<string, unknown>,

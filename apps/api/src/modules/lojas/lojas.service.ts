@@ -63,7 +63,12 @@ export class LojasService {
           orderBy: [{ destaque: 'desc' }, { ordem: 'asc' }],
           include: {
             produto: {
-              include: { categoria: { select: { nome: true, slug: true, cor: true } } },
+              include: {
+                categoria: { select: { nome: true, slug: true, cor: true } },
+                // o associado precisa saber que um produto da vitrine dele
+                // tem data para sair, para poder substituí-lo a tempo
+                parceiro: { select: { nome: true, ativo: true, encerraEm: true } },
+              },
             },
           },
         },
@@ -90,6 +95,11 @@ export class LojasService {
           ganhoEstimado: Number(((preco * comissaoPct) / 100).toFixed(2)),
           destaque: lp.destaque,
           ordem: lp.ordem,
+          /** Data em que sai da vitrine, quando a parceria foi encerrada. */
+          disponivelAte:
+            lp.produto.parceiro && !lp.produto.parceiro.ativo
+              ? lp.produto.parceiro.encerraEm
+              : null,
         };
       }),
       desempenho: {
@@ -116,14 +126,35 @@ export class LojasService {
 
   /** Vitrine pública por slug — registra a visita e devolve só o que é publicável. */
   async vitrinePublica(slug: string, userAgent?: string) {
+    const agora = new Date();
     const loja = await this.prisma.loja.findUniqueOrThrow({
       where: { slug },
       include: {
         associado: { select: { nome: true, handle: true, bio: true } },
         produtos: {
-          where: { produto: { status: StatusProduto.ATIVO } },
+          where: {
+            produto: {
+              status: StatusProduto.ATIVO,
+              // Parceria encerrada não derruba a vitrine de imediato: o produto
+              // fica em prateleira até a data combinada, com aviso ao visitante,
+              // e some sozinho depois. A comparação com `agora` dispensa tarefa
+              // agendada — a consulta já resolve.
+              OR: [
+                { parceiroId: null },
+                { parceiro: { ativo: true } },
+                { parceiro: { encerraEm: { gt: agora } } },
+              ],
+            },
+          },
           orderBy: [{ destaque: 'desc' }, { ordem: 'asc' }],
-          include: { produto: { include: { categoria: { select: { nome: true, cor: true } } } } },
+          include: {
+            produto: {
+              include: {
+                categoria: { select: { nome: true, cor: true } },
+                parceiro: { select: { ativo: true, encerraEm: true } },
+              },
+            },
+          },
         },
       },
     });
@@ -166,6 +197,11 @@ export class LojasService {
         checkoutUrl: lp.produto.checkoutUrl,
         categoria: lp.produto.categoria.nome,
         destaque: lp.destaque,
+        /** Data em que sai da vitrine, quando a parceria foi encerrada. */
+        disponivelAte:
+          lp.produto.parceiro && !lp.produto.parceiro.ativo
+            ? lp.produto.parceiro.encerraEm
+            : null,
         /** usar com /portal/r/{codigo}; ausente = produto sem rastreio */
         codigoAfiliado: codigoPorProduto.get(lp.produtoId) ?? null,
       })),
@@ -241,7 +277,10 @@ export class LojasService {
       }),
       this.prisma.produto.findUniqueOrThrow({
         where: { id: dto.produtoId },
-        include: { planoMinimo: { select: { nivel: true, nome: true } } },
+        include: {
+          planoMinimo: { select: { nivel: true, nome: true } },
+          parceiro: { select: { nome: true, ativo: true } },
+        },
       }),
     ]);
 
@@ -261,6 +300,14 @@ export class LojasService {
 
     if (produto.status !== StatusProduto.ATIVO) {
       throw new ConflictException(`"${produto.nome}" não está ativo no catálogo.`);
+    }
+
+    // quem já divulgava fica até a data de encerramento; começar agora, não
+    if (produto.parceiro && !produto.parceiro.ativo) {
+      throw new ConflictException(
+        `A parceria com ${produto.parceiro.nome} foi encerrada — "${produto.nome}" `
+        + 'não pode mais ser adicionado a novas vitrines.',
+      );
     }
 
     const item = await this.prisma.lojaProduto.create({

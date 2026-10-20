@@ -2,7 +2,8 @@ import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { NivelPlano, TipoBeneficio } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
-  IsBoolean, IsEmail, IsEnum, IsOptional, IsString, IsUrl, Matches, MinLength,
+  IsBoolean,
+  IsDateString, IsEmail, IsEnum, IsOptional, IsString, IsUrl, Matches, MinLength,
 } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { EhCnpj } from '../../../common/validators/cnpj.validator';
@@ -53,7 +54,17 @@ export class CriarParceiroDto {
   ativo?: boolean;
 }
 
-export class AtualizarParceiroDto extends PartialType(CriarParceiroDto) {}
+export class AtualizarParceiroDto extends PartialType(CriarParceiroDto) {
+  @ApiPropertyOptional({
+    description:
+      'Até quando os produtos deste parceiro continuam nas vitrines que já os tinham. '
+      + 'Ao desligar sem informar, vale o prazo padrão de 60 dias. Religar limpa a data.',
+    example: '2026-12-31',
+  })
+  @IsOptional()
+  @IsDateString()
+  encerraEm?: string;
+}
 
 export class CriarBeneficioDto {
   @ApiProperty({ example: '50% off Canva Pro Anual' })

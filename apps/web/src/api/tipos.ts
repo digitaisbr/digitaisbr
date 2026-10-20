@@ -114,6 +114,8 @@ export interface Produto {
   categoria: { id: string; nome: string; slug: string; cor: string | null };
   planoMinimo: { nivel: NivelPlano; nome: string } | null;
   parceiro?: { id: string; nome: string } | null;
+  /** Parceria encerrada: data em que o produto sai da vitrine. */
+  disponivelAte?: string | null;
 }
 
 export interface Categoria {

@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Button, Form, Input, Space, Switch, Tag, Tooltip, Typography } from 'antd';
+import {
+  Button, DatePicker, Form, Input, Space, Switch, Tag, Tooltip, Typography,
+} from 'antd';
+import dayjs, { type Dayjs } from 'dayjs';
 import { ApiOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useApi } from '@/api/hooks';
@@ -163,8 +166,36 @@ export function Parceiros() {
           <Input placeholder="https://empresa.com/logo.png" />
         </Form.Item>
 
-        <Form.Item name="ativo" label="Ativo" valuePropName="checked">
+        <Form.Item
+          name="ativo"
+          label="Ativo"
+          valuePropName="checked"
+          extra="Ao desligar, os produtos somem do catálogo na hora, mas continuam nas
+                 vitrines que já os tinham até a data abaixo."
+        >
           <Switch />
+        </Form.Item>
+
+        {/* só faz sentido quando a parceria está sendo encerrada */}
+        <Form.Item noStyle shouldUpdate={(a, b) => a.ativo !== b.ativo}>
+          {(form) =>
+            form.getFieldValue('ativo') === false && (
+              <Form.Item
+                name="encerraEm"
+                label="Produtos ficam nas vitrines até"
+                extra="Em branco, vale o prazo padrão de 60 dias a partir do desligamento."
+                getValueProps={(v?: string) => ({ value: v ? dayjs(v) : undefined })}
+                normalize={(d: Dayjs | null) => d?.toISOString()}
+              >
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  style={{ width: 200 }}
+                  minDate={dayjs()}
+                  placeholder="60 dias"
+                />
+              </Form.Item>
+            )
+          }
         </Form.Item>
       </ModalRecurso>
 

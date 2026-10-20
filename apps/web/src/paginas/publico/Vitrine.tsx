@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { Avatar, Button, Card, Col, Divider, Layout, Result, Row, Space, Tag, Typography } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { useApi } from '@/api/hooks';
-import { moeda } from '@/api/formato';
+import { data, moeda } from '@/api/formato';
 import { Estado } from '@/componentes/Estado';
 import { Logo } from '@/componentes/Logo';
 import { gradienteMarca, marca } from '@/marca';
@@ -24,6 +24,8 @@ interface VitrinePublica {
     checkoutUrl: string | null;
     categoria: string;
     destaque: boolean;
+    /** parceria encerrada: último dia em que o produto fica na vitrine */
+    disponivelAte: string | null;
     /** código de origem; passa pelo redirecionador para atribuir a venda */
     codigoAfiliado: string | null;
   }[];
@@ -156,11 +158,14 @@ export function Vitrine() {
                             </Button>,
                           ]}
                         >
-                          {p.destaque && (
-                            <Tag color="gold" style={{ marginBottom: 6 }}>
-                              Destaque
-                            </Tag>
-                          )}
+                          <Space wrap size={4} style={{ marginBottom: 6 }}>
+                            {p.destaque && <Tag color="gold">Destaque</Tag>}
+                            {/* o visitante merece saber que tem prazo, como em
+                                catálogo de streaming: cria urgência honesta */}
+                            {p.disponivelAte && (
+                              <Tag color="orange">Disponível até {data(p.disponivelAte)}</Tag>
+                            )}
+                          </Space>
                           <Typography.Text strong style={{ display: 'block', minHeight: 40 }}>
                             {p.nome}
                           </Typography.Text>

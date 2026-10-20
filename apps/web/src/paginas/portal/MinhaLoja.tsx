@@ -1,11 +1,14 @@
 import {
-  App, Button, Card, Col, Empty, Input, Row, Select, Space, Statistic, Tabs, Tag, Typography,
+  App, Button, Card, Col, Empty, Input, Row, Select, Space, Statistic, Tabs, Tag, Tooltip,
+  Typography,
 } from 'antd';
-import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  ClockCircleOutlined, DeleteOutlined, PlusOutlined, SearchOutlined,
+} from '@ant-design/icons';
 import { useState } from 'react';
 import { mensagemDeErro } from '@/api/cliente';
 import { useAcao, useApi, useLista } from '@/api/hooks';
-import { moeda, numero, percentual } from '@/api/formato';
+import { data, moeda, numero, percentual } from '@/api/formato';
 import { Estado } from '@/componentes/Estado';
 import { Pagina } from '@/componentes/Pagina';
 import type { Produto } from '@/api/tipos';
@@ -106,6 +109,13 @@ export function MinhaLoja() {
               {p.categoria.nome}
             </Tag>
             {naVitrine && <Tag color="green">Na sua loja</Tag>}
+            {p.disponivelAte && (
+              <Tooltip title="A parceria com esta empresa foi encerrada. Depois dessa data o produto sai da sua loja — vale escolher outro no lugar.">
+                <Tag color="orange" icon={<ClockCircleOutlined />}>
+                  Até {data(p.disponivelAte)}
+                </Tag>
+              </Tooltip>
+            )}
           </Space>
           <Typography.Text strong style={{ display: 'block', minHeight: 40 }}>
             {p.nome}

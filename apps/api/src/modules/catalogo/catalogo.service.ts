@@ -94,6 +94,19 @@ export class CatalogoService {
       ];
     }
 
+    // Parceria encerrada sai do catálogo na hora: não faz sentido montar
+    // vitrine com produto que já tem data de saída marcada. Quem já o
+    // divulgava continua até a data — isso é tratado na vitrine, não aqui.
+    //
+    // A administração enxerga tudo, inclusive o que está de saída, porque
+    // precisa disso para religar o parceiro.
+    if (nivelAssociado) {
+      where.AND = [
+        ...(Array.isArray(where.AND) ? where.AND : where.AND ? [where.AND] : []),
+        { OR: [{ parceiroId: null }, { parceiro: { ativo: true } }] },
+      ];
+    }
+
     const [total, produtos] = await this.prisma.$transaction([
       this.prisma.produto.count({ where }),
       this.prisma.produto.findMany({
