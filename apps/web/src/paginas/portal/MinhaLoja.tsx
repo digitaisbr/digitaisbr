@@ -1,4 +1,6 @@
-import { App, Button, Card, Col, Empty, Input, Row, Space, Statistic, Tabs, Tag, Typography } from 'antd';
+import {
+  App, Button, Card, Col, Empty, Input, Row, Select, Space, Statistic, Tabs, Tag, Typography,
+} from 'antd';
 import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { mensagemDeErro } from '@/api/cliente';
@@ -19,15 +21,33 @@ interface Loja {
   associado: { plano: { nome: string; limiteProdutos: number } };
 }
 
+interface Categoria {
+  id: string;
+  nome: string;
+  slug: string;
+  totalProdutos: number;
+}
+
 export function MinhaLoja() {
   const { message } = App.useApp();
   const [busca, setBusca] = useState('');
+  const [categoria, setCategoria] = useState<string | undefined>();
   const loja = useApi<Loja>(['portal', 'loja'], '/portal/loja');
-  const marketplace = useLista<Produto>(['catalogo', 'produtos', 'portal'], '/catalogo/produtos', {
-    limit: 50,
-    status: 'ATIVO',
-    search: busca || undefined,
-  });
+
+  // alimenta o filtro do marketplace; já vem com a contagem por categoria
+  const categorias = useApi<Categoria[]>(['catalogo', 'categorias'], '/catalogo/categorias');
+
+  const marketplace = useLista<Produto>(
+    ['catalogo', 'produtos', 'portal'],
+    '/catalogo/produtos',
+    {
+      limit: 50,
+      status: 'ATIVO',
+      search: busca || undefined,
+      // a API já aceitava o recorte por categoria; faltava oferecê-lo na tela
+      categoria,
+    },
+  );
 
   const adicionar = useAcao<{ produtoId: string }, unknown>(
     'post',
@@ -168,18 +188,36 @@ export function MinhaLoja() {
                   label: `Marketplace (${marketplace.data?.meta.total ?? 0})`,
                   children: (
                     <>
-                      <Input
-                        allowClear
-                        prefix={<SearchOutlined />}
-                        placeholder="Buscar produtos…"
-                        style={{ width: 300, marginBottom: 16 }}
-                        value={busca}
-                        onChange={(e) => setBusca(e.target.value)}
-                      />
+                      <Space wrap style={{ marginBottom: 16 }}>
+                        <Input
+                          allowClear
+                          prefix={<SearchOutlined />}
+                          placeholder="Buscar produtos…"
+                          style={{ width: 260 }}
+                          value={busca}
+                          onChange={(e) => setBusca(e.target.value)}
+                        />
+                        <Select
+                          allowClear
+                          placeholder="Todas as categorias"
+                          style={{ width: 230 }}
+                          value={categoria}
+                          onChange={setCategoria}
+                          loading={categorias.isLoading}
+                          options={(categorias.data ?? []).map((c) => ({
+                            value: c.slug,
+                            label: `${c.nome} (${c.totalProdutos})`,
+                          }))}
+                        />
+                      </Space>
                       <Estado carregando={marketplace.isLoading} erro={marketplace.error} esqueleto>
-                        <Row gutter={[14, 14]}>
-                          {(marketplace.data?.data ?? []).map((p) => cartaoProduto(p, naLoja.has(p.id)))}
-                        </Row>
+                        {(marketplace.data?.data ?? []).length === 0 ? (
+                          <Empty description="Nenhum produto nesta categoria. Tente outra ou limpe o filtro." />
+                        ) : (
+                          <Row gutter={[14, 14]}>
+                            {(marketplace.data?.data ?? []).map((p) => cartaoProduto(p, naLoja.has(p.id)))}
+                          </Row>
+                        )}
                       </Estado>
                     </>
                   ),
