@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, Tag, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import { Button, Space, Tag, Typography } from 'antd';
+import { PlusOutlined, TagsOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useApi } from '@/api/hooks';
 import { corDeStatus, moeda, percentual, rotulo } from '@/api/formato';
 import { Cartoes } from '@/componentes/Cartoes';
 import { Pagina } from '@/componentes/Pagina';
+import { PainelCategorias } from '@/componentes/PainelCategorias';
 import { TabelaRecurso } from '@/componentes/TabelaRecurso';
 import type { Categoria, Produto } from '@/api/tipos';
 import { marca } from '@/marca';
@@ -19,6 +21,7 @@ interface Estatisticas {
 
 export function Catalogo() {
   const navegar = useNavigate();
+  const [categoriasAberto, setCategoriasAberto] = useState(false);
   const stats = useApi<Estatisticas>(['catalogo', 'estatisticas'], '/catalogo/produtos/estatisticas');
   const categorias = useApi<Categoria[]>(['catalogo', 'categorias'], '/catalogo/categorias');
 
@@ -92,9 +95,14 @@ export function Catalogo() {
       titulo="Catálogo"
       descricao="Produtos disponíveis para as lojas dos associados"
       acoes={
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => navegar('/catalogo/novo')}>
-          Novo produto
-        </Button>
+        <Space>
+          <Button icon={<TagsOutlined />} onClick={() => setCategoriasAberto(true)}>
+            Categorias
+          </Button>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => navegar('/catalogo/novo')}>
+            Novo produto
+          </Button>
+        </Space>
       }
     >
       <Cartoes
@@ -140,6 +148,11 @@ export function Catalogo() {
             ],
           },
         ]}
+      />
+
+      <PainelCategorias
+        aberto={categoriasAberto}
+        aoFechar={() => setCategoriasAberto(false)}
       />
     </Pagina>
   );
